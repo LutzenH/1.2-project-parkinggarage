@@ -1,6 +1,8 @@
-package Parkeersimulator;
+package parkeersimulator.model.car;
 
 import java.awt.*;
+
+import parkeersimulator.model.location.Location;
 
 public abstract class Car {
 
