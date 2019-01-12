@@ -38,6 +38,9 @@ public class Main {
 		
 		screen.pack();
 		screen.setSize(800, 800);
+		
+		model.notifyViews();
+		
 		screen.setVisible(true);
 	}
 	
