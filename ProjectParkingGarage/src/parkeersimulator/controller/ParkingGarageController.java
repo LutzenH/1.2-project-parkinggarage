@@ -1,9 +1,11 @@
 package parkeersimulator.controller;
 
+import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
 
 import parkeersimulator.model.ParkingGarageModel;
@@ -38,6 +40,8 @@ public class ParkingGarageController extends AbstractController implements Actio
 		plusone.setBounds(140, 10, 70, 30);
 		start.setBounds(229, 10, 70, 30);
 		stop.setBounds(319, 10, 70, 30);
+		
+		this.setBorder(BorderFactory.createLineBorder(Color.black));
 
 		setVisible(true);
 	}

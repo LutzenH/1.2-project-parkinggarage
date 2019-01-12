@@ -4,16 +4,17 @@ import java.awt.FlowLayout;
 
 import javax.swing.JFrame;
 
-import parkeersimulator.controller.AbstractController;
 import parkeersimulator.controller.ParkingGarageController;
 import parkeersimulator.model.ParkingGarageModel;
-import parkeersimulator.view.AbstractView;
 import parkeersimulator.view.CarParkView;
 import parkeersimulator.view.QueueCountView;
+import parkeersimulator.view.TimeView;
 
 public class Main {
 	private ParkingGarageModel model;
+	
 	private ParkingGarageController controller;
+	private TimeView timeview;
 	private CarParkView carparkview;
 	private QueueCountView queuecountview;
 
@@ -25,6 +26,7 @@ public class Main {
 		
 		carparkview = new CarParkView(model);
 		queuecountview = new QueueCountView(model);
+		timeview = new TimeView(model);
 		
 		screen = new JFrame("Parking Garage Simulator");
 		screen.setLayout(new FlowLayout());
@@ -32,6 +34,7 @@ public class Main {
 		screen.getContentPane().add(controller);
 		
 		screen.getContentPane().add(queuecountview);
+		screen.getContentPane().add(timeview);
 		screen.getContentPane().add(carparkview);
 		
 		screen.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);

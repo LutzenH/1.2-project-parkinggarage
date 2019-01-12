@@ -1,9 +1,9 @@
 package parkeersimulator.view;
 
-import javax.swing.JPanel;
+import javax.swing.BorderFactory;
 import javax.swing.JLabel;
+import java.awt.Color;
 import java.awt.GridLayout;
-import javax.swing.SwingConstants;
 
 import parkeersimulator.model.ParkingGarageModel;
 
@@ -21,6 +21,8 @@ public class QueueCountView extends AbstractView {
 		super(model);
 		
 		setLayout(new GridLayout(4, 1, 0, 0));
+		
+		this.setBorder(BorderFactory.createLineBorder(Color.black));
 		
 		entranceCarQueueLabel = new JLabel("entranceCarQueue: ");
 		add(entranceCarQueueLabel);

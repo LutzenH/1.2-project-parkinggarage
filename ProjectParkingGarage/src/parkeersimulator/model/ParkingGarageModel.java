@@ -205,7 +205,24 @@ public class ParkingGarageModel extends AbstractModel implements Runnable {
     	removeCarAt(car.getLocation());
         exitCarQueue.addCar(car);
     }
-
+    
+    public int getDay()
+    {
+    	return day;
+    }
+    
+    public int getHour() {
+    	return hour;
+    }
+    
+    public int getMinute() {
+    	return minute;
+    }
+    
+    public int[] getTime() {
+    	return new int[] { day, hour, minute };
+    }
+    
 	public int getNumberOfFloors() {
         return numberOfFloors;
     }

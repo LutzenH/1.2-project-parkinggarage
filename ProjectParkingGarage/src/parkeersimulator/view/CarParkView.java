@@ -5,6 +5,8 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Image;
 
+import javax.swing.BorderFactory;
+
 import parkeersimulator.model.ParkingGarageModel;
 import parkeersimulator.model.car.Car;
 import parkeersimulator.model.location.Location;
@@ -21,6 +23,9 @@ public class CarParkView extends AbstractView {
     	super(model);
     	    	
         size = new Dimension(0, 0);
+        
+		this.setBorder(BorderFactory.createLineBorder(Color.black));
+
     }
 
     /**
