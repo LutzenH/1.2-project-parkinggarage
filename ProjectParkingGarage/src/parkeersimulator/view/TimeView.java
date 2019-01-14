@@ -10,12 +10,19 @@ import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 
+/**
+ * A view that returns the current time of the week.
+ * 
+ * @author LutzenH
+ * @author ThowV
+ * @author b-kuiper
+ */
 public class TimeView extends AbstractView {
-	
+	///Declaration of the label used to display the time.
 	private JLabel timeLabel;
 
 	/**
-	 * Create the panel.
+	 * Constructor of TimeView, Creates the panel for this view.
 	 */
 	public TimeView(ParkingGarageModel model) {
 		super(model);
@@ -31,6 +38,9 @@ public class TimeView extends AbstractView {
 
 	}
 	
+	/**
+	 * Repaints the information diplayed in this view.
+	 */
     @Override
     public void updateView() {
     	

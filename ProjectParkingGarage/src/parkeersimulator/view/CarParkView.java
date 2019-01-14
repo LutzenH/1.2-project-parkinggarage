@@ -11,6 +11,9 @@ import parkeersimulator.model.ParkingGarageModel;
 import parkeersimulator.model.car.Car;
 import parkeersimulator.model.location.Location;
 
+/**
+ * class of the view of the simulation.
+ */
 public class CarParkView extends AbstractView {
     
     private Dimension size;
@@ -54,6 +57,9 @@ public class CarParkView extends AbstractView {
         }
     }
 
+    /**
+     * Repaints this view.
+     */
     @Override
     public void updateView() {
         // Create a new car park image if the size has changed.

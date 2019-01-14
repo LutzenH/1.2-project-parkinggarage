@@ -7,15 +7,23 @@ import java.awt.GridLayout;
 
 import parkeersimulator.model.ParkingGarageModel;
 
+/**
+ * A view that displays the number of cars in the four queues.
+ * 
+ * @author LutzenH
+ * @author ThowV
+ * @author b-kuiper
+ *
+ */
 public class QueueCountView extends AbstractView {
-
+	//Declaration of the JLabels used in this view.
 	private JLabel entranceCarQueueLabel;
 	private JLabel entrancePassQueueLabel;
 	private JLabel paymentCarQueueLabel;
 	private JLabel exitCarQueueLabel;
 	
 	/**
-	 * Create the panel.
+	 * Constructor of QueueCountView.
 	 */
 	public QueueCountView(ParkingGarageModel model) {
 		super(model);
@@ -38,6 +46,9 @@ public class QueueCountView extends AbstractView {
 
 	}
 	
+	/**
+	 * repaints the information displayed in this view.
+	 */
     @Override
     public void updateView() {
     	entranceCarQueueLabel.setText("entranceCarQueue: " + model.getEntranceCarQueue().carsInQueue());

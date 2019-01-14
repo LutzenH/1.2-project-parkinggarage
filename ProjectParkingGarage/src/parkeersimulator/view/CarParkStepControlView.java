@@ -10,12 +10,26 @@ import parkeersimulator.controller.ParkingGarageController;
 import parkeersimulator.controller.ParkingGarageController.ActionType;
 import parkeersimulator.model.ParkingGarageModel;
 
+/**
+ * Class of a view that can start and stop the simulation.
+ * 
+ * @author LutzenH
+ * @author ThowV
+ * @author b-kuiper
+ * 
+ */
 public class CarParkStepControlView extends AbstractControllableView{
+	///Declaration of the buttons in this view.
 	private JButton plusone;
 	private JButton plushundred;
 	private JButton start;
 	private JButton stop;
 	
+	/**
+	 * Constructor of CarParkStepControlView
+	 * @param model The model this view should be getting information from.
+	 * @param controller The controller this view should send instruction to.
+	 */ 
 	public CarParkStepControlView(ParkingGarageModel model, ParkingGarageController controller) {
 		super(model, controller);
 		

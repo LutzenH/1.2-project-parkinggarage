@@ -1,5 +1,8 @@
 package parkeersimulator.model.location;
 
+/**
+ * Class used for parking spots in the parking garage simulation.
+ */
 public class Location {
 
     private int floor;

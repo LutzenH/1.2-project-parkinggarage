@@ -8,63 +8,95 @@ import parkeersimulator.model.car.ParkingPassCar;
 import parkeersimulator.model.location.Location;
 import parkeersimulator.model.queue.CarQueue;
 
+/**
+ * The model of the parking garage simulation.
+ * 
+ * @author LutzenH
+ * @author ThowV
+ * @author b-kuiper
+ * 
+ */
 public class ParkingGarageModel extends AbstractModel implements Runnable {
 
+	///boolean that is used for when threads need to stop running.
 	private boolean run;
 	
+	//TODO Replace these different types with an Enum.
+	///Id of the different types of cars.
 	private static final String AD_HOC = "1";
 	private static final String PASS = "2";
 	
+	///Declaration of the different queues in the simulation.
 	private CarQueue entranceCarQueue;
     private CarQueue entrancePassQueue;
     private CarQueue paymentCarQueue;
     private CarQueue exitCarQueue;
 
+    //TODO Replace this with a more robust system.
+    ///Declaration of the time of the week.
     private int day = 0;
     private int hour = 0;
     private int minute = 0;
 
+    ///The amount of time the thread should wait before executing the next tick().
     private int tickPause = 100;
 
-    int weekDayArrivals= 100; // average number of arriving cars per hour
-    int weekendArrivals = 200; // average number of arriving cars per hour
-    int weekDayPassArrivals= 50; // average number of arriving cars per hour
-    int weekendPassArrivals = 5; // average number of arriving cars per hour
-
-    int enterSpeed = 3; // number of cars that can enter per minute
-    int paymentSpeed = 7; // number of cars that can pay per minute
-    int exitSpeed = 5; // number of cars that can leave per minute
+    ///The average number of arriving cars per hour.
+    int weekDayArrivals= 100;
+    int weekendArrivals = 200;
+    int weekDayPassArrivals= 50;
+    int weekendPassArrivals = 5;
+  
+    /// number of cars that can enter per minute
+    int enterSpeed = 3; 
+    /// number of cars that can pay per minute
+    int paymentSpeed = 7;
+    /// number of cars that can leave per minute
+    int exitSpeed = 5;
     
+    ///Declaration of Multi-dimensional array of Car, format: [numberOfFloors][numberOfRows][numberOfPlaces]
     private Car[][][] cars;
 
-	private int numberOfFloors;
-	private int numberOfRows;
-	private int numberOfPlaces;
+    ///Declaration of values needed to generate the parking garage.
+	private int numberOfFloors = 3;
+	private int numberOfRows = 8;
+	private int numberOfPlaces = 30;
 	private int numberOfOpenSpots;
 
+	/**
+	 * Constructor of ParkingGarageModel
+	 */
     public ParkingGarageModel() {
+    	///Instantiation of the queue's
         entranceCarQueue = new CarQueue();
         entrancePassQueue = new CarQueue();
         paymentCarQueue = new CarQueue();
         exitCarQueue = new CarQueue();
+
+        this.numberOfOpenSpots = numberOfFloors * numberOfRows * numberOfPlaces;
         
-        this.numberOfFloors = 3;
-        this.numberOfRows = 8;
-        this.numberOfPlaces = 30;
-        this.numberOfOpenSpots =numberOfFloors*numberOfRows*numberOfPlaces;
-        
+        ///Instantiation of the all possible car positions.
         cars = new Car[numberOfFloors][numberOfRows][numberOfPlaces];
     }
 
+    /**
+     * Starts the simulation on a different thread.
+     */
 	public void start() {
 		if(!run)
 			new Thread(this).start();
 	}
 	
+	/**
+	 * Stops the currently running simulation on a different thread.
+	 */
 	public void stop() {
 		run=false;
 	}
 	
+	/**
+	 * Simulation that runs on a different thread when started.
+	 */
 	@Override
 	public void run() {
 		run=true;
@@ -78,6 +110,9 @@ public class ParkingGarageModel extends AbstractModel implements Runnable {
 		}
 	}
 
+	/**
+	 * Responsible for what happens every iteration in the simulation.
+	 */
     public void tick() {
     	advanceTime();
     	tickCars();
@@ -86,6 +121,11 @@ public class ParkingGarageModel extends AbstractModel implements Runnable {
     	handleEntrance();
     }
     
+    /**
+     * Runs a certain amount of simulation iterations
+     * 
+     * @param amount The amount of ticks that should run.
+     */
     public void tick(int amount) {
     	for(int i = 0; i < amount; i++)
     	{
@@ -93,6 +133,9 @@ public class ParkingGarageModel extends AbstractModel implements Runnable {
     	}
     }
 
+    /**
+     * A method that is used for incrementing the current time.
+     */
     private void advanceTime(){
         // Advance the time by one minute.
         minute++;
@@ -110,18 +153,27 @@ public class ParkingGarageModel extends AbstractModel implements Runnable {
 
     }
 
+    /**
+     * Handles all methods related to entrance of the cars.
+     */
     private void handleEntrance(){
     	carsArriving();
     	carsEntering(entrancePassQueue);
     	carsEntering(entranceCarQueue);  	
     }
     
+    /**
+     * Handles all methods related to leaving of cars.
+     */
     private void handleExit(){
         carsReadyToLeave();
         carsPaying();
         carsLeaving();
     }
     
+    /**
+     * Puts a certain amount of cars in the queue depending on there average values / type.
+     */
     private void carsArriving(){
     	int numberOfCars=getNumberOfCars(weekDayArrivals, weekendArrivals);
         addArrivingCars(numberOfCars, AD_HOC);    	
@@ -129,10 +181,13 @@ public class ParkingGarageModel extends AbstractModel implements Runnable {
         addArrivingCars(numberOfCars, PASS);   
     }
 
+    /**
+     * Removes cars from the front of the queue and assign to a parking space depending on the enterSpeed.
+     * 
+     * @param queue the queue that the cars should be taken from.
+     */
     private void carsEntering(CarQueue queue){
-        int i=0;
-        // Remove car from the front of the queue and assign to a parking space.
-        
+        int i=0;      
     	while (queue.carsInQueue()>0 && 
     			getNumberOfOpenSpots()>0 && 
     			i<enterSpeed) {
@@ -143,8 +198,10 @@ public class ParkingGarageModel extends AbstractModel implements Runnable {
         }
     }
     
+    /**
+     * Adds leaving cars to the payment queue.
+     */
     private void carsReadyToLeave(){
-        // Add leaving cars to the payment queue.
         Car car = getFirstLeavingCar();
         while (car!=null) {
         	if (car.getHasToPay()){
@@ -158,19 +215,23 @@ public class ParkingGarageModel extends AbstractModel implements Runnable {
         }
     }
 
+    // TODO Handle payment.
+    /**
+     * Let cars pay.
+     */
     private void carsPaying(){
-        // Let cars pay.
     	int i=0;
     	while (paymentCarQueue.carsInQueue()>0 && i < paymentSpeed){
             Car car = paymentCarQueue.removeCar();
-            // TODO Handle payment.
             carLeavesSpot(car);
             i++;
     	}
     }
     
+    /**
+     * Lets cars leave.
+     */
     private void carsLeaving(){
-        // Let cars leave.
     	int i=0;
     	while (exitCarQueue.carsInQueue()>0 && i < exitSpeed){
             exitCarQueue.removeCar();
@@ -178,6 +239,13 @@ public class ParkingGarageModel extends AbstractModel implements Runnable {
     	}	
     }
     
+    /**
+     * Returns the number of cars that arrive per minute depending on the entered values.
+     * 
+     * @param weekDay The average amount of cars that should enter the parking garage on a weekday per hour.
+     * @param weekend The average amount of cars that should enter the parking garage in the weekend per hour.
+     * @return The number of cars that arrive per minute.
+     */
     private int getNumberOfCars(int weekDay, int weekend){
         Random random = new Random();
 
@@ -192,8 +260,13 @@ public class ParkingGarageModel extends AbstractModel implements Runnable {
         return (int)Math.round(numberOfCarsPerHour / 60);	
     }
     
+    /**
+     * Adds a certain number and type of cars to the back of the queue.
+     * 
+     * @param numberOfCars Amount of cars that should be added to the queue.
+     * @param type Type of car that should be added to the queue.
+     */
     private void addArrivingCars(int numberOfCars, String type){
-        // Add the cars to the back of the queue.
     	switch(type) {
     	case AD_HOC: 
             for (int i = 0; i < numberOfCars; i++) {
@@ -208,65 +281,87 @@ public class ParkingGarageModel extends AbstractModel implements Runnable {
     	}
     }
     
+    /**
+     * Removes a car from its location and places it the exitCarQueue
+     * 
+     * @param car The car that should leave its location.
+     */
     private void carLeavesSpot(Car car){
     	removeCarAt(car.getLocation());
         exitCarQueue.addCar(car);
     }
     
-    public int getDay()
-    {
-    	return day;
-    }
+    /**
+     * @return The current day of the week.
+     */
+    public int getDay() { return day; }
     
-    public int getHour() {
-    	return hour;
-    }
+    /**
+     * @return The current hour of the day.
+     */
+    public int getHour() { return hour; }
     
-    public int getMinute() {
-    	return minute;
-    }
+    /**
+     * @return The current minute of the hour.
+     */
+    public int getMinute() { return minute; }
     
-    public int[] getTime() {
-    	return new int[] { day, hour, minute };
-    }
+    /**
+     * @return The current time in the format: int[day][hour][minute].
+     */
+    public int[] getTime() { return new int[] { day, hour, minute }; }
     
-	public int getNumberOfFloors() {
-        return numberOfFloors;
-    }
-
-    public int getNumberOfRows() {
-        return numberOfRows;
-    }
-
-    public int getNumberOfPlaces() {
-        return numberOfPlaces;
-    }
-
-    public int getNumberOfOpenSpots() {
-    	return numberOfOpenSpots;
-    }
-    
-    public Car[][][] getCars() {
-    	return cars;
-    }
-    
-	public CarQueue getEntranceCarQueue() {
-		return entranceCarQueue;
-	}
+    /**
+     * @return The number of floors in the parking garage.
+     */
+	public int getNumberOfFloors() { return numberOfFloors; }
 	
-    public CarQueue getEntrancePassQueue() {
-    	return entrancePassQueue;
-    }
+	/**
+	 * @return The number of rows in the parking garage per floor.
+	 */
+    public int getNumberOfRows() { return numberOfRows; }
     
-    public CarQueue getPaymentCarQueue() {
-    	return paymentCarQueue;
-    }
+	/**
+	 * @return The number of places in the parking garage per row.
+	 */
+    public int getNumberOfPlaces() { return numberOfPlaces; }
     
-    public CarQueue getExitCarQueue() {
-    	return exitCarQueue;
-    }
+    /**
+     * @return The total amount of open spots in the parking garage.
+     */
+    public int getNumberOfOpenSpots() { return numberOfOpenSpots; }
     
+    /**
+     * @return A multi-dimensional array of all cars in the parking garage, format: car[floor][row][place]
+     */
+    public Car[][][] getCars() { return cars; }
     
+    /**
+     * @return The entranceCarQueue.
+     */
+	public CarQueue getEntranceCarQueue() { return entranceCarQueue; }
+	
+    /**
+     * @return The entrancePassQueue.
+     */
+    public CarQueue getEntrancePassQueue() { return entrancePassQueue; }
+    
+    /**
+     * @return The paymentCarQueue.
+     */
+    public CarQueue getPaymentCarQueue() { return paymentCarQueue; }
+    
+    /**
+     * @return The exitCarQueue.
+     */
+    public CarQueue getExitCarQueue() { return exitCarQueue; }
+    
+    /**
+     * Returns the car at a certain location.
+     * 
+     * @param location the location where a car could be.
+     * @return A car at a certain location.
+     */
     public Car getCarAt(Location location) {
         if (!locationIsValid(location)) {
             return null;
@@ -274,6 +369,13 @@ public class ParkingGarageModel extends AbstractModel implements Runnable {
         return cars[location.getFloor()][location.getRow()][location.getPlace()];
     }
 
+    /**
+     * Sets the car at a certain location.
+     * 
+     * @param location The location where the car should be set.
+     * @param car The car that will be placed at the location.
+     * @return returns true if there aren't any cars at this location.
+     */
     public boolean setCarAt(Location location, Car car) {
         if (!locationIsValid(location)) {
             return false;
@@ -288,6 +390,12 @@ public class ParkingGarageModel extends AbstractModel implements Runnable {
         return false;
     }
 
+    /**
+     * Removes a car from a certain location.
+     * 
+     * @param location The location the car should be removed from.
+     * @return The car that is removed from the specified location.
+     */
     public Car removeCarAt(Location location) {
         if (!locationIsValid(location)) {
             return null;
@@ -302,6 +410,9 @@ public class ParkingGarageModel extends AbstractModel implements Runnable {
         return car;
     }
 
+    /**
+     * @return The first free location in the parking garage.
+     */
     public Location getFirstFreeLocation() {
         for (int floor = 0; floor < getNumberOfFloors(); floor++) {
             for (int row = 0; row < getNumberOfRows(); row++) {
@@ -316,6 +427,9 @@ public class ParkingGarageModel extends AbstractModel implements Runnable {
         return null;
     }
 
+    /**
+     * @return The first car ready to leave its parking spot.
+     */
     public Car getFirstLeavingCar() {
         for (int floor = 0; floor < getNumberOfFloors(); floor++) {
             for (int row = 0; row < getNumberOfRows(); row++) {
@@ -331,6 +445,9 @@ public class ParkingGarageModel extends AbstractModel implements Runnable {
         return null;
     }
 
+    /**
+     * Ticks all the cars to remove a minute from the minutes they have left.
+     */
     public void tickCars() {
         for (int floor = 0; floor < getNumberOfFloors(); floor++) {
             for (int row = 0; row < getNumberOfRows(); row++) {
@@ -345,6 +462,11 @@ public class ParkingGarageModel extends AbstractModel implements Runnable {
         }
     }
 
+    /**
+     * Checks if a location is valid, depending on the size of the garage.
+     * @param location the location that needs to be checked.
+     * @return returns true if the specified location is valid.
+     */
     private boolean locationIsValid(Location location) {
         int floor = location.getFloor();
         int row = location.getRow();
