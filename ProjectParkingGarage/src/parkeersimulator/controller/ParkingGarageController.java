@@ -53,8 +53,7 @@ public class ParkingGarageController extends AbstractController implements Actio
 		}
 		
 		if (e.getSource()==plushunderd) {
-			for(int i = 0; i < 100; i++)
-				model.tick();
+				model.tick(100);
 		}
 		
 		if (e.getSource()==start) {

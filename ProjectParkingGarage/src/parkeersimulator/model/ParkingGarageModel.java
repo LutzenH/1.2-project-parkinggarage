@@ -24,7 +24,7 @@ public class ParkingGarageModel extends AbstractModel implements Runnable {
     private int hour = 0;
     private int minute = 0;
 
-    private int tickPause = 1;
+    private int tickPause = 100;
 
     int weekDayArrivals= 100; // average number of arriving cars per hour
     int weekendArrivals = 200; // average number of arriving cars per hour
@@ -84,6 +84,13 @@ public class ParkingGarageModel extends AbstractModel implements Runnable {
     	handleExit();
     	notifyViews();
     	handleEntrance();
+    }
+    
+    public void tick(int amount) {
+    	for(int i = 0; i < amount; i++)
+    	{
+    		tick();
+    	}
     }
 
     private void advanceTime(){
