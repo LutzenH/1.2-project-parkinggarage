@@ -1,5 +1,8 @@
 package parkeersimulator.view;
 
+import java.awt.BorderLayout;
+import java.awt.FlowLayout;
+
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
@@ -43,6 +46,8 @@ public class GraphView extends AbstractView {
     public GraphView(ParkingGarageModel model) {
         super(model);
         
+        setName("Graph #1");
+        
         dataset = new XYSeriesCollection();
         
         graph_data = new XYSeries[2];
@@ -60,7 +65,8 @@ public class GraphView extends AbstractView {
         ///Allow the mouse wheel to scroll.
         panel.setMouseWheelEnabled(true);
         
-        add(panel);
+        this.setLayout(new BorderLayout());
+        add(panel, BorderLayout.CENTER);
     }
     
     /**
@@ -92,7 +98,6 @@ public class GraphView extends AbstractView {
         
         ///Can be used to display shapes around each individual data-point.
         renderer.setBaseShapesVisible(false);
-        
         renderer.setBaseShapesFilled(true);
 
         NumberAxis rangeAxis = (NumberAxis) plot.getRangeAxis();

@@ -9,6 +9,7 @@ import parkeersimulator.model.ParkingGarageModel;
 import parkeersimulator.view.CarParkStepControlView;
 import parkeersimulator.view.CarParkView;
 import parkeersimulator.view.GraphView;
+import parkeersimulator.view.MainFrame;
 import parkeersimulator.view.QueueCountView;
 import parkeersimulator.view.TimeView;
 
@@ -33,9 +34,9 @@ public class Main {
 	private CarParkView carparkview;
 	private QueueCountView queuecountview;
 	private CarParkStepControlView carparkstepcontrolview;
-	private GraphView graphview;
+	private GraphView[] graphviews;
 
-	private JFrame screen;
+	private MainFrame screen;
 	
 	/**
 	 * Constructor of the class Main.
@@ -52,19 +53,16 @@ public class Main {
 		queuecountview = new QueueCountView(model);
 		timeview = new TimeView(model);
 		carparkstepcontrolview = new CarParkStepControlView(model, controller);
-		graphview = new GraphView(model);
+		
+		graphviews = new GraphView[1];
+		graphviews[0] = new GraphView(model);
 		
 		///Layout and instantiation of the JFrame.
-		screen = new JFrame("Parking Garage Simulator");
-		screen.setLayout(new FlowLayout());
+		screen = new MainFrame("Parking Garage Simulator", carparkstepcontrolview, graphviews, carparkview);
 		
-		screen.getContentPane().add(queuecountview);
-		screen.getContentPane().add(timeview);
-		screen.getContentPane().add(carparkview);
-		screen.getContentPane().add(carparkstepcontrolview);
-		screen.getContentPane().add(graphview);
+		//screen.getContentPane().add(queuecountview);
+		//screen.getContentPane().add(timeview);
 		
-		screen.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		screen.pack();
 		screen.setSize(800, 800);
 		
