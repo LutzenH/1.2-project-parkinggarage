@@ -23,12 +23,22 @@ public class CarParkView extends AbstractView {
     private static final int X_OFFSET_PLACE = 21;
     private static final int Y_OFFSET_PLACE = 10;
     
+  ///The x and y values used for sizing parking places
+    private static final int X_WIDTH_PLACE = 20;
+    private static final int Y_WIDTH_PLACE = 10;
+    
+    ///The t offset used for spacing between each level of the parking garage
+    private static final int Y_OFFSET_FLOORS = 20;
+    private static final int Y_OFFSET_FLOORS_DEFAULT = 300;
+    
     ///The x offset used for spacing between each column of parking placed
     private static final int X_OFFSET_COLUMN = 55;
-    ///The x offset used for spacing between each level of the parking garage
-    private static final int X_OFFSET_FLOORS = 280;
+    
     ///The x factor used for calculating which row each parking space goes in
     private static final float X_ROWPOS_FACTOR = 0.5f;
+    
+  ///The factor used sizing the entire parking garage
+    private static final int SIZE_FACTOR = 1;
     
     private Dimension size;
     private Image carParkImage;    
@@ -102,9 +112,17 @@ public class CarParkView extends AbstractView {
     private void drawPlace(Graphics graphics, Location location, Color color) {
         graphics.setColor(color);
         graphics.fillRect(
-                location.getFloor() * X_OFFSET_FLOORS + ((int)Math.floor(location.getRow() * X_ROWPOS_FACTOR)) * X_OFFSET_COLUMN + (location.getRow() % 2) * X_OFFSET_PLACE + X_OFFSET,
-                location.getPlace() * Y_OFFSET_PLACE + Y_OFFSET,
-                20 - 1,
-                10 - 1); // TODO use dynamic size or constants
+                ((int)Math.floor(location.getRow() * X_ROWPOS_FACTOR) * X_OFFSET_COLUMN + (location.getRow() % 2) * X_OFFSET_PLACE + X_OFFSET) * SIZE_FACTOR,
+                (location.getPlace() * Y_OFFSET_PLACE + location.getFloor() * (Y_OFFSET_FLOORS + Y_OFFSET_FLOORS_DEFAULT) + Y_OFFSET) * SIZE_FACTOR,
+                (X_WIDTH_PLACE - 1) * SIZE_FACTOR,
+                (Y_WIDTH_PLACE - 1) * SIZE_FACTOR); // TODO use dynamic size or constants
+        
+        /* OLD VERSION
+         * graphics.fillRect(
+                    location.getFloor() * X_OFFSET_FLOORS + ((int)Math.floor(location.getRow() * X_ROWPOS_FACTOR)) * X_OFFSET_COLUMN + (location.getRow() % 2) * X_OFFSET_PLACE + X_OFFSET,
+                    location.getPlace() * Y_OFFSET_PLACE + Y_OFFSET,
+                    X_WIDTH_PLACE - 1,
+                    Y_WIDTH_PLACE - 1); // TODO use dynamic size or constants
+         * */
     }
 }
