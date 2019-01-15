@@ -15,6 +15,20 @@ import parkeersimulator.model.location.Location;
  * class of the view of the simulation.
  */
 public class CarParkView extends AbstractView {
+	///The x and y offset used for positioning the entire parking garage on the window
+    private static final int X_OFFSET = 10; 
+    private static final int Y_OFFSET = 10;
+    
+    ///The x and y offset used for spacing between parking places
+    private static final int X_OFFSET_PLACE = 21;
+    private static final int Y_OFFSET_PLACE = 10;
+    
+    ///The x offset used for spacing between each column of parking placed
+    private static final int X_OFFSET_COLUMN = 55;
+    ///The x offset used for spacing between each level of the parking garage
+    private static final int X_OFFSET_FLOORS = 280;
+    ///The x factor used for calculating which row each parking space goes in
+    private static final float X_ROWPOS_FACTOR = 0.5f;
     
     private Dimension size;
     private Image carParkImage;    
@@ -88,8 +102,8 @@ public class CarParkView extends AbstractView {
     private void drawPlace(Graphics graphics, Location location, Color color) {
         graphics.setColor(color);
         graphics.fillRect(
-                location.getFloor() * 260 + (1 + (int)Math.floor(location.getRow() * 0.5)) * 75 + (location.getRow() % 2) * 20,
-                60 + location.getPlace() * 10,
+                location.getFloor() * X_OFFSET_FLOORS + ((int)Math.floor(location.getRow() * X_ROWPOS_FACTOR)) * X_OFFSET_COLUMN + (location.getRow() % 2) * X_OFFSET_PLACE + X_OFFSET,
+                location.getPlace() * Y_OFFSET_PLACE + Y_OFFSET,
                 20 - 1,
                 10 - 1); // TODO use dynamic size or constants
     }

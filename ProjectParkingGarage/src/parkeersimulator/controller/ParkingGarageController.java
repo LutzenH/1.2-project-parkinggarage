@@ -13,7 +13,7 @@ import parkeersimulator.model.ParkingGarageModel;
 public class ParkingGarageController extends AbstractController {
 	
 	///The type of event that should be performed when a certain button or field has been triggered. 
-	public enum ActionType {EVENT_PLUSONE, EVENT_PLUSHUNDRED, EVENT_START, EVENT_STOP};
+	public enum ActionType {EVENT_TICKPAUSEAMOUNT, EVENT_TICKAMOUNT, EVENT_TICKSTART, EVENT_TICKSTOP};
 	
 	/**
 	 * The constructor of ParkingGarageController
@@ -34,16 +34,16 @@ public class ParkingGarageController extends AbstractController {
 	public boolean performAction(ActionType actionType, HashMap<String, Object> data) {
 		switch(actionType)
 		{
-			case EVENT_PLUSONE:
-				model.tick();
+			case EVENT_TICKPAUSEAMOUNT:
+				model.setTickPause((Integer)data.get("amount"));
 				return true;
-			case EVENT_PLUSHUNDRED:
-				model.tick(100);
+			case EVENT_TICKAMOUNT:
+				model.tick((Integer)data.get("amount"));
 				return true;
-			case EVENT_START:
+			case EVENT_TICKSTART:
 				model.start();
 				return true;
-			case EVENT_STOP:
+			case EVENT_TICKSTOP:
 				model.stop();
 				return true;
 		}

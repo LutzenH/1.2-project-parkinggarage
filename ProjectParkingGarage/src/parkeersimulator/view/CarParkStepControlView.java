@@ -2,9 +2,15 @@ package parkeersimulator.view;
 
 import java.awt.Color;
 import java.awt.FlowLayout;
+import java.awt.Font;
+import java.util.HashMap;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
+import javax.swing.JSlider;
+import javax.swing.JSpinner;
+import javax.swing.JTextField;
+import javax.swing.SpinnerNumberModel;
 
 import parkeersimulator.controller.ParkingGarageController;
 import parkeersimulator.controller.ParkingGarageController.ActionType;
@@ -20,10 +26,14 @@ import parkeersimulator.model.ParkingGarageModel;
  */
 public class CarParkStepControlView extends AbstractControllableView{
 	///Declaration of the buttons in this view.
-	private JButton plusone;
-	private JButton plushundred;
-	private JButton start;
-	private JButton stop;
+	private JSlider tickPauseAmountSlider;
+	private JButton tickPauseAmountButton;
+	
+	private JSpinner tickAmountInput;
+	private JButton tickAmountButton;
+	
+	private JButton tickStartButton;
+	private JButton tickStopButton;
 	
 	/**
 	 * Constructor of CarParkStepControlView
@@ -34,25 +44,43 @@ public class CarParkStepControlView extends AbstractControllableView{
 		super(model, controller);
 		
 		setSize(450, 50);
-		plusone=new JButton("+1");
-		plusone.addActionListener(e -> controller.performAction(ActionType.EVENT_PLUSONE));
+
+		//Tick pause amount
+		tickPauseAmountSlider = new JSlider();
+		tickPauseAmountSlider.setValue(100);
+		tickPauseAmountSlider.setMinimum(1);
+		tickPauseAmountSlider.setMaximum(1000);
+		tickPauseAmountButton = new JButton("Set");
+		tickPauseAmountButton.addActionListener(e -> controller.performAction(ActionType.EVENT_TICKPAUSEAMOUNT, new HashMap<String, Object>() {{ put("amount", tickPauseAmountSlider.getValue()); }}));
 		
-		plushundred=new JButton("+100");
-		plushundred.addActionListener(e -> controller.performAction(ActionType.EVENT_PLUSHUNDRED));
+		//Tick amount
+		tickAmountInput = new JSpinner();
+		tickAmountInput.setModel(new SpinnerNumberModel(100, 1, 1000, 1));
+		tickAmountButton = new JButton("Step");
 		
-		start=new JButton("Start");
-		start.addActionListener(e -> controller.performAction(ActionType.EVENT_START));
-		stop=new JButton("Stop");
-		stop.addActionListener(e -> controller.performAction(ActionType.EVENT_STOP));
+		tickAmountButton.addActionListener(e -> controller.performAction(ActionType.EVENT_TICKAMOUNT, new HashMap<String, Object>() {{ put("amount", tickAmountInput.getValue()); }}));
+		
+		//Tick start and stop
+		tickStartButton = new JButton("Start");
+		tickStartButton.addActionListener(e -> controller.performAction(ActionType.EVENT_TICKSTART));
+		tickStopButton = new JButton("Stop");
+		tickStopButton.addActionListener(e -> controller.performAction(ActionType.EVENT_TICKSTOP));
 		
 		this.setLayout(new FlowLayout());
-		add(plusone);
-		add(plushundred);
-		add(start);
-		add(stop);
-		plusone.setBounds(140, 10, 70, 30);
-		start.setBounds(229, 10, 70, 30);
-		stop.setBounds(319, 10, 70, 30);
+		
+		add(tickPauseAmountSlider);
+		add(tickPauseAmountButton);
+		add(tickAmountInput);
+		add(tickAmountButton);
+		add(tickStartButton);
+		add(tickStopButton);
+		
+		tickPauseAmountSlider.setBounds(140, 10, 70, 30);
+		tickPauseAmountButton.setBounds(140, 10, 70, 30);
+		tickAmountInput.setBounds(140, 10, 70, 30);
+		tickAmountButton.setBounds(140, 10, 70, 30);
+		tickStartButton.setBounds(229, 10, 70, 30);
+		tickStopButton.setBounds(319, 10, 70, 30);
 		
 		this.setBorder(BorderFactory.createLineBorder(Color.black));
 

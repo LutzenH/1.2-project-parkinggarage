@@ -292,6 +292,15 @@ public class ParkingGarageModel extends AbstractModel implements Runnable {
     }
     
     /**
+     * @return The current pause between ticks.
+     */
+    public int getTickPause() { return tickPause; }
+    /**
+     * Sets the pause between ticks.
+     */
+    public void setTickPause(int amount) { tickPause = amount; }
+    
+    /**
      * @return The current day of the week.
      */
     public int getDay() { return day; }
