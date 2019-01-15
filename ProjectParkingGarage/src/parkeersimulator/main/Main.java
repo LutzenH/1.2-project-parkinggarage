@@ -8,6 +8,7 @@ import parkeersimulator.controller.ParkingGarageController;
 import parkeersimulator.model.ParkingGarageModel;
 import parkeersimulator.view.CarParkStepControlView;
 import parkeersimulator.view.CarParkView;
+import parkeersimulator.view.GraphView;
 import parkeersimulator.view.QueueCountView;
 import parkeersimulator.view.TimeView;
 
@@ -32,6 +33,7 @@ public class Main {
 	private CarParkView carparkview;
 	private QueueCountView queuecountview;
 	private CarParkStepControlView carparkstepcontrolview;
+	private GraphView graphview;
 
 	private JFrame screen;
 	
@@ -50,14 +52,18 @@ public class Main {
 		queuecountview = new QueueCountView(model);
 		timeview = new TimeView(model);
 		carparkstepcontrolview = new CarParkStepControlView(model, controller);
+		graphview = new GraphView(model);
 		
 		///Layout and instantiation of the JFrame.
 		screen = new JFrame("Parking Garage Simulator");
 		screen.setLayout(new FlowLayout());
+		
 		screen.getContentPane().add(queuecountview);
 		screen.getContentPane().add(timeview);
 		screen.getContentPane().add(carparkview);
 		screen.getContentPane().add(carparkstepcontrolview);
+		screen.getContentPane().add(graphview);
+		
 		screen.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		screen.pack();
 		screen.setSize(800, 800);
