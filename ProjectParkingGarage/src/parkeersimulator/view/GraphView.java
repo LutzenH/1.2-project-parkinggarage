@@ -88,7 +88,7 @@ public class GraphView extends AbstractView {
      */
     private JFreeChart createChart(XYDataset dataset) {
         ///Initiates the chart.
-        JFreeChart chart = ChartFactory.createXYLineChart("Cars in queue", "time", "amount", dataset, PlotOrientation.VERTICAL, true, true, false);
+        JFreeChart chart = ChartFactory.createXYLineChart("Cars in queue", "Time (minutes)", "Amount", dataset, PlotOrientation.VERTICAL, true, true, false);
 
         XYPlot plot = (XYPlot) chart.getPlot();
         plot.setDomainPannable(true);
@@ -107,7 +107,7 @@ public class GraphView extends AbstractView {
     }
     
     /**
-     * Repaints this view, will only update the data-set every 60th tick.
+     * Repaints this view, will only update the data-set every DATA_COLLECT_FREQUENTY'th tick.
      */
     @Override
     public void updateView() {

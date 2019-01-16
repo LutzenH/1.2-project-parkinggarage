@@ -4,6 +4,10 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
+
+import parkeersimulator.controller.ParkingGarageController;
+import parkeersimulator.controller.ParkingGarageController.ActionType;
+
 import java.awt.Dimension;
 import javax.swing.JMenuBar;
 import javax.swing.JMenu;
@@ -11,13 +15,15 @@ import javax.swing.JMenuItem;
 
 public class MainFrame extends JFrame {
 
-	public MainFrame(String string, JPanel controlPanel, JPanel[] graphPanels, JPanel simulationPanel) {
+	JSplitPane splitPane;
+	
+	public MainFrame(String string, JPanel controlPanel, JPanel[] tabbedPanels, JPanel simulationPanel) {
 		super(string);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		setJMenuBar(createMenuBar());
 		
-		JSplitPane splitPane = new JSplitPane();
+		splitPane = new JSplitPane();
 		this.getContentPane().add(splitPane);
 		
 		JSplitPane splitPane_1 = new JSplitPane();
@@ -32,7 +38,7 @@ public class MainFrame extends JFrame {
 		
 		splitPane_1.setLeftComponent(tabbedPane);
 		
-		for(JPanel panel : graphPanels)
+		for(JPanel panel : tabbedPanels)
 		{
 			tabbedPane.addTab(panel.getName(), null, panel, null);
 		}
@@ -40,6 +46,11 @@ public class MainFrame extends JFrame {
 		splitPane.setRightComponent(simulationPanel);
 	}
 
+	public void addResizeProperty(ParkingGarageController controller)
+	{
+		splitPane.addPropertyChangeListener(e -> controller.performAction(ActionType.EVENT_FRAME_RESIZE));
+	}
+	
 	private JMenuBar createMenuBar() {
 		JMenuBar menuBar = new JMenuBar();
 		

@@ -13,7 +13,7 @@ import parkeersimulator.model.ParkingGarageModel;
 public class ParkingGarageController extends AbstractController {
 	
 	///The type of event that should be performed when a certain button or field has been triggered. 
-	public enum ActionType {EVENT_TICKPAUSEAMOUNT, EVENT_TICKAMOUNT, EVENT_TICKSTART, EVENT_TICKSTOP};
+	public enum ActionType {EVENT_TICKPAUSEAMOUNT, EVENT_TICKAMOUNT, EVENT_TICKSTART, EVENT_TICKSTOP, EVENT_FRAME_RESIZE};
 	
 	/**
 	 * The constructor of ParkingGarageController
@@ -45,6 +45,9 @@ public class ParkingGarageController extends AbstractController {
 				return true;
 			case EVENT_TICKSTOP:
 				model.stop();
+				return true;
+			case EVENT_FRAME_RESIZE:
+				model.notifyViews();
 				return true;
 		}
 		return false;

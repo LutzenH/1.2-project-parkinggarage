@@ -1,8 +1,6 @@
 package parkeersimulator.main;
 
-import java.awt.FlowLayout;
-
-import javax.swing.JFrame;
+import javax.swing.JPanel;
 
 import parkeersimulator.controller.ParkingGarageController;
 import parkeersimulator.model.ParkingGarageModel;
@@ -34,7 +32,7 @@ public class Main {
 	private CarParkView carparkview;
 	private QueueCountView queuecountview;
 	private CarParkStepControlView carparkstepcontrolview;
-	private GraphView[] graphviews;
+	private JPanel[] tabbedviews;
 
 	private MainFrame screen;
 	
@@ -54,11 +52,12 @@ public class Main {
 		timeview = new TimeView(model);
 		carparkstepcontrolview = new CarParkStepControlView(model, controller);
 		
-		graphviews = new GraphView[1];
-		graphviews[0] = new GraphView(model);
+		tabbedviews = new JPanel[1];
+		tabbedviews[0] = new GraphView(model);
+		tabbedviews[0].setName("Cars in queue");
 		
 		///Layout and instantiation of the JFrame.
-		screen = new MainFrame("Parking Garage Simulator", carparkstepcontrolview, graphviews, carparkview);
+		screen = new MainFrame("Parking Garage Simulator", carparkstepcontrolview, tabbedviews, carparkview);
 		
 		//screen.getContentPane().add(queuecountview);
 		//screen.getContentPane().add(timeview);
@@ -71,6 +70,8 @@ public class Main {
 		
 		///Makes this JFrame visible.
 		screen.setVisible(true);
+		
+		screen.addResizeProperty(controller);
 	}
 	
 	/**
