@@ -1,5 +1,6 @@
 package parkeersimulator.model;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 import parkeersimulator.model.car.AdHocCar;
@@ -41,11 +42,18 @@ public class ParkingGarageModel extends AbstractModel implements Runnable {
     ///The amount of time the thread should wait before executing the next tick().
     private int tickPause = 100;
 
-    ///The average number of arriving cars per hour.
-    int weekDayArrivals= 100;
-    int weekendArrivals = 200;
-    int weekDayPassArrivals= 50;
-    int weekendPassArrivals = 5;
+    ///The baseline number of cars arriving in an hour.
+    int standardArrivals = 100;
+    int adHocArrivals;
+    int passArrivals;
+    
+    ///The multipliers of cars arriving in an hour.
+    float adHocArrivals_week = 1f;
+    float adHocArrivals_weekend = 2f;
+    float adHocArrivals_event = 2f;
+    float passArrivals_week = 0.5f;
+    float passArrivals_weekend = 0.05f;
+    float passArrivals_event = 0f;
   
     /// number of cars that can enter per minute
     int enterSpeed = 3; 
@@ -118,6 +126,7 @@ public class ParkingGarageModel extends AbstractModel implements Runnable {
     	tickCars();
     	handleExit();
     	notifyViews();
+    	setArrivals();
     	handleEntrance();
     }
     
@@ -146,6 +155,7 @@ public class ParkingGarageModel extends AbstractModel implements Runnable {
         while (hour > 23) {
             hour -= 24;
             day++;
+            checkForEvent();
         }
         while (day > 6) {
             day -= 7;
@@ -175,9 +185,9 @@ public class ParkingGarageModel extends AbstractModel implements Runnable {
      * Puts a certain amount of cars in the queue depending on there average values / type.
      */
     private void carsArriving(){
-    	int numberOfCars=getNumberOfCars(weekDayArrivals, weekendArrivals);
+    	int numberOfCars=getNumberOfCars(adHocArrivals);
         addArrivingCars(numberOfCars, AD_HOC);    	
-    	numberOfCars=getNumberOfCars(weekDayPassArrivals, weekendPassArrivals);
+    	numberOfCars=getNumberOfCars(passArrivals);
         addArrivingCars(numberOfCars, PASS);   
     }
 
@@ -246,13 +256,11 @@ public class ParkingGarageModel extends AbstractModel implements Runnable {
      * @param weekend The average amount of cars that should enter the parking garage in the weekend per hour.
      * @return The number of cars that arrive per minute.
      */
-    private int getNumberOfCars(int weekDay, int weekend){
+    private int getNumberOfCars(int arrivalNum){
         Random random = new Random();
 
         // Get the average number of cars that arrive per hour.
-        int averageNumberOfCarsPerHour = day < 5
-                ? weekDay
-                : weekend;
+        int averageNumberOfCarsPerHour = arrivalNum;
 
         // Calculate the number of cars that arrive this minute.
         double standardDeviation = averageNumberOfCarsPerHour * 0.3;
@@ -484,5 +492,39 @@ public class ParkingGarageModel extends AbstractModel implements Runnable {
             return false;
         }
         return true;
+    }
+    
+    
+    boolean isEvent = false;
+    
+    private void checkForEvent() {
+    	double chance = Math.random();
+    	if(chance < 50 * 0.01) {//50%
+    		isEvent = true;
+    		System.out.println("Event is happening");
+    	}
+    	else {
+    		isEvent = false;
+    		System.out.println("Event has stopped");
+    	}
+    	//else
+    		//System.out.println("Event chance");
+    	System.out.println("adHocArrivals: " + adHocArrivals + " passArrivals: " + passArrivals);
+    }
+
+    private void setArrivals() {
+    	if(day <= 5) {
+    		adHocArrivals = (int)Math.floor(standardArrivals * adHocArrivals_week);
+        	passArrivals = (int)Math.floor(standardArrivals * passArrivals_week);
+    	}
+    	else if(day > 5) {
+    		adHocArrivals = (int)Math.floor(standardArrivals * adHocArrivals_weekend);
+        	passArrivals = (int)Math.floor(standardArrivals * passArrivals_weekend);
+    	}
+    	
+    	if(isEvent) {
+    		adHocArrivals = (int)Math.floor(standardArrivals * adHocArrivals_weekend);
+    		passArrivals = (int)Math.floor(standardArrivals * passArrivals_weekend);
+    	}
     }
 }
