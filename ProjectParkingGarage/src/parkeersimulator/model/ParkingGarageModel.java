@@ -32,6 +32,8 @@ public class ParkingGarageModel extends AbstractModel implements Runnable {
     private CarQueue entrancePassQueue;
     private CarQueue paymentCarQueue;
     private CarQueue exitCarQueue;
+    
+    private int eventChancePercentage = 10;
 
     //TODO Replace this with a more robust system.
     ///Declaration of the time of the week.
@@ -499,7 +501,7 @@ public class ParkingGarageModel extends AbstractModel implements Runnable {
     
     private void checkForEvent() {
     	double chance = Math.random();
-    	if(chance < 50 * 0.01) {//50%
+    	if(chance < eventChancePercentage * 0.01) {//50%
     		isEvent = true;
     		System.out.println("Event is happening");
     	}
@@ -507,9 +509,6 @@ public class ParkingGarageModel extends AbstractModel implements Runnable {
     		isEvent = false;
     		System.out.println("Event has stopped");
     	}
-    	//else
-    		//System.out.println("Event chance");
-    	System.out.println("adHocArrivals: " + adHocArrivals + " passArrivals: " + passArrivals);
     }
 
     private void setArrivals() {
