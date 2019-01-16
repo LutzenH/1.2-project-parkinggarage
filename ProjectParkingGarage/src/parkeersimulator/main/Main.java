@@ -6,10 +6,11 @@ import parkeersimulator.controller.ParkingGarageController;
 import parkeersimulator.model.ParkingGarageModel;
 import parkeersimulator.view.CarParkStepControlView;
 import parkeersimulator.view.CarParkView;
-import parkeersimulator.view.GraphView;
 import parkeersimulator.view.MainFrame;
 import parkeersimulator.view.QueueCountView;
 import parkeersimulator.view.TimeView;
+import parkeersimulator.view.graph.CarCountGraphView;
+import parkeersimulator.view.graph.QueueGraphView;
 
 /**
  * The Entry point for launching the program.
@@ -52,9 +53,11 @@ public class Main {
 		timeview = new TimeView(model);
 		carparkstepcontrolview = new CarParkStepControlView(model, controller);
 		
-		tabbedviews = new JPanel[1];
-		tabbedviews[0] = new GraphView(model);
+		tabbedviews = new JPanel[2];
+		tabbedviews[0] = new QueueGraphView(model);
 		tabbedviews[0].setName("Cars in queue");
+		tabbedviews[1] = new CarCountGraphView(model);
+		tabbedviews[1].setName("Car Count");
 		
 		///Layout and instantiation of the JFrame.
 		screen = new MainFrame("Parking Garage Simulator", carparkstepcontrolview, tabbedviews, carparkview);

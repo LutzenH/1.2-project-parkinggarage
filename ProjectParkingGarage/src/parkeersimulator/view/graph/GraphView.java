@@ -1,4 +1,4 @@
-package parkeersimulator.view;
+package parkeersimulator.view.graph;
 
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
@@ -15,6 +15,7 @@ import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
 
 import parkeersimulator.model.ParkingGarageModel;
+import parkeersimulator.view.AbstractView;
 
 /**
  * GraphView is a View used for displaying GUI Graphs using the JFreeChart API.
@@ -23,43 +24,41 @@ import parkeersimulator.model.ParkingGarageModel;
  * JFreeChart is released under the LGPL-license,
  * site: http://www.jfree.org/jfreechart/
  */
-public class GraphView extends AbstractView {
+public abstract class GraphView extends AbstractView {
 	///Time between ticks for collecting data.
-	private static final int DATA_COLLECT_FREQUENTY = 60;
+	protected int dataCollectFrequency;
 	
 	//TODO Temporary placeholder until time has been properly implemented.
-	private int time = 0;
+	protected int time = 0;
 	
 	///Declaration of dataset collection of the data that needs to be displayed.
-	private XYSeriesCollection dataset;
+	protected XYSeriesCollection dataset;
+	
 	///Declaration of an Array of each individual line represented in the graph.
-	private XYSeries[] graph_data;
+	protected XYSeries[] graph_data;
 	
 	///Declaration of JFreeChart Swing panels.
-	private JFreeChart chart;
-	private ChartPanel panel;
+	protected JFreeChart chart;
+	protected ChartPanel panel;
 	
 	/**
 	 * Constructor of GraphView
 	 * @param model The ParkingGarageModel this view uses to display data.
 	 */
-    public GraphView(ParkingGarageModel model) {
+    public GraphView(ParkingGarageModel model, String tableName, XYSeries[] dataSeries, String xAxisName, String yAxisName, int dataCollectFrequency) {
         super(model);
         
-        setName("Graph #1");
+        this.dataCollectFrequency = dataCollectFrequency;
         
         dataset = new XYSeriesCollection();
         
-        graph_data = new XYSeries[2];
-        graph_data[0] = new XYSeries("AdHocCar");
-        graph_data[1] = new XYSeries("ParkingPassCar");
+        this.graph_data = dataSeries;
         
-        for(XYSeries data : graph_data)
-        {
-            dataset.addSeries(data);
+        for(int i = 0; i < graph_data.length; i++) {
+            dataset.addSeries(graph_data[i]);
         }
         
-        chart = createChart(dataset);
+        chart = createChart(dataset, tableName, xAxisName, yAxisName);
         panel = new ChartPanel(chart);
         
         ///Allow the mouse wheel to scroll.
@@ -72,13 +71,15 @@ public class GraphView extends AbstractView {
     /**
      * Updates the data in the data-set and redisplays it. if the time (x) is already in the data-set it will be overwritten.
      */
-    private void updateDataset() {
+    protected abstract void updateDataset();
+    /*
+	{
     	graph_data[0].addOrUpdate(time, model.getEntranceCarQueue().carsInQueue());
     	graph_data[1].addOrUpdate(time, model.getEntrancePassQueue().carsInQueue());  	
     	
     	///Refreshes the UI element to display the new data in the UI.
-    	panel.updateUI();
     }
+     */
 
     /**
      * Creates a JFreeChart which can be used to display data.
@@ -86,9 +87,9 @@ public class GraphView extends AbstractView {
      * @param dataset The data-set that should be displayed in this chart
      * @return A JFreeChart which can be used to display data.
      */
-    private JFreeChart createChart(XYDataset dataset) {
+    private JFreeChart createChart(XYDataset dataset, String tableName, String xAxisName, String yAxisName) {
         ///Initiates the chart.
-        JFreeChart chart = ChartFactory.createXYLineChart("Cars in queue", "Time (minutes)", "Amount", dataset, PlotOrientation.VERTICAL, true, true, false);
+        JFreeChart chart = ChartFactory.createXYLineChart(tableName, xAxisName, yAxisName, dataset, PlotOrientation.VERTICAL, true, true, false);
 
         XYPlot plot = (XYPlot) chart.getPlot();
         plot.setDomainPannable(true);
@@ -111,8 +112,10 @@ public class GraphView extends AbstractView {
      */
     @Override
     public void updateView() {
-    	if(time % DATA_COLLECT_FREQUENTY == 0)
+    	if(time % dataCollectFrequency == 0)
     		updateDataset();
+    	
+    	panel.updateUI();
     	
     	time++;
     	

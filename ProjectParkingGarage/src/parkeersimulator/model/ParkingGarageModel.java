@@ -23,8 +23,7 @@ public class ParkingGarageModel extends AbstractModel implements Runnable {
 	
 	//TODO Replace these different types with an Enum.
 	///Id of the different types of cars.
-	private static final String AD_HOC = "1";
-	private static final String PASS = "2";
+	public enum carType { AD_HOC, PASS }
 	
 	///Declaration of the different queues in the simulation.
 	private CarQueue entranceCarQueue;
@@ -176,9 +175,9 @@ public class ParkingGarageModel extends AbstractModel implements Runnable {
      */
     private void carsArriving(){
     	int numberOfCars=getNumberOfCars(weekDayArrivals, weekendArrivals);
-        addArrivingCars(numberOfCars, AD_HOC);    	
+        addArrivingCars(numberOfCars, carType.AD_HOC);    	
     	numberOfCars=getNumberOfCars(weekDayPassArrivals, weekendPassArrivals);
-        addArrivingCars(numberOfCars, PASS);   
+        addArrivingCars(numberOfCars, carType.PASS);   
     }
 
     /**
@@ -266,7 +265,7 @@ public class ParkingGarageModel extends AbstractModel implements Runnable {
      * @param numberOfCars Amount of cars that should be added to the queue.
      * @param type Type of car that should be added to the queue.
      */
-    private void addArrivingCars(int numberOfCars, String type){
+    private void addArrivingCars(int numberOfCars, carType type){
     	switch(type) {
     	case AD_HOC: 
             for (int i = 0; i < numberOfCars; i++) {
@@ -344,6 +343,35 @@ public class ParkingGarageModel extends AbstractModel implements Runnable {
      * @return A multi-dimensional array of all cars in the parking garage, format: car[floor][row][place]
      */
     public Car[][][] getCars() { return cars; }
+    
+    //TODO Optimize this method.
+    /**
+     * Get the total car count of a certain car type.
+     * @param type The type of car that should be used to calculate the car count.
+     * @return amount of cars of this type currently in the parking garage.
+     */
+    public int getCarCount(carType type) {
+    	int count = 0;
+    	
+    	for(Car[][] floor : cars) {
+    		for(Car[] row : floor) {
+        		for(Car car : row) {
+        			switch(type) {
+	        			case AD_HOC:
+	        				if(car instanceof AdHocCar)
+	        					count++;
+	        				break;
+	        			case PASS:
+	        				if(car instanceof ParkingPassCar)
+	        					count++;
+	        				break;
+        			}
+            	}
+        	}
+    	}
+    	
+    	return count;
+    }
     
     /**
      * @return The entranceCarQueue.
