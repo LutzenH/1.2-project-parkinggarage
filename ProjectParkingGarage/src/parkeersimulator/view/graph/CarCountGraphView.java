@@ -13,7 +13,8 @@ public class CarCountGraphView extends GraphView {
 				"Total Car Count",
 				new XYSeries[] {
 						new XYSeries("AdHocCar"),
-						new XYSeries("ParkingPassCar")
+						new XYSeries("ParkingPassCar"),
+						new XYSeries("ReservationCar")
 				},
 				"time (minutes)",
 				"amount",
@@ -25,6 +26,7 @@ public class CarCountGraphView extends GraphView {
 	protected void updateDataset() {
 		graph_data[0].addOrUpdate(time, model.getCarCount(carType.AD_HOC));
 		graph_data[1].addOrUpdate(time, model.getCarCount(carType.PASS));
+		graph_data[2].addOrUpdate(time, model.getCarCount(carType.RESERVERATION_CAR));
 	}
 
 }
