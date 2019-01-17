@@ -50,11 +50,12 @@ public class ParkingGarageModel extends AbstractModel implements Runnable {
     
     ///The multipliers of cars arriving in an hour.
     float adHocArrivals_week = 1f;
-    float adHocArrivals_weekend = 2f;
-    float adHocArrivals_event = 2f;
+    float adHocArrivals_weekend = 1.7f;
+    float adHocArrivals_event = 2.1f;
+    
     float passArrivals_week = 0.5f;
     float passArrivals_weekend = 0.05f;
-    float passArrivals_event = 0f;
+    float passArrivals_eventWeek = 0.3f;
   
     /// number of cars that can enter per minute
     int enterSpeed = 3; 
@@ -300,6 +301,63 @@ public class ParkingGarageModel extends AbstractModel implements Runnable {
         exitCarQueue.addCar(car);
     }
     
+    
+    /**
+     * @return The current adHocArrivals_week in percent.
+     */
+    public Integer getAdHocArrivalsPercent_week() { return Math.round(adHocArrivals_week * 100f); }
+    /**
+     * Sets the multiplier for adHoc cars arriving during standard weeks.
+     */
+    public void setAdHocArrivals_week(float amount) {adHocArrivals_week = amount / 100f; }
+    
+    /**
+     * @return The current adHocArrivals_weekend in percent.
+     */
+    public Integer getAdHocArrivals_weekend() { return Math.round(adHocArrivals_weekend * 100f); }
+    /**
+     * Sets the multiplier for adHoc cars arriving during weekends.
+     */
+    public void setAdHocArrivals_weekend(float amount) {adHocArrivals_weekend = amount / 100f; }
+    
+    /**
+     * @return The current adHocArrivals_event in percent.
+     */
+    public Integer getAdHocArrivals_event() { return Math.round(adHocArrivals_event * 100f); }
+    /**
+     * Sets the multiplier for adHoc cars arriving at events.
+     */
+    public void setAdHocArrivals_event(float amount) {adHocArrivals_event = amount / 100f; }
+    
+    
+    /**
+     * @return The current passArrivals_week in percent.
+     */
+    public Integer getPassArrivals_week() { return Math.round(passArrivals_week * 100f); }
+    /**
+     * Sets the multiplier for pass cars arriving during standard weeks.
+     */
+    public void setPassArrivals_week(float amount) {passArrivals_week = amount / 100f; }
+    
+    /**
+     * @return The current passArrivals_weekend in percent.
+     */
+    public Integer getPassArrivals_weekend() { return Math.round(passArrivals_weekend * 100f); }
+    /**
+     * Sets the multiplier for pass cars arriving during weekends.
+     */
+    public void setPassArrivals_weekend(float amount) {passArrivals_weekend = amount / 100f; }
+    
+    /**
+     * @return The current passArrivals_eventWeek in percent.
+     */
+    public Integer getPassArrivals_eventWeek() { return Math.round(passArrivals_eventWeek * 100f); }
+    /**
+     * Sets the multiplier for pass cars arriving at events during standard weeks.
+     */
+    public void setPassArrivals_eventWeek(float amount) {passArrivals_eventWeek = amount / 100f; }
+    
+    
     /**
      * @return The current pause between ticks.
      */
@@ -531,7 +589,7 @@ public class ParkingGarageModel extends AbstractModel implements Runnable {
     	double chance = Math.random();
     	if(chance < eventChancePercentage * 0.01) {//50%
     		isEvent = true;
-    		System.out.println("Event is happening");
+    		System.out.println("Event has started");
     	}
     	else {
     		isEvent = false;
@@ -540,6 +598,7 @@ public class ParkingGarageModel extends AbstractModel implements Runnable {
     }
 
     private void setArrivals() {
+    	//Handle normal days
     	if(day <= 5) {
     		adHocArrivals = (int)Math.floor(standardArrivals * adHocArrivals_week);
         	passArrivals = (int)Math.floor(standardArrivals * passArrivals_week);
@@ -549,9 +608,16 @@ public class ParkingGarageModel extends AbstractModel implements Runnable {
         	passArrivals = (int)Math.floor(standardArrivals * passArrivals_weekend);
     	}
     	
-    	if(isEvent) {
+    	//Handle events
+    	if(isEvent && day <= 5) { //In the week there should be a few pass holders
+    		adHocArrivals = (int)Math.floor(standardArrivals * adHocArrivals_weekend);
+    		passArrivals = (int)Math.floor(standardArrivals * passArrivals_eventWeek);
+    	}
+    	else if(isEvent && day > 5) { //In the weekend there should be no pass holders
     		adHocArrivals = (int)Math.floor(standardArrivals * adHocArrivals_weekend);
     		passArrivals = (int)Math.floor(standardArrivals * passArrivals_weekend);
     	}
+    	
+    	System.out.println("adHocArrivals_week: " + adHocArrivals_week);
     }
 }

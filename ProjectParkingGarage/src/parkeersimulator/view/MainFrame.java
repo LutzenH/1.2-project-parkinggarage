@@ -1,5 +1,6 @@
 package parkeersimulator.view;
 
+import javax.swing.BoxLayout;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
@@ -9,6 +10,8 @@ import parkeersimulator.controller.ParkingGarageController;
 import parkeersimulator.controller.ParkingGarageController.ActionType;
 
 import java.awt.Dimension;
+import java.awt.FlowLayout;
+
 import javax.swing.JMenuBar;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
@@ -29,7 +32,8 @@ public class MainFrame extends JFrame {
 		JSplitPane splitPane_1 = new JSplitPane();
 		splitPane_1.setOrientation(JSplitPane.VERTICAL_SPLIT);
 		splitPane.setLeftComponent(splitPane_1);
-		
+
+		controlPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 5));
 		splitPane_1.setRightComponent(controlPanel);
 		
 		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.BOTTOM);
