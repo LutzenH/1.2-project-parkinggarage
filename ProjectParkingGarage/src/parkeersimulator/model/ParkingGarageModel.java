@@ -6,6 +6,7 @@ import java.util.Random;
 import parkeersimulator.model.car.AdHocCar;
 import parkeersimulator.model.car.Car;
 import parkeersimulator.model.car.ParkingPassCar;
+import parkeersimulator.model.car.ReservationCar;
 import parkeersimulator.model.location.Location;
 import parkeersimulator.model.queue.CarQueue;
 
@@ -15,6 +16,7 @@ import parkeersimulator.model.queue.CarQueue;
  * @author LutzenH
  * @author ThowV
  * @author b-kuiper
+ * @author shand
  * 
  */
 public class ParkingGarageModel extends AbstractModel implements Runnable {
@@ -24,7 +26,7 @@ public class ParkingGarageModel extends AbstractModel implements Runnable {
 	
 	//TODO Replace these different types with an Enum.
 	///Id of the different types of cars.
-	public enum carType { AD_HOC, PASS }
+	public enum carType { AD_HOC, PASS, RESERVERATION_CAR }
 	
 	///Declaration of the different queues in the simulation.
 	private CarQueue entranceCarQueue;
@@ -47,6 +49,7 @@ public class ParkingGarageModel extends AbstractModel implements Runnable {
     int standardArrivals = 100;
     int adHocArrivals;
     int passArrivals;
+    int reservationArrivals;
     
     ///The multipliers of cars arriving in an hour.
     float adHocArrivals_week = 1f;
@@ -55,8 +58,16 @@ public class ParkingGarageModel extends AbstractModel implements Runnable {
     
     float passArrivals_week = 0.5f;
     float passArrivals_weekend = 0.05f;
+
     float passArrivals_eventWeek = 0.3f;
   
+
+    float passArrivals_event = 0f;
+    float reservationArrivals_week = 0.5f;
+    float reservationArrivals_weekend = 1f;
+    float reservationArrivals_event = 0f;
+    
+
     /// number of cars that can enter per minute
     int enterSpeed = 3; 
     /// number of cars that can pay per minute
@@ -190,7 +201,9 @@ public class ParkingGarageModel extends AbstractModel implements Runnable {
     	int numberOfCars=getNumberOfCars(adHocArrivals);  
 		addArrivingCars(numberOfCars, carType.AD_HOC); 
     	numberOfCars=getNumberOfCars(passArrivals);
-        addArrivingCars(numberOfCars, carType.PASS);   
+        addArrivingCars(numberOfCars, carType.PASS); 
+        numberOfCars=getNumberOfCars(reservationArrivals);
+        addArrivingCars(numberOfCars, carType.RESERVERATION_CAR);
     }
 
     /**
@@ -287,7 +300,12 @@ public class ParkingGarageModel extends AbstractModel implements Runnable {
             for (int i = 0; i < numberOfCars; i++) {
             	entrancePassQueue.addCar(new ParkingPassCar());
             }
-            break;	            
+            break;	     
+    	case RESERVERATION_CAR:
+            for (int i = 0; i < numberOfCars; i++) {
+            	entranceCarQueue.addCar(new ReservationCar());
+            }
+    		break;
     	}
     }
     
@@ -431,6 +449,10 @@ public class ParkingGarageModel extends AbstractModel implements Runnable {
 	        				break;
 	        			case PASS:
 	        				if(car instanceof ParkingPassCar)
+	        					count++;
+	        				break;
+	        			case RESERVERATION_CAR:
+	        				if(car instanceof ReservationCar)
 	        					count++;
 	        				break;
         			}
@@ -605,7 +627,8 @@ public class ParkingGarageModel extends AbstractModel implements Runnable {
     	}
     	else if(day > 5) {
     		adHocArrivals = (int)Math.floor(standardArrivals * adHocArrivals_weekend);
-        	passArrivals = (int)Math.floor(standardArrivals * passArrivals_weekend);
+    		passArrivals = (int)Math.floor(standardArrivals * passArrivals_weekend);
+    		reservationArrivals = (int)Math.floor(standardArrivals * reservationArrivals_weekend);
     	}
     	
     	//Handle events
@@ -616,6 +639,7 @@ public class ParkingGarageModel extends AbstractModel implements Runnable {
     	else if(isEvent && day > 5) { //In the weekend there should be no pass holders
     		adHocArrivals = (int)Math.floor(standardArrivals * adHocArrivals_weekend);
     		passArrivals = (int)Math.floor(standardArrivals * passArrivals_weekend);
+    		reservationArrivals = (int)Math.floor(standardArrivals * reservationArrivals_weekend);
     	}
     	
     	System.out.println("adHocArrivals_week: " + adHocArrivals_week);
