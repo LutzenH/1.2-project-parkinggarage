@@ -110,6 +110,8 @@ public abstract class GraphView extends AbstractView {
     		panel.updateUI();
     	}
     	
+    	chart.getXYPlot().getDomainAxis().setRange(time-10000, time+10000);
+    		
     	time++;
     }
 }
