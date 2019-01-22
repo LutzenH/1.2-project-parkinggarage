@@ -8,6 +8,7 @@ import parkeersimulator.model.car.Car;
 import parkeersimulator.model.car.ParkingPassCar;
 import parkeersimulator.model.car.ReservationCar;
 import parkeersimulator.model.location.Location;
+import parkeersimulator.model.location.Place;
 import parkeersimulator.model.queue.CarQueue;
 
 /**
@@ -61,12 +62,10 @@ public class ParkingGarageModel extends AbstractModel implements Runnable {
 
     float passArrivals_eventWeek = 0.3f;
   
-
     float passArrivals_event = 0f;
     float reservationArrivals_week = 0.5f;
     float reservationArrivals_weekend = 1f;
     float reservationArrivals_event = 0f;
-    
 
     /// number of cars that can enter per minute
     int enterSpeed = 3; 
@@ -75,8 +74,8 @@ public class ParkingGarageModel extends AbstractModel implements Runnable {
     /// number of cars that can leave per minute
     int exitSpeed = 5;
     
-    ///Declaration of Multi-dimensional array of Car, format: [numberOfFloors][numberOfRows][numberOfPlaces]
-    private Car[][][] cars;
+    ///Declaration of Multi-dimensional array of places, format: [numberOfFloors][numberOfRows][numberOfPlacesInRow]
+    private Place[][][] places;
 
     ///Declaration of values needed to generate the parking garage.
 	private int numberOfFloors = 3;
@@ -97,7 +96,8 @@ public class ParkingGarageModel extends AbstractModel implements Runnable {
         this.numberOfOpenSpots = numberOfFloors * numberOfRows * numberOfPlaces;
         
         ///Instantiation of the all possible car positions.
-        cars = new Car[numberOfFloors][numberOfRows][numberOfPlaces];
+        places = new Place[numberOfFloors][numberOfRows][numberOfPlaces];
+        populatePlaces();
     }
 
     /**
@@ -428,7 +428,7 @@ public class ParkingGarageModel extends AbstractModel implements Runnable {
     /**
      * @return A multi-dimensional array of all cars in the parking garage, format: car[floor][row][place]
      */
-    public Car[][][] getCars() { return cars; }
+    public Place[][][] getPlaces() { return places; }
     
     //TODO Optimize this method.
     /**
@@ -439,20 +439,20 @@ public class ParkingGarageModel extends AbstractModel implements Runnable {
     public int getCarCount(carType type) {
     	int count = 0;
     	
-    	for(Car[][] floor : cars) {
-    		for(Car[] row : floor) {
-        		for(Car car : row) {
+    	for(Place[][] floor : places) {
+    		for(Place[] row : floor) {
+        		for(Place place : row) {
         			switch(type) {
 	        			case AD_HOC:
-	        				if(car instanceof AdHocCar)
+	        				if(place.getCar() instanceof AdHocCar)
 	        					count++;
 	        				break;
 	        			case PASS:
-	        				if(car instanceof ParkingPassCar)
+	        				if(place.getCar() instanceof ParkingPassCar)
 	        					count++;
 	        				break;
 	        			case RESERVERATION_CAR:
-	        				if(car instanceof ReservationCar)
+	        				if(place.getCar() instanceof ReservationCar)
 	        					count++;
 	        				break;
         			}
@@ -493,7 +493,7 @@ public class ParkingGarageModel extends AbstractModel implements Runnable {
         if (!locationIsValid(location)) {
             return null;
         }
-        return cars[location.getFloor()][location.getRow()][location.getPlace()];
+        return places[location.getFloor()][location.getRow()][location.getPlace()].getCar();
     }
 
     /**
@@ -509,7 +509,7 @@ public class ParkingGarageModel extends AbstractModel implements Runnable {
         }
         Car oldCar = getCarAt(location);
         if (oldCar == null) {
-            cars[location.getFloor()][location.getRow()][location.getPlace()] = car;
+            places[location.getFloor()][location.getRow()][location.getPlace()].setCar(car);
             car.setLocation(location);
             numberOfOpenSpots--;
             return true;
@@ -531,7 +531,7 @@ public class ParkingGarageModel extends AbstractModel implements Runnable {
         if (car == null) {
             return null;
         }
-        cars[location.getFloor()][location.getRow()][location.getPlace()] = null;
+        places[location.getFloor()][location.getRow()][location.getPlace()].setCar(null);
         car.setLocation(null);
         numberOfOpenSpots++;
         return car;
@@ -644,4 +644,15 @@ public class ParkingGarageModel extends AbstractModel implements Runnable {
     	
     	System.out.println("adHocArrivals_week: " + adHocArrivals_week);
     }
+    
+    private void populatePlaces() {   	
+    	for(int floor = 0; floor < numberOfFloors; floor++) {
+    		for(int rows = 0; rows < numberOfRows; rows++) {
+    			for(int place = 0; place < numberOfPlaces; place++) {
+    				places[floor][rows][place] = new Place();
+    			}
+    		}
+    	}
+    }
+    
 }
