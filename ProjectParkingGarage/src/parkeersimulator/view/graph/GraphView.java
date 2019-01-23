@@ -72,14 +72,6 @@ public abstract class GraphView extends AbstractView {
      * Updates the data in the data-set and redisplays it. if the time (x) is already in the data-set it will be overwritten.
      */
     protected abstract void updateDataset();
-    /*
-	{
-    	graph_data[0].addOrUpdate(time, model.getEntranceCarQueue().carsInQueue());
-    	graph_data[1].addOrUpdate(time, model.getEntrancePassQueue().carsInQueue());  	
-    	
-    	///Refreshes the UI element to display the new data in the UI.
-    }
-     */
 
     /**
      * Creates a JFreeChart which can be used to display data.
@@ -113,12 +105,13 @@ public abstract class GraphView extends AbstractView {
     @Override
     public void updateView() {
     	if(time % dataCollectFrequency == 0)
+    	{
     		updateDataset();
+    		panel.updateUI();
+    	}
     	
-    	panel.updateUI();
-    	
+    	chart.getXYPlot().getDomainAxis().setRange(time-10000, time+10000);
+    		
     	time++;
-    	
-    	repaint();
     }
 }

@@ -6,7 +6,9 @@ import java.util.Random;
 import parkeersimulator.model.car.AdHocCar;
 import parkeersimulator.model.car.Car;
 import parkeersimulator.model.car.ParkingPassCar;
+import parkeersimulator.model.car.ReservationCar;
 import parkeersimulator.model.location.Location;
+import parkeersimulator.model.location.Place;
 import parkeersimulator.model.queue.CarQueue;
 
 /**
@@ -15,6 +17,7 @@ import parkeersimulator.model.queue.CarQueue;
  * @author LutzenH
  * @author ThowV
  * @author b-kuiper
+ * @author shand
  * 
  */
 public class ParkingGarageModel extends AbstractModel implements Runnable {
@@ -24,7 +27,7 @@ public class ParkingGarageModel extends AbstractModel implements Runnable {
 	
 	//TODO Replace these different types with an Enum.
 	///Id of the different types of cars.
-	public enum carType { AD_HOC, PASS }
+	public enum carType { AD_HOC, PASS, RESERVERATION_CAR }
 	
 	///Declaration of the different queues in the simulation.
 	private CarQueue entranceCarQueue;
@@ -49,6 +52,7 @@ public class ParkingGarageModel extends AbstractModel implements Runnable {
     int standardArrivals = 100;
     int adHocArrivals;
     int passArrivals;
+    int reservationArrivals;
     
     ///The multipliers of cars arriving in an hour.
     float adHocArrivals_week = 1f;
@@ -58,6 +62,10 @@ public class ParkingGarageModel extends AbstractModel implements Runnable {
     float passArrivals_week = 0.5f;
     float passArrivals_weekend = 0.05f;
     float passArrivals_event = 0.3f;
+    
+    float reservationArrivals_week = 0.5f;
+    float reservationArrivals_weekend = 1f;
+    float reservationArrivals_event = 0f;
     
     //The amount of time a car can stay in the car park;
     private int stayMinutes;
@@ -89,7 +97,7 @@ public class ParkingGarageModel extends AbstractModel implements Runnable {
     
     ArrayList<Float> timeStamps_weekend = new ArrayList<Float>() {{ add(0f); add(4.5f); add(12f); add(14.5f); add(15.5f); add(16.75f); add(17.0f); add(24f); }};
     ArrayList<Float> arrivalFactors_weekend = new ArrayList<Float>() {{ add(0.6f); add(0f); add(1f); add(0.6f); add(0.3f); add(0.2f); add(1f); add(0.6f); }};
-  
+
     
     /// number of cars that can enter per minute
     int enterSpeed = 3; 
@@ -98,8 +106,8 @@ public class ParkingGarageModel extends AbstractModel implements Runnable {
     /// number of cars that can leave per minute
     int exitSpeed = 5;
     
-    ///Declaration of Multi-dimensional array of Car, format: [numberOfFloors][numberOfRows][numberOfPlaces]
-    private Car[][][] cars;
+    ///Declaration of Multi-dimensional array of places, format: [numberOfFloors][numberOfRows][numberOfPlacesInRow]
+    private Place[][][] places;
 
     ///Declaration of values needed to generate the parking garage.
 	private int numberOfFloors = 3;
@@ -120,7 +128,8 @@ public class ParkingGarageModel extends AbstractModel implements Runnable {
         this.numberOfOpenSpots = numberOfFloors * numberOfRows * numberOfPlaces;
         
         ///Instantiation of the all possible car positions.
-        cars = new Car[numberOfFloors][numberOfRows][numberOfPlaces];
+        places = new Place[numberOfFloors][numberOfRows][numberOfPlaces];
+        populatePlaces();
     }
 
     /**
@@ -225,7 +234,9 @@ public class ParkingGarageModel extends AbstractModel implements Runnable {
     	int numberOfCars=getNumberOfCars(adHocArrivals);  
 		addArrivingCars(numberOfCars, carType.AD_HOC); 
     	numberOfCars=getNumberOfCars(passArrivals);
-        addArrivingCars(numberOfCars, carType.PASS);   
+        addArrivingCars(numberOfCars, carType.PASS); 
+        numberOfCars=getNumberOfCars(reservationArrivals);
+        addArrivingCars(numberOfCars, carType.RESERVERATION_CAR);
     }
 
     /**
@@ -322,7 +333,12 @@ public class ParkingGarageModel extends AbstractModel implements Runnable {
             for (int i = 0; i < numberOfCars; i++) {
             	entrancePassQueue.addCar(new ParkingPassCar(stayMinutes));
             }
-            break;	            
+            break;	     
+    	case RESERVERATION_CAR:
+            for (int i = 0; i < numberOfCars; i++) {
+            	entranceCarQueue.addCar(new ReservationCar());
+            }
+    		break;
     	}
     }
     
@@ -445,7 +461,7 @@ public class ParkingGarageModel extends AbstractModel implements Runnable {
     /**
      * @return A multi-dimensional array of all cars in the parking garage, format: car[floor][row][place]
      */
-    public Car[][][] getCars() { return cars; }
+    public Place[][][] getPlaces() { return places; }
     
     //TODO Optimize this method.
     /**
@@ -456,16 +472,20 @@ public class ParkingGarageModel extends AbstractModel implements Runnable {
     public int getCarCount(carType type) {
     	int count = 0;
     	
-    	for(Car[][] floor : cars) {
-    		for(Car[] row : floor) {
-        		for(Car car : row) {
+    	for(Place[][] floor : places) {
+    		for(Place[] row : floor) {
+        		for(Place place : row) {
         			switch(type) {
 	        			case AD_HOC:
-	        				if(car instanceof AdHocCar)
+	        				if(place.getCar() instanceof AdHocCar)
 	        					count++;
 	        				break;
 	        			case PASS:
-	        				if(car instanceof ParkingPassCar)
+	        				if(place.getCar() instanceof ParkingPassCar)
+	        					count++;
+	        				break;
+	        			case RESERVERATION_CAR:
+	        				if(place.getCar() instanceof ReservationCar)
 	        					count++;
 	        				break;
         			}
@@ -506,7 +526,7 @@ public class ParkingGarageModel extends AbstractModel implements Runnable {
         if (!locationIsValid(location)) {
             return null;
         }
-        return cars[location.getFloor()][location.getRow()][location.getPlace()];
+        return places[location.getFloor()][location.getRow()][location.getPlace()].getCar();
     }
 
     /**
@@ -522,7 +542,7 @@ public class ParkingGarageModel extends AbstractModel implements Runnable {
         }
         Car oldCar = getCarAt(location);
         if (oldCar == null) {
-            cars[location.getFloor()][location.getRow()][location.getPlace()] = car;
+            places[location.getFloor()][location.getRow()][location.getPlace()].setCar(car);
             car.setLocation(location);
             numberOfOpenSpots--;
             return true;
@@ -544,7 +564,7 @@ public class ParkingGarageModel extends AbstractModel implements Runnable {
         if (car == null) {
             return null;
         }
-        cars[location.getFloor()][location.getRow()][location.getPlace()] = null;
+        places[location.getFloor()][location.getRow()][location.getPlace()].setCar(null);
         car.setLocation(null);
         numberOfOpenSpots++;
         return car;
@@ -660,18 +680,22 @@ public class ParkingGarageModel extends AbstractModel implements Runnable {
     		if(!isEventStart) {
     			adHocArrivals = (int)Math.floor(standardArrivals * adHocArrivals_week);
             	passArrivals = (int)Math.floor(standardArrivals * passArrivals_week);
+            	reservationArrivals = (int)Math.floor(standardArrivals * reservationArrivals_week);
     		}
     		else if(isEventStart) {
     			adHocArrivals = (int)Math.floor(standardArrivals * adHocArrivals_event);
         		passArrivals = (int)Math.floor(standardArrivals * passArrivals_event);
+        		reservationArrivals = (int)Math.floor(standardArrivals * reservationArrivals_event);
     		}
     	}
     	else if(day > 4) {
     		if(!isEventStart) {
     			adHocArrivals = (int)Math.floor(standardArrivals * adHocArrivals_weekend);
+    			reservationArrivals = (int)Math.floor(standardArrivals * reservationArrivals_weekend);
     		}
     		else if(isEventStart) {
     			adHocArrivals = (int)Math.floor(standardArrivals * adHocArrivals_event);
+    			reservationArrivals = (int)Math.floor(standardArrivals * reservationArrivals_event);
     		}
     		
     		passArrivals = (int)Math.floor(standardArrivals * passArrivals_weekend);
@@ -683,7 +707,9 @@ public class ParkingGarageModel extends AbstractModel implements Runnable {
     	if(!isEventStart) { //Apply the time arrival factor but only when there is not an event starting
 			adHocArrivals = (int)Math.floor(adHocArrivals * timeArrivalFactor);
         	passArrivals = (int)Math.floor(passArrivals * timeArrivalFactor);
+        	reservationArrivals = (int)Math.floor(reservationArrivals * timeArrivalFactor);
     	}
+    	
 
     	//Change the time cars should stay in the car park
     	updateCarStayMinutes();
@@ -761,4 +787,16 @@ public class ParkingGarageModel extends AbstractModel implements Runnable {
     	else
     		stayMinutes = (int) Math.floor(random.nextFloat() * (540 * Math.pow(timeArrivalFactor, 2)) + 15);
     }
+    
+    
+    private void populatePlaces() {   	
+    	for(int floor = 0; floor < numberOfFloors; floor++) {
+    		for(int rows = 0; rows < numberOfRows; rows++) {
+    			for(int place = 0; place < numberOfPlaces; place++) {
+    				places[floor][rows][place] = new Place();
+    			}
+    		}
+    	}
+    }
+    
 }
