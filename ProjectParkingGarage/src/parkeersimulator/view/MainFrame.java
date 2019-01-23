@@ -9,7 +9,10 @@ import javax.swing.JTabbedPane;
 import parkeersimulator.controller.ParkingGarageController;
 import parkeersimulator.controller.ParkingGarageController.ActionType;
 
+import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Toolkit;
+import java.awt.image.ImageObserver;
 import java.awt.FlowLayout;
 
 import javax.swing.JMenuBar;
@@ -19,35 +22,50 @@ import javax.swing.JMenuItem;
 public class MainFrame extends JFrame {
 
 	JSplitPane splitPane;
-	
 	public MainFrame(String string, JPanel controlPanel, JPanel[] tabbedPanels, JPanel simulationPanel) {
+
 		super(string);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		this.setExtendedState(JFrame.MAXIMIZED_BOTH);
 		
 		setJMenuBar(createMenuBar());
 		
 		splitPane = new JSplitPane();
 		this.getContentPane().add(splitPane);
 		
-		JSplitPane splitPane_1 = new JSplitPane();
-		splitPane_1.setOrientation(JSplitPane.VERTICAL_SPLIT);
-		splitPane.setLeftComponent(splitPane_1);
-
-		controlPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 5));
-		splitPane_1.setRightComponent(controlPanel);
+		///get screen size
+		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+		int width = screenSize.width;
+		int height = screenSize.height;
 		
+		JSplitPane splitPane = new JSplitPane();
+		splitPane.setEnabled(true);
 		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.BOTTOM);
-		tabbedPane.setPreferredSize(new Dimension(300, 200));
-		tabbedPane.setMinimumSize(new Dimension(300, 200));
+		this.getContentPane().add(splitPane);
 		
-		splitPane_1.setLeftComponent(tabbedPane);
+		JSplitPane splitPane_1 = new JSplitPane();
+		splitPane_1.setEnabled(false);
+		splitPane_1.setOrientation(JSplitPane.VERTICAL_SPLIT);
+		
+		splitPane.setLeftComponent(splitPane_1);	
+		splitPane.setRightComponent(controlPanel);
+		splitPane_1.setTopComponent(tabbedPane);
+		splitPane_1.setBottomComponent(simulationPanel);
+		
+		splitPane_1.getTopComponent().setMaximumSize(new Dimension(width / 1366 * 1048, height / 768 * 530));
+		splitPane_1.getTopComponent().setMinimumSize(new Dimension(width / 1366 * 866, height / 768 * 350));
+		splitPane_1.getBottomComponent().setMaximumSize(new Dimension(width / 1366 * 1048, height / 768 * 418));
+		splitPane_1.getBottomComponent().setMinimumSize(new Dimension(width / 1366 * 866, height / 768 * 238));
+		splitPane.getRightComponent().setMaximumSize(new Dimension(width / 1366 * 500, height));
+		splitPane.getRightComponent().setMinimumSize(new Dimension(width / 1366 * 320, height));
 		
 		for(JPanel panel : tabbedPanels)
 		{
 			tabbedPane.addTab(panel.getName(), null, panel, null);
 		}
 		
-		splitPane.setRightComponent(simulationPanel);
+		this.pack();
+		
 	}
 
 	public void addResizeProperty(ParkingGarageController controller)

@@ -1,5 +1,6 @@
 package parkeersimulator.main;
 
+import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 import parkeersimulator.controller.ParkingGarageController;
@@ -62,11 +63,10 @@ public class Main {
 		///Layout and instantiation of the JFrame.
 		screen = new MainFrame("Parking Garage Simulator", carparkstepcontrolview, tabbedviews, carparkview);
 		
+		
+		
 		//screen.getContentPane().add(queuecountview);
 		//screen.getContentPane().add(timeview);
-		
-		screen.pack();
-		screen.setSize(800, 800);
 		
 		///the views will be notified before the simulation runs in order to display an empty CarParkView.
 		model.notifyViews();
@@ -74,7 +74,7 @@ public class Main {
 		///Makes this JFrame visible.
 		screen.setVisible(true);
 		
-		screen.addResizeProperty(controller);
+		//screen.addResizeProperty(controller);
 	}
 	
 	/**
