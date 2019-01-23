@@ -39,10 +39,12 @@ public class ParkingGarageModel extends AbstractModel implements Runnable {
     private int day = 0;
     private int hour = 0;
     private int minute = 0;
+    private int week = 0;
 
     ///The amount of time the thread should wait before executing the next tick().
     private int tickPause = 100;
 
+    //Arrivals and stay times
     ///The baseline number of cars arriving in an hour.
     int standardArrivals = 100;
     int adHocArrivals;
@@ -55,8 +57,40 @@ public class ParkingGarageModel extends AbstractModel implements Runnable {
     
     float passArrivals_week = 0.5f;
     float passArrivals_weekend = 0.05f;
-    float passArrivals_eventWeek = 0.3f;
+    float passArrivals_event = 0.3f;
+    
+    //The amount of time a car can stay in the car park;
+    private int stayMinutes;
+	
+    
+    //Events
+    //Boolean that intitializes an event
+    boolean isEventStart = false;
+    
+    //Integer that holds the duration of an event
+    int eventDuration;
+    
+    //Integers that hold the starting time of certain events
+    int eventStartingHour_ThursdayMarket = 18;
+	int eventStartingHour_SaturdayConcert = 19;
+	int eventStartingHour_SundayConcert = 15;
+    
+	
+	//Time arrival
+	//The double that holds the factor that gets applied to the number of arriving cars for simulating busy times
+    private double timeArrivalFactor;
+    
+    //The arraylists used for changing the timeArrivalFactor multiplier
+    ArrayList<Float> timeStamps_week = new ArrayList<Float>() {{ add(0f); add(4.5f); add(8f); add(11.75f); add(15.5f); add(17f); add(24f); }};
+    ArrayList<Float> arrivalFactors_week = new ArrayList<Float>() {{ add(0.2f); add(0.1f); add(1f); add(0.3f); add(0.4f); add(0.5f); add(0.2f); }};
   
+    ArrayList<Float> timeStamps_friday = new ArrayList<Float>() {{ add(0f); add(4.5f); add(8f); add(11.75f); add(15.5f); add(17f); add(24f); }};
+    ArrayList<Float> arrivalFactors_friday = new ArrayList<Float>() {{ add(0.1f); add(0.15f); add(1f); add(0.3f); add(0.4f); add(0.8f); add(0.5f); }};
+    
+    ArrayList<Float> timeStamps_weekend = new ArrayList<Float>() {{ add(0f); add(4.5f); add(12f); add(14.5f); add(15.5f); add(16.75f); add(17.0f); add(24f); }};
+    ArrayList<Float> arrivalFactors_weekend = new ArrayList<Float>() {{ add(0.6f); add(0f); add(1f); add(0.6f); add(0.3f); add(0.2f); add(1f); add(0.6f); }};
+  
+    
     /// number of cars that can enter per minute
     int enterSpeed = 3; 
     /// number of cars that can pay per minute
@@ -128,7 +162,8 @@ public class ParkingGarageModel extends AbstractModel implements Runnable {
     	tickCars();
     	handleExit();
     	notifyViews();
-    	setArrivals();
+    	setArrivalProperties();
+    	eventManager();
     	handleEntrance();
     }
     
@@ -157,10 +192,10 @@ public class ParkingGarageModel extends AbstractModel implements Runnable {
         while (hour > 23) {
             hour -= 24;
             day++;
-            checkForEvent();
         }
         while (day > 6) {
             day -= 7;
+            week++;
         }
 
     }
@@ -280,12 +315,12 @@ public class ParkingGarageModel extends AbstractModel implements Runnable {
     	switch(type) {
     	case AD_HOC: 
             for (int i = 0; i < numberOfCars; i++) {
-            	entranceCarQueue.addCar(new AdHocCar());
+            	entranceCarQueue.addCar(new AdHocCar(stayMinutes));
             }
             break;
     	case PASS:
             for (int i = 0; i < numberOfCars; i++) {
-            	entrancePassQueue.addCar(new ParkingPassCar());
+            	entrancePassQueue.addCar(new ParkingPassCar(stayMinutes));
             }
             break;	            
     	}
@@ -351,11 +386,11 @@ public class ParkingGarageModel extends AbstractModel implements Runnable {
     /**
      * @return The current passArrivals_eventWeek in percent.
      */
-    public Integer getPassArrivals_eventWeek() { return Math.round(passArrivals_eventWeek * 100f); }
+    public Integer getPassArrivals_eventWeek() { return Math.round(passArrivals_event * 100f); }
     /**
      * Sets the multiplier for pass cars arriving at events during standard weeks.
      */
-    public void setPassArrivals_eventWeek(float amount) {passArrivals_eventWeek = amount / 100f; }
+    public void setPassArrivals_eventWeek(float amount) {passArrivals_event = amount / 100f; }
     
     
     /**
@@ -583,41 +618,147 @@ public class ParkingGarageModel extends AbstractModel implements Runnable {
     }
     
     
-    boolean isEvent = false;
-    
-    private void checkForEvent() {
-    	double chance = Math.random();
-    	if(chance < eventChancePercentage * 0.01) {//50%
-    		isEvent = true;
-    		System.out.println("Event has started");
+    /**
+     * Checks if we can spawn or despawn an event.
+     */
+    private void eventManager() {
+    	Random random = new Random();
+    	
+    	//Check if an event has started or not
+    	if(!isEventStart && minute == 0) {
+    		//Check if we can spawn the start of an event
+    		if(day == 3 && hour == eventStartingHour_ThursdayMarket)
+    			isEventStart = true;
+    		else if(day == 5 && hour == eventStartingHour_SaturdayConcert)
+    			isEventStart = true;
+    		else if(day == 6 && hour == eventStartingHour_SundayConcert)
+    			isEventStart = true;
+    		
+    		if(isEventStart == true) {
+    			eventDuration = random.nextInt((4 - 1) + 1) + 1; //Randomly set a duration for the event
+    			eventDuration *= 60; //Translate hours to minutes
+    		}
     	}
-    	else {
-    		isEvent = false;
-    		System.out.println("Event has stopped");
+    	else if(isEventStart && minute == 0){ //People have 2 hours to show up, this is the + 2
+    		//Check if we can despawn the start of an event
+    		if(day == 3 && hour == eventStartingHour_ThursdayMarket + 2)
+    			isEventStart = false;
+    		else if(day == 5 && hour == eventStartingHour_SaturdayConcert + 2)
+    			isEventStart = false;
+    		else if(day == 6 && hour == eventStartingHour_SundayConcert + 2)
+    			isEventStart = false;
     	}
     }
+    
+    /**
+     * Sets the arrival properties of the cars entering the car park. Such as: The amount arriving and the time they stay.
+     * We do this based on day, time and events.
+     */
 
-    private void setArrivals() {
-    	//Handle normal days
-    	if(day <= 5) {
-    		adHocArrivals = (int)Math.floor(standardArrivals * adHocArrivals_week);
-        	passArrivals = (int)Math.floor(standardArrivals * passArrivals_week);
+    private void setArrivalProperties() {
+    	if(day <= 4) {
+    		if(!isEventStart) {
+    			adHocArrivals = (int)Math.floor(standardArrivals * adHocArrivals_week);
+            	passArrivals = (int)Math.floor(standardArrivals * passArrivals_week);
+    		}
+    		else if(isEventStart) {
+    			adHocArrivals = (int)Math.floor(standardArrivals * adHocArrivals_event);
+        		passArrivals = (int)Math.floor(standardArrivals * passArrivals_event);
+    		}
     	}
-    	else if(day > 5) {
-    		adHocArrivals = (int)Math.floor(standardArrivals * adHocArrivals_weekend);
-        	passArrivals = (int)Math.floor(standardArrivals * passArrivals_weekend);
-    	}
-    	
-    	//Handle events
-    	if(isEvent && day <= 5) { //In the week there should be a few pass holders
-    		adHocArrivals = (int)Math.floor(standardArrivals * adHocArrivals_weekend);
-    		passArrivals = (int)Math.floor(standardArrivals * passArrivals_eventWeek);
-    	}
-    	else if(isEvent && day > 5) { //In the weekend there should be no pass holders
-    		adHocArrivals = (int)Math.floor(standardArrivals * adHocArrivals_weekend);
+    	else if(day > 4) {
+    		if(!isEventStart) {
+    			adHocArrivals = (int)Math.floor(standardArrivals * adHocArrivals_weekend);
+    		}
+    		else if(isEventStart) {
+    			adHocArrivals = (int)Math.floor(standardArrivals * adHocArrivals_event);
+    		}
+    		
     		passArrivals = (int)Math.floor(standardArrivals * passArrivals_weekend);
     	}
     	
-    	System.out.println("adHocArrivals_week: " + adHocArrivals_week);
+    	
+    	//Change the amount of cars coming into the car park
+    	updateTimeArrivalFactor(); //Update the time arrival factor    	
+    	if(!isEventStart) { //Apply the time arrival factor but only when there is not an event starting
+			adHocArrivals = (int)Math.floor(adHocArrivals * timeArrivalFactor);
+        	passArrivals = (int)Math.floor(passArrivals * timeArrivalFactor);
+    	}
+
+    	//Change the time cars should stay in the car park
+    	updateCarStayMinutes();
+    }
+    
+    
+    
+    /**
+     * Changes the amount of cars entering the car park
+     */
+    private void updateTimeArrivalFactor() {
+    	//Choose what arrayList to use based on the day of the week
+    	ArrayList<Float> timeStamps = new ArrayList<>();
+    	ArrayList<Float> factors = new ArrayList<>();
+    	
+    	if(day <= 3) {
+    		timeStamps = timeStamps_week;
+    		factors = arrivalFactors_week;
+    	}
+    	if(day == 4) {
+    		timeStamps = timeStamps_friday;
+    		factors = arrivalFactors_friday;
+    	}
+    	else if(day > 4) {
+    		timeStamps = timeStamps_weekend;
+    		factors = arrivalFactors_weekend;
+    	}
+    	
+    	//Create a variable holding the hours and minutes
+    	float hours = hour;
+    	hours += minute / 60f;
+    	
+    	//Create variables to hold the timeStamps and factors to use in our cosine wave 
+    	float currentStamp;
+    	float currentFactor;
+    	float nextStamp;
+    	float nextFactor;
+		
+		//Random factor for variation
+    	float leftLimit = 0.8f;
+    	float randomFactor = leftLimit + new Random().nextFloat() * (1f - leftLimit);
+		
+		//Create our cosine wave and set our final factor
+    	for (int i = 0; i < timeStamps.size(); i++) {
+       		//Set our variables
+    		currentStamp = timeStamps.get(i);
+    		currentFactor = factors.get(i);
+    		
+    		if(i != timeStamps.size() - 1) {
+    			nextStamp = timeStamps.get(i + 1);
+    			nextFactor = factors.get(i + 1);
+    		}
+    		else {
+    			nextStamp = timeStamps.get(0);
+    			nextFactor = factors.get(0);
+    		}
+    		
+    		//Create a factor
+    		if(hours >= currentStamp && hours < nextStamp) {
+    			timeArrivalFactor = (currentFactor - nextFactor) / 2f * Math.cos((2f * Math.PI) / ((nextStamp - currentStamp) * 2f) * (hours - currentStamp)) + (currentFactor + nextFactor) / 2f;
+    		}
+    	}
+    	
+    	timeArrivalFactor *= randomFactor;
+    }
+
+    /**
+     * Changes the duration of cars staying in the car park
+     */
+    private void updateCarStayMinutes() {
+    	Random random = new Random();
+
+    	if(isEventStart)
+    		stayMinutes = eventDuration;
+    	else
+    		stayMinutes = (int) Math.floor(random.nextFloat() * (540 * Math.pow(timeArrivalFactor, 2)) + 15);
     }
 }

@@ -12,9 +12,7 @@ public class ParkingPassCar extends Car {
 	/**
 	 * The constructor for ParkingPassCar
 	 */
-    public ParkingPassCar() {
-    	Random random = new Random();
-    	int stayMinutes = (int) (15 + random.nextFloat() * 3 * 60);
+    public ParkingPassCar(int stayMinutes) {    	
         this.setMinutesLeft(stayMinutes);
         this.setHasToPay(false);
     }
