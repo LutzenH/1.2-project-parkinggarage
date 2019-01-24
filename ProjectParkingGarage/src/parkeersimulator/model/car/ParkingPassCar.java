@@ -17,7 +17,6 @@ public class ParkingPassCar extends Car {
 	 */
     public ParkingPassCar(int stayMinutes) {    	
         this.setMinutesLeft(stayMinutes);
-        this.setHasToPay(false);
     }
     
     /**
@@ -30,5 +29,10 @@ public class ParkingPassCar extends Car {
 	@Override
 	public CarType getCarType() {
 		return CarType.PASS;
+	}
+
+	@Override
+	public boolean getHasToPay() {
+		return false;
 	}
 }

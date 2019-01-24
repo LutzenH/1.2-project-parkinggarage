@@ -20,7 +20,6 @@ public class ReservationCar extends Car {
     	Random random = new Random();
     	int stayMinutes = (int) (15 + random.nextFloat() * 3 * 60);
         this.setMinutesLeft(stayMinutes);
-        this.setHasToPay(true);
     }
     
     /**
@@ -33,5 +32,10 @@ public class ReservationCar extends Car {
 	@Override
 	public CarType getCarType() {
 		return CarType.RESERVERATION_CAR;
+	}
+
+	@Override
+	public boolean getHasToPay() {
+		return true;
 	}
 }
