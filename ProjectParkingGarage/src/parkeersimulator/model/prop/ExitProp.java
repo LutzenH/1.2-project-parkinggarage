@@ -2,10 +2,12 @@ package parkeersimulator.model.prop;
 
 import java.awt.Color;
 
+import parkeersimulator.model.location.Coordinate;
+
 public class ExitProp extends Prop {
 
-	public ExitProp() {
-		super(0.8f);
+	public ExitProp(Coordinate position) {
+		super(0.8f, position);
 	}
 
 	@Override

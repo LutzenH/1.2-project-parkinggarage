@@ -1,12 +1,15 @@
 package parkeersimulator.model;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Random;
 
 import parkeersimulator.model.car.AdHocCar;
 import parkeersimulator.model.car.Car;
+import parkeersimulator.model.car.Car.CarType;
 import parkeersimulator.model.car.ParkingPassCar;
 import parkeersimulator.model.car.ReservationCar;
+import parkeersimulator.model.location.Coordinate;
 import parkeersimulator.model.location.Location;
 import parkeersimulator.model.location.Place;
 import parkeersimulator.model.prop.EntranceProp;
@@ -108,6 +111,9 @@ public class ParkingGarageModel extends AbstractModel implements Runnable {
     ///Declaration of Multi-dimensional array of places, format: [numberOfFloors][numberOfRows][numberOfPlacesInRow]
     private Place[][][] places;
     
+    //Declaration of sortable places 
+    private ArrayList<Place> preferredPlaces;
+    
     ///Declaration of array of Props;
     private Prop[] props;
 
@@ -138,6 +144,7 @@ public class ParkingGarageModel extends AbstractModel implements Runnable {
         
         ///Instantiation of the all possible car positions.
         places = new Place[numberOfFloors][numberOfRows][numberOfPlaces];
+        preferredPlaces = new ArrayList<Place>();
         populatePlaces();
         
         props = new Prop[numberOfRows * numberOfFloors];
@@ -504,29 +511,69 @@ public class ParkingGarageModel extends AbstractModel implements Runnable {
      * Sets the prop to the next prop depending on its current state
      * @param index the index of the prop in props
      */
-    public void setProp(int index) {
+    public void setProp(int index) {  
+		Coordinate position = Prop.calculateCoordinate(index, getNumberOfPlaces());
+		
     	if(props[index] != null) {
         	switch(props[index].getType()) {
     			case PROP_ENTRANCE:
-    				props[index] = new ExitProp();
+    				props[index] = new ExitProp(position);
     				break;
     			case PROP_EXIT:
-    				props[index] = new TicketMachineProp();
+    				props[index] = new TicketMachineProp(position);
     				break;
     			case PROP_TICKETMACHINE:
     				props[index] = null;
     				break;
     			default:
-    				props[index] = new EntranceProp();
+    				props[index] = new EntranceProp(position);
     				break;
         	}	
     	}
     	else {
-    		props[index] = new EntranceProp();
+    		props[index] = new EntranceProp(position);
     	}
+    	
+    	updatePlacePreferences();
     }
     
-    //TODO Optimize this method.
+    private void updatePlacePreferences() {
+		for (int floor = 0; floor < getNumberOfFloors(); floor++) {
+			for (int row = 0; row < getNumberOfRows(); row++) {
+				for (int place = 0; place < getNumberOfPlaces(); place++) {
+					Location location = new Location(floor, row, place);
+					
+					Coordinate position = Location.convertToCoordinate(location, getNumberOfRows());
+					
+					float preferenceFactor = 0f;
+					
+					for(Prop prop : props) {
+						if(prop != null) {
+							preferenceFactor += Coordinate.calculateDistance(position, prop.getPosition());
+							//preferenceFactor *= prop.getPreferenceAmount();
+						}
+					}
+					
+					places[floor][row][place].setPreferenceFactor(preferenceFactor);
+				}
+			}
+		}
+		
+		Collections.sort(preferredPlaces);
+		
+		int count = 0;
+		for(Place place : preferredPlaces) {
+			if(count < passHolderPlaceAmount) {
+				place.setCarType(CarType.PASS);
+			}
+			else {
+				place.setCarType(null);
+			}
+			count++;
+		}
+	}
+
+	//TODO Optimize this method.
     /**
      * Get the total car count of a certain car type.
      * @param type The type of car that should be used to calculate the car count.
@@ -538,19 +585,9 @@ public class ParkingGarageModel extends AbstractModel implements Runnable {
     	for(Place[][] floor : places) {
     		for(Place[] row : floor) {
         		for(Place place : row) {
-        			switch(type) {
-	        			case AD_HOC:
-	        				if(place.getCar() instanceof AdHocCar)
-	        					count++;
-	        				break;
-	        			case PASS:
-	        				if(place.getCar() instanceof ParkingPassCar)
-	        					count++;
-	        				break;
-	        			case RESERVERATION_CAR:
-	        				if(place.getCar() instanceof ReservationCar)
-	        					count++;
-	        				break;
+        			if(place.getCar() != null) {
+            			if(place.getCar().getCarType() == type)
+            				count++;
         			}
             	}
         	}
@@ -644,29 +681,24 @@ public class ParkingGarageModel extends AbstractModel implements Runnable {
      * @return The first free location in the parking garage.
      */
     public Location getFirstFreeLocation(Car car) {
-        for (int floor = 0; floor < getNumberOfFloors(); floor++) {
-            for (int row = 0; row < getNumberOfRows(); row++) {
-                for (int place = 0; place < getNumberOfPlaces(); place++) {
-               
-                	Car.CarType[] allowedTypes = places[floor][row][place].getCarTypes();
-                    Location location = new Location(floor, row, place);
-                	
-                	if(allowedTypes == null) {
-                        if (getCarAt(location) == null) {
-                            return location;
-                        }
-                	}
-                	else {
-                    	for(Car.CarType type : allowedTypes) {
-                    		if(car.getCarType() == type && getCarAt(location) == null) {
-                    			return location;
-                    		}
-                    	}
-                	}
-                	
-                }
-            }
-        }
+    	for(Place place : preferredPlaces) {
+            
+        	CarType allowedType = place.getCarType();
+            Location location = place.getLocation();
+
+        	if(allowedType == null) {
+        		if(car.getCarType() != CarType.PASS) {
+                    if (getCarAt(location) == null) {
+                        return location;
+                    }
+        		}
+        	}
+        	else {
+        		if(car.getCarType() == allowedType && getCarAt(location) == null) {
+        			return location;
+        		}
+        	}
+    	}
         return null;
     }
 
@@ -881,9 +913,11 @@ public class ParkingGarageModel extends AbstractModel implements Runnable {
     		for(int rows = 0; rows < numberOfRows; rows++) {
     			for(int place = 0; place < numberOfPlaces; place++) {
     				if(count < passHolderPlaceAmount)
-    					places[floor][rows][place] = new Place(Car.CarType.PASS);
+    					places[floor][rows][place] = new Place(Car.CarType.PASS, new Location(floor, rows, place));
     				else
-    					places[floor][rows][place] = new Place();
+    					places[floor][rows][place] = new Place(new Location(floor, rows, place));
+    				
+    				preferredPlaces.add(places[floor][rows][place]);
     				
     				count++;
     			}

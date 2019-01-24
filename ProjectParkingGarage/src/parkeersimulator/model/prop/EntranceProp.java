@@ -2,10 +2,12 @@ package parkeersimulator.model.prop;
 
 import java.awt.Color;
 
+import parkeersimulator.model.location.Coordinate;
+
 public class EntranceProp extends Prop {
 
-	public EntranceProp() {
-		super(1f);
+	public EntranceProp(Coordinate position) {
+		super(1f, position);
 	}
 
 	@Override

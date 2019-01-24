@@ -115,7 +115,7 @@ public class CarParkView extends AbstractView {
 
                     Color color = Color.WHITE;
                     
-                    if(place.getCarTypes() != null)
+                    if(place.getCarType() == CarType.PASS)
                     	color = new Color(200, 200, 255);
                     
                     color = car == null ? color : car.getColor();

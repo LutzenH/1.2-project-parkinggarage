@@ -126,7 +126,8 @@ public class GarageCustomisationView extends AbstractControllableView implements
     }
     
     @Override
-    public void mouseClicked(MouseEvent e){   	
+    public void mouseClicked(MouseEvent e){
+		updateView();
     	for(int i = 0; i < rectangles.length; i++) {
     		Integer index = i;
     		

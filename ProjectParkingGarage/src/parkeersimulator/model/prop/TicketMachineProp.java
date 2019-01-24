@@ -2,10 +2,12 @@ package parkeersimulator.model.prop;
 
 import java.awt.Color;
 
+import parkeersimulator.model.location.Coordinate;
+
 public class TicketMachineProp extends Prop {
 
-	public TicketMachineProp() {
-		super(2f);
+	public TicketMachineProp(Coordinate position) {
+		super(2f, position);
 	}
 
 	@Override

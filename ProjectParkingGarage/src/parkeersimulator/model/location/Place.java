@@ -3,19 +3,24 @@ package parkeersimulator.model.location;
 import parkeersimulator.model.car.Car;
 import parkeersimulator.model.car.Car.CarType;
 
-public class Place {
+public class Place implements Comparable<Place> {
 	private Car car;
-	private CarType[] carTypes;
+	private CarType carType;
+	private Location location;
 	
 	private boolean isReserved;
+	
+	private float preferenceFactor;
 
 	/**
 	 * Default Constructor for Place
 	 */
-	public Place() {
+	public Place(Location location) {
 		this.car = null;
-		this.carTypes = null;
+		this.carType = null;
 		this.isReserved = false;
+		this.setPreferenceFactor(0f);
+		this.location = location;
 	}
 	
 	/**
@@ -23,10 +28,11 @@ public class Place {
 	 * @param car The car located at this Place.
 	 * @param cartypes The type of cars allowed at this Place.
 	 */
-	public Place(Car car, CarType[] carTypes) {
+	public Place(Car car, CarType carType, Location location) {
 		this.car = car;
-		this.carTypes = carTypes;
+		this.carType = carType;
 		this.isReserved = false;
+		this.location = location;
 	}
 	
 	/**
@@ -34,11 +40,11 @@ public class Place {
 
 	 * @param carType The type of car allowed at this Place.
 	 */
-	public Place(CarType carType) {
+	public Place(CarType carType, Location location) {
 		this.car = null;
-		this.carTypes = new CarType[1];
-		this.carTypes[0] = carType;
+		this.carType = carType;
 		this.isReserved = false;
+		this.location = location;
 	}
 	
 	/**
@@ -64,14 +70,14 @@ public class Place {
 	public void setReserved(boolean isReserved) { this.isReserved = isReserved; }
 
 	/**
-	 * @return the allowed carTypes
+	 * @return the allowed carType
 	 */
-	public CarType[] getCarTypes() { return carTypes; }
+	public CarType getCarType() { return carType; }
 
 	/**
-	 * @param carTypes set the allowed carTypes
+	 * @param carTypes set the allowed carType
 	 */
-	public void setCarTypes(CarType[] carTypes) { this.carTypes = carTypes; }
+	public void setCarType(CarType carType) { this.carType = carType; }
 	
 	/**
 	 * Check if this Place is empty
@@ -79,5 +85,31 @@ public class Place {
 	 */
 	public boolean isEmpty() {
 		return (car == null) ? true : false;
+	}
+
+	/**
+	 * @return its preference factor
+	 */
+	public float getPreferenceFactor() {
+		return preferenceFactor;
+	}
+
+	/**
+	 * @param preferenceFactor the preferenceFactor
+	 */
+	public void setPreferenceFactor(float preferenceFactor) {
+		this.preferenceFactor = preferenceFactor;
+	}
+
+	@Override
+	public int compareTo(Place otherPlace) {
+		return Float.compare(this.preferenceFactor, otherPlace.getPreferenceFactor());
+	}
+
+	/**
+	 * @return the location
+	 */
+	public Location getLocation() {
+		return location;
 	}
 }
