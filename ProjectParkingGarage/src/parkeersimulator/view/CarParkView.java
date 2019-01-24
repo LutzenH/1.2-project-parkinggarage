@@ -129,10 +129,10 @@ public class CarParkView extends AbstractView {
         if(color == Color.white &&  !isReserved) {
             graphics.setColor(Color.LIGHT_GRAY);
             graphics.fillRect(
-            		((int)Math.floor(location.getRow() * X_ROWPOS_FACTOR) * X_OFFSET_COLUMN + (location.getRow() % 2) * X_OFFSET_PLACE + X_OFFSET + 2) * SIZE_FACTOR,
-                    (location.getPlace() * Y_OFFSET_PLACE + location.getFloor() * (Y_OFFSET_FLOORS + Y_OFFSET_FLOORS_DEFAULT) + Y_OFFSET + 2) * SIZE_FACTOR,
-                    (X_WIDTH_PLACE - 5) * SIZE_FACTOR,
-                    (Y_WIDTH_PLACE - 5) * SIZE_FACTOR);
+            		 ((int)Math.floor(location.getRow() * X_ROWPOS_FACTOR) * X_OFFSET_COLUMN + (location.getRow() % 2) * X_OFFSET_PLACE + X_OFFSET + 2) + location.getFloor() * (Y_OFFSET_FLOORS + Y_OFFSET_FLOORS_DEFAULT) * SIZE_FACTOR,
+                     (location.getPlace() * Y_OFFSET_PLACE + Y_OFFSET + 2) * SIZE_FACTOR,
+                     (X_WIDTH_PLACE - 5) * SIZE_FACTOR,
+                     (Y_WIDTH_PLACE - 5) * SIZE_FACTOR);
         }
     }
 }
