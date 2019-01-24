@@ -10,6 +10,7 @@ import javax.swing.BorderFactory;
 import parkeersimulator.model.ParkingGarageModel;
 import parkeersimulator.model.car.Car;
 import parkeersimulator.model.location.Location;
+import parkeersimulator.model.location.Place;
 
 /**
  * class of the view of the simulation.
@@ -94,12 +95,14 @@ public class CarParkView extends AbstractView {
         Graphics graphics = carParkImage.getGraphics();
         for(int floor = 0; floor < model.getNumberOfFloors(); floor++) {
             for(int row = 0; row < model.getNumberOfRows(); row++) {
-                for(int place = 0; place < model.getNumberOfPlaces(); place++) {
-                    Location location = new Location(floor, row, place);
-                    Car car = model.getCarAt(location);
+                for(int places = 0; places < model.getNumberOfPlaces(); places++) {
+                    Location location = new Location(floor, row, places);
+                    
+                    Place place = model.getPlaces()[floor][row][places];
+                    Car car = place.getCar();
 
                     Color color = car == null ? Color.white : car.getColor();
-                    drawPlace(graphics, location, color);
+                    drawPlace(graphics, location, color, place.getReserved());
                 }
             }
         }
@@ -109,20 +112,20 @@ public class CarParkView extends AbstractView {
     /**
      * Paint a place on this car park view in a given color.
      */
-    private void drawPlace(Graphics graphics, Location location, Color color) {
+    private void drawPlace(Graphics graphics, Location location, Color color, boolean isReserved) {
         graphics.setColor(color);
         graphics.fillRect(
                 ((int)Math.floor(location.getRow() * X_ROWPOS_FACTOR) * X_OFFSET_COLUMN + (location.getRow() % 2) * X_OFFSET_PLACE + X_OFFSET) * SIZE_FACTOR,
                 (location.getPlace() * Y_OFFSET_PLACE + location.getFloor() * (Y_OFFSET_FLOORS + Y_OFFSET_FLOORS_DEFAULT) + Y_OFFSET) * SIZE_FACTOR,
                 (X_WIDTH_PLACE - 1) * SIZE_FACTOR,
                 (Y_WIDTH_PLACE - 1) * SIZE_FACTOR); // TODO use dynamic size or constants
-        
-        /* OLD VERSION
-         * graphics.fillRect(
-                    location.getFloor() * X_OFFSET_FLOORS + ((int)Math.floor(location.getRow() * X_ROWPOS_FACTOR)) * X_OFFSET_COLUMN + (location.getRow() % 2) * X_OFFSET_PLACE + X_OFFSET,
-                    location.getPlace() * Y_OFFSET_PLACE + Y_OFFSET,
-                    X_WIDTH_PLACE - 1,
-                    Y_WIDTH_PLACE - 1); // TODO use dynamic size or constants
-         * */
+        if(color == Color.white &&  !isReserved) {
+            graphics.setColor(Color.LIGHT_GRAY);
+            graphics.fillRect(
+            		((int)Math.floor(location.getRow() * X_ROWPOS_FACTOR) * X_OFFSET_COLUMN + (location.getRow() % 2) * X_OFFSET_PLACE + X_OFFSET + 2) * SIZE_FACTOR,
+                    (location.getPlace() * Y_OFFSET_PLACE + location.getFloor() * (Y_OFFSET_FLOORS + Y_OFFSET_FLOORS_DEFAULT) + Y_OFFSET + 2) * SIZE_FACTOR,
+                    (X_WIDTH_PLACE - 5) * SIZE_FACTOR,
+                    (Y_WIDTH_PLACE - 5) * SIZE_FACTOR);
+        }
     }
 }

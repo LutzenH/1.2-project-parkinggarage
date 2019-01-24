@@ -10,19 +10,22 @@ public class Place {
 	private boolean isReserved;
 
 	/**
-	 * Constructor for Place
+	 * Default Constructor for Place
+	 */
+	public Place() {
+		this.car = null;
+		this.carTypes = null;
+		this.isReserved = false;
+	}
+	
+	/**
+	 * Constructor for place.
 	 * @param car The car located at this Place.
 	 * @param cartypes The type of cars allowed at this Place.
 	 */
 	public Place(Car car, carType[] carTypes) {
 		this.car = car;
 		this.carTypes = carTypes;
-		this.isReserved = false;
-	}
-	
-	public Place() {
-		this.car = null;
-		this.carTypes = null;
 		this.isReserved = false;
 	}
 	
