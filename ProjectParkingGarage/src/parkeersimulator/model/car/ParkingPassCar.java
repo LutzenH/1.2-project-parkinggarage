@@ -1,6 +1,9 @@
 package parkeersimulator.model.car;
 
 import java.util.Random;
+
+import parkeersimulator.model.ParkingGarageModel.CarType;
+
 import java.awt.*;
 
 /**
@@ -14,7 +17,6 @@ public class ParkingPassCar extends Car {
 	 */
     public ParkingPassCar(int stayMinutes) {    	
         this.setMinutesLeft(stayMinutes);
-        this.setHasToPay(false);
     }
     
     /**
@@ -23,4 +25,14 @@ public class ParkingPassCar extends Car {
     public Color getColor(){
     	return COLOR;
     }
+    
+	@Override
+	public CarType getCarType() {
+		return CarType.PASS;
+	}
+
+	@Override
+	public boolean getHasToPay() {
+		return false;
+	}
 }

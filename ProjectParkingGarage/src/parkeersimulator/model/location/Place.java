@@ -1,11 +1,11 @@
 package parkeersimulator.model.location;
 
-import parkeersimulator.model.ParkingGarageModel.carType;
+import parkeersimulator.model.ParkingGarageModel.CarType;
 import parkeersimulator.model.car.Car;
 
 public class Place {
 	private Car car;
-	private carType[] carTypes;
+	private CarType[] carTypes;
 	
 	private boolean isReserved;
 
@@ -23,9 +23,21 @@ public class Place {
 	 * @param car The car located at this Place.
 	 * @param cartypes The type of cars allowed at this Place.
 	 */
-	public Place(Car car, carType[] carTypes) {
+	public Place(Car car, CarType[] carTypes) {
 		this.car = car;
 		this.carTypes = carTypes;
+		this.isReserved = false;
+	}
+	
+	/**
+	 * Constructor for place with CarType input variable.
+
+	 * @param carType The type of car allowed at this Place.
+	 */
+	public Place(CarType carType) {
+		this.car = null;
+		this.carTypes = new CarType[1];
+		this.carTypes[0] = carType;
 		this.isReserved = false;
 	}
 	
@@ -54,12 +66,12 @@ public class Place {
 	/**
 	 * @return the allowed carTypes
 	 */
-	public carType[] getCarTypes() { return carTypes; }
+	public CarType[] getCarTypes() { return carTypes; }
 
 	/**
 	 * @param carTypes set the allowed carTypes
 	 */
-	public void setCarTypes(carType[] carTypes) { this.carTypes = carTypes; }
+	public void setCarTypes(CarType[] carTypes) { this.carTypes = carTypes; }
 	
 	/**
 	 * Check if this Place is empty

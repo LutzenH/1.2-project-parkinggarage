@@ -2,6 +2,8 @@ package parkeersimulator.model.car;
 
 import java.util.Random;
 
+import parkeersimulator.model.ParkingGarageModel.CarType;
+
 import java.awt.*;
 
 /**
@@ -15,7 +17,6 @@ public class AdHocCar extends Car {
 	 */
     public AdHocCar(int stayMinutes) {    	
         this.setMinutesLeft(stayMinutes);
-        this.setHasToPay(true);
     }
     /**
      * @return the color of the car used in the simulation.
@@ -23,4 +24,13 @@ public class AdHocCar extends Car {
     public Color getColor(){
     	return COLOR;
     }
+    
+	@Override
+	public CarType getCarType() {
+		return CarType.AD_HOC;
+	}
+	@Override
+	public boolean getHasToPay() {
+		return true;
+	}
 }

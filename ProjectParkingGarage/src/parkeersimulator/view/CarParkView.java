@@ -9,6 +9,7 @@ import java.awt.Toolkit;
 import javax.swing.BorderFactory;
 
 import parkeersimulator.model.ParkingGarageModel;
+import parkeersimulator.model.ParkingGarageModel.CarType;
 import parkeersimulator.model.car.Car;
 import parkeersimulator.model.location.Location;
 import parkeersimulator.model.location.Place;
@@ -108,7 +109,13 @@ public class CarParkView extends AbstractView {
                     Place place = model.getPlaces()[floor][row][places];
                     Car car = place.getCar();
 
-                    Color color = car == null ? Color.white : car.getColor();
+                    Color color = Color.WHITE;
+                    
+                    if(place.getCarTypes() != null)
+                    	color = new Color(200, 200, 255);
+                    
+                    color = car == null ? color : car.getColor();
+                    
                     drawPlace(graphics, location, color, place.getReserved());
                 }
             }
@@ -126,7 +133,7 @@ public class CarParkView extends AbstractView {
                 (location.getPlace() * Y_OFFSET_PLACE + Y_OFFSET) * SIZE_FACTOR,
                 (X_WIDTH_PLACE - 1) * SIZE_FACTOR,
                 (Y_WIDTH_PLACE - 1) * SIZE_FACTOR); // TODO use dynamic size or constants
-        if(color == Color.white &&  !isReserved) {
+        if(color == Color.white &&  isReserved) {
             graphics.setColor(Color.LIGHT_GRAY);
             graphics.fillRect(
             		 ((int)Math.floor(location.getRow() * X_ROWPOS_FACTOR) * X_OFFSET_COLUMN + (location.getRow() % 2) * X_OFFSET_PLACE + X_OFFSET + 2) + location.getFloor() * (Y_OFFSET_FLOORS + Y_OFFSET_FLOORS_DEFAULT) * SIZE_FACTOR,
