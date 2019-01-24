@@ -9,6 +9,10 @@ import parkeersimulator.model.car.ParkingPassCar;
 import parkeersimulator.model.car.ReservationCar;
 import parkeersimulator.model.location.Location;
 import parkeersimulator.model.location.Place;
+import parkeersimulator.model.prop.EntranceProp;
+import parkeersimulator.model.prop.ExitProp;
+import parkeersimulator.model.prop.Prop;
+import parkeersimulator.model.prop.TicketMachineProp;
 import parkeersimulator.model.queue.CarQueue;
 
 /**
@@ -24,10 +28,6 @@ public class ParkingGarageModel extends AbstractModel implements Runnable {
 
 	///boolean that is used for when threads need to stop running.
 	private boolean run;
-	
-	//TODO Replace these different types with an Enum.
-	///Id of the different types of cars.
-	public enum CarType { AD_HOC, PASS, RESERVERATION_CAR }
 	
 	///Declaration of the different queues in the simulation.
 	private CarQueue entranceCarQueue;
@@ -107,6 +107,9 @@ public class ParkingGarageModel extends AbstractModel implements Runnable {
     
     ///Declaration of Multi-dimensional array of places, format: [numberOfFloors][numberOfRows][numberOfPlacesInRow]
     private Place[][][] places;
+    
+    ///Declaration of array of Props;
+    private Prop[] props;
 
     ///Declaration of values needed to generate the parking garage.
 	private int numberOfFloors = 3;
@@ -136,6 +139,8 @@ public class ParkingGarageModel extends AbstractModel implements Runnable {
         ///Instantiation of the all possible car positions.
         places = new Place[numberOfFloors][numberOfRows][numberOfPlaces];
         populatePlaces();
+        
+        props = new Prop[numberOfRows * numberOfFloors];
     }
 
     /**
@@ -238,11 +243,11 @@ public class ParkingGarageModel extends AbstractModel implements Runnable {
      */
     private void carsArriving(){
     	int numberOfCars=getNumberOfCars(adHocArrivals);  
-		addArrivingCars(numberOfCars, CarType.AD_HOC); 
+		addArrivingCars(numberOfCars, Car.CarType.AD_HOC); 
     	numberOfCars=getNumberOfCars(passArrivals);
-        addArrivingCars(numberOfCars, CarType.PASS); 
+        addArrivingCars(numberOfCars, Car.CarType.PASS); 
         numberOfCars=getNumberOfCars(reservationArrivals);
-        addArrivingCars(numberOfCars, CarType.RESERVERATION_CAR);
+        addArrivingCars(numberOfCars, Car.CarType.RESERVERATION_CAR);
     }
 
     /**
@@ -343,7 +348,7 @@ public class ParkingGarageModel extends AbstractModel implements Runnable {
      * @param numberOfCars Amount of cars that should be added to the queue.
      * @param type Type of car that should be added to the queue.
      */
-    private void addArrivingCars(int numberOfCars, CarType type){
+    private void addArrivingCars(int numberOfCars, Car.CarType type){
     	switch(type) {
     	case AD_HOC: 
             for (int i = 0; i < numberOfCars; i++) {
@@ -489,13 +494,45 @@ public class ParkingGarageModel extends AbstractModel implements Runnable {
      */
     public Place[][][] getPlaces() { return places; }
     
+    /**
+     * @return An array of all props
+     */
+    public Prop[] getProps() { return props; }
+    
+    //TODO: add illegalArgumentsException above propsSize
+    /**
+     * Sets the prop to the next prop depending on its current state
+     * @param index the index of the prop in props
+     */
+    public void setProp(int index) {
+    	if(props[index] != null) {
+        	switch(props[index].getType()) {
+    			case PROP_ENTRANCE:
+    				props[index] = new ExitProp();
+    				break;
+    			case PROP_EXIT:
+    				props[index] = new TicketMachineProp();
+    				break;
+    			case PROP_TICKETMACHINE:
+    				props[index] = null;
+    				break;
+    			default:
+    				props[index] = new EntranceProp();
+    				break;
+        	}	
+    	}
+    	else {
+    		props[index] = new EntranceProp();
+    	}
+    }
+    
     //TODO Optimize this method.
     /**
      * Get the total car count of a certain car type.
      * @param type The type of car that should be used to calculate the car count.
      * @return amount of cars of this type currently in the parking garage.
      */
-    public int getCarCount(CarType type) {
+    public int getCarCount(Car.CarType type) {
     	int count = 0;
     	
     	for(Place[][] floor : places) {
@@ -570,7 +607,7 @@ public class ParkingGarageModel extends AbstractModel implements Runnable {
         if (oldCar == null) {
             places[location.getFloor()][location.getRow()][location.getPlace()].setCar(car);
             car.setLocation(location);
-            if(car.getCarType() == CarType.PASS)
+            if(car.getCarType() == Car.CarType.PASS)
             	numberOfOpenPassHolderSpots--;
             else
             	numberOfOpenDefaultSpots--;
@@ -595,7 +632,7 @@ public class ParkingGarageModel extends AbstractModel implements Runnable {
         }
         places[location.getFloor()][location.getRow()][location.getPlace()].setCar(null);
         car.setLocation(null);
-        if(car.getCarType() == CarType.PASS)
+        if(car.getCarType() == Car.CarType.PASS)
         	numberOfOpenPassHolderSpots++;
         else
             numberOfOpenDefaultSpots++;
@@ -611,7 +648,7 @@ public class ParkingGarageModel extends AbstractModel implements Runnable {
             for (int row = 0; row < getNumberOfRows(); row++) {
                 for (int place = 0; place < getNumberOfPlaces(); place++) {
                
-                	CarType[] allowedTypes = places[floor][row][place].getCarTypes();
+                	Car.CarType[] allowedTypes = places[floor][row][place].getCarTypes();
                     Location location = new Location(floor, row, place);
                 	
                 	if(allowedTypes == null) {
@@ -620,7 +657,7 @@ public class ParkingGarageModel extends AbstractModel implements Runnable {
                         }
                 	}
                 	else {
-                    	for(CarType type : allowedTypes) {
+                    	for(Car.CarType type : allowedTypes) {
                     		if(car.getCarType() == type && getCarAt(location) == null) {
                     			return location;
                     		}
@@ -844,7 +881,7 @@ public class ParkingGarageModel extends AbstractModel implements Runnable {
     		for(int rows = 0; rows < numberOfRows; rows++) {
     			for(int place = 0; place < numberOfPlaces; place++) {
     				if(count < passHolderPlaceAmount)
-    					places[floor][rows][place] = new Place(CarType.PASS);
+    					places[floor][rows][place] = new Place(Car.CarType.PASS);
     				else
     					places[floor][rows][place] = new Place();
     				

@@ -1,7 +1,7 @@
 package parkeersimulator.model.location;
 
-import parkeersimulator.model.ParkingGarageModel.CarType;
 import parkeersimulator.model.car.Car;
+import parkeersimulator.model.car.Car.CarType;
 
 public class Place {
 	private Car car;

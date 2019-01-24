@@ -1,4 +1,4 @@
-package parkeersimulator.view;
+package parkeersimulator.view.frame;
 
 import javax.swing.BoxLayout;
 import javax.swing.JFrame;

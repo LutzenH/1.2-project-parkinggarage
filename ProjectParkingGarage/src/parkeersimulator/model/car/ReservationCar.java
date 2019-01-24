@@ -2,8 +2,6 @@ package parkeersimulator.model.car;
 
 import java.util.Random;
 
-import parkeersimulator.model.ParkingGarageModel.CarType;
-
 import java.awt.*;
 
 /**

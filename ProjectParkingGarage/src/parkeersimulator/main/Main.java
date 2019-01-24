@@ -1,5 +1,7 @@
 package parkeersimulator.main;
 
+import java.awt.Dimension;
+
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
@@ -7,9 +9,10 @@ import parkeersimulator.controller.ParkingGarageController;
 import parkeersimulator.model.ParkingGarageModel;
 import parkeersimulator.view.CarParkStepControlView;
 import parkeersimulator.view.CarParkView;
-import parkeersimulator.view.MainFrame;
 import parkeersimulator.view.QueueCountView;
 import parkeersimulator.view.TimeView;
+import parkeersimulator.view.frame.MainFrame;
+import parkeersimulator.view.frame.GarageDesignFrame;
 import parkeersimulator.view.graph.CarCountGraphView;
 import parkeersimulator.view.graph.QueueGraphView;
 
@@ -62,8 +65,7 @@ public class Main {
 		
 		///Layout and instantiation of the JFrame.
 		screen = new MainFrame("Parking Garage Simulator", carparkstepcontrolview, tabbedviews, carparkview);
-		
-		
+
 		
 		//screen.getContentPane().add(queuecountview);
 		//screen.getContentPane().add(timeview);
@@ -75,6 +77,10 @@ public class Main {
 		screen.setVisible(true);
 		
 		//screen.addResizeProperty(controller);
+		
+		GarageDesignFrame temp = new GarageDesignFrame(model, controller);
+		temp.setVisible(true);
+		temp.setSize(new Dimension(732, 410));
 	}
 	
 	/**

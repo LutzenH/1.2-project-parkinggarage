@@ -2,7 +2,6 @@ package parkeersimulator.model.car;
 
 import java.awt.*;
 
-import parkeersimulator.model.ParkingGarageModel.CarType;
 import parkeersimulator.model.location.Location;
 
 /**
@@ -10,7 +9,10 @@ import parkeersimulator.model.location.Location;
  */
 public abstract class Car {
 
-    private Location location;
+	///Id of the different types of cars.
+	public enum CarType { AD_HOC, PASS, RESERVERATION_CAR }
+
+	private Location location;
     private int minutesLeft;
     private boolean isPaying;
 
