@@ -2,6 +2,8 @@ package parkeersimulator.model.car;
 
 import java.util.Random;
 
+import parkeersimulator.model.ParkingGarageModel.CarType;
+
 import java.awt.*;
 
 /**
@@ -23,4 +25,9 @@ public class AdHocCar extends Car {
     public Color getColor(){
     	return COLOR;
     }
+    
+	@Override
+	public CarType getCarType() {
+		return CarType.AD_HOC;
+	}
 }

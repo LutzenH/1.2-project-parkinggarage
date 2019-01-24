@@ -27,7 +27,7 @@ public class ParkingGarageModel extends AbstractModel implements Runnable {
 	
 	//TODO Replace these different types with an Enum.
 	///Id of the different types of cars.
-	public enum carType { AD_HOC, PASS, RESERVERATION_CAR }
+	public enum CarType { AD_HOC, PASS, RESERVERATION_CAR }
 	
 	///Declaration of the different queues in the simulation.
 	private CarQueue entranceCarQueue;
@@ -69,7 +69,6 @@ public class ParkingGarageModel extends AbstractModel implements Runnable {
     
     //The amount of time a car can stay in the car park;
     private int stayMinutes;
-	
     
     //Events
     //Boolean that intitializes an event
@@ -113,7 +112,13 @@ public class ParkingGarageModel extends AbstractModel implements Runnable {
 	private int numberOfFloors = 3;
 	private int numberOfRows = 8;
 	private int numberOfPlaces = 30;
-	private int numberOfOpenSpots;
+	
+	//Number of open spots.
+	private int numberOfOpenDefaultSpots;
+	private int numberOfOpenPassHolderSpots;
+	
+    //Amount of spots for Pass holders
+    private int passHolderPlaceAmount = 100;
 
 	/**
 	 * Constructor of ParkingGarageModel
@@ -125,7 +130,8 @@ public class ParkingGarageModel extends AbstractModel implements Runnable {
         paymentCarQueue = new CarQueue();
         exitCarQueue = new CarQueue();
 
-        this.numberOfOpenSpots = numberOfFloors * numberOfRows * numberOfPlaces;
+        this.numberOfOpenDefaultSpots = (numberOfFloors * numberOfRows * numberOfPlaces) - passHolderPlaceAmount;
+        this.numberOfOpenPassHolderSpots = passHolderPlaceAmount;
         
         ///Instantiation of the all possible car positions.
         places = new Place[numberOfFloors][numberOfRows][numberOfPlaces];
@@ -232,11 +238,11 @@ public class ParkingGarageModel extends AbstractModel implements Runnable {
      */
     private void carsArriving(){
     	int numberOfCars=getNumberOfCars(adHocArrivals);  
-		addArrivingCars(numberOfCars, carType.AD_HOC); 
+		addArrivingCars(numberOfCars, CarType.AD_HOC); 
     	numberOfCars=getNumberOfCars(passArrivals);
-        addArrivingCars(numberOfCars, carType.PASS); 
+        addArrivingCars(numberOfCars, CarType.PASS); 
         numberOfCars=getNumberOfCars(reservationArrivals);
-        addArrivingCars(numberOfCars, carType.RESERVERATION_CAR);
+        addArrivingCars(numberOfCars, CarType.RESERVERATION_CAR);
     }
 
     /**
@@ -245,14 +251,29 @@ public class ParkingGarageModel extends AbstractModel implements Runnable {
      * @param queue the queue that the cars should be taken from.
      */
     private void carsEntering(CarQueue queue){
-        int i=0;      
-    	while (queue.carsInQueue()>0 && 
-    			getNumberOfOpenSpots()>0 && 
-    			i<enterSpeed) {
-            Car car = queue.removeCar();
-            Location freeLocation = getFirstFreeLocation();
-            setCarAt(freeLocation, car);
-            i++;
+        int i=0;
+        
+        if(queue == entranceCarQueue )
+        {
+        	while (queue.carsInQueue()>0 && 
+        			getNumberOfOpenDefaultSpots()>0 && 
+        			i<enterSpeed) {
+                Car car = queue.removeCar();
+                Location freeLocation = getFirstFreeLocation(car);
+                setCarAt(freeLocation, car);
+                i++;
+            }
+        }
+        else if (queue == entrancePassQueue)
+        {
+        	while (queue.carsInQueue()>0 && 
+        			getNumberOfOpenPassHolderSpots()>0 && 
+        			i<enterSpeed) {
+                Car car = queue.removeCar();
+                Location freeLocation = getFirstFreeLocation(car);
+                setCarAt(freeLocation, car);
+                i++;
+            }
         }
     }
     
@@ -322,7 +343,7 @@ public class ParkingGarageModel extends AbstractModel implements Runnable {
      * @param numberOfCars Amount of cars that should be added to the queue.
      * @param type Type of car that should be added to the queue.
      */
-    private void addArrivingCars(int numberOfCars, carType type){
+    private void addArrivingCars(int numberOfCars, CarType type){
     	switch(type) {
     	case AD_HOC: 
             for (int i = 0; i < numberOfCars; i++) {
@@ -454,9 +475,14 @@ public class ParkingGarageModel extends AbstractModel implements Runnable {
     public int getNumberOfPlaces() { return numberOfPlaces; }
     
     /**
-     * @return The total amount of open spots in the parking garage.
+     * @return The total amount of default open spots in the parking garage.
      */
-    public int getNumberOfOpenSpots() { return numberOfOpenSpots; }
+    public int getNumberOfOpenDefaultSpots() { return numberOfOpenDefaultSpots; }
+    
+    /**
+     * @return The total amount of open passholder spots in the parking garage.
+     */
+    public int getNumberOfOpenPassHolderSpots() { return numberOfOpenPassHolderSpots; }
     
     /**
      * @return A multi-dimensional array of all cars in the parking garage, format: car[floor][row][place]
@@ -469,7 +495,7 @@ public class ParkingGarageModel extends AbstractModel implements Runnable {
      * @param type The type of car that should be used to calculate the car count.
      * @return amount of cars of this type currently in the parking garage.
      */
-    public int getCarCount(carType type) {
+    public int getCarCount(CarType type) {
     	int count = 0;
     	
     	for(Place[][] floor : places) {
@@ -544,7 +570,10 @@ public class ParkingGarageModel extends AbstractModel implements Runnable {
         if (oldCar == null) {
             places[location.getFloor()][location.getRow()][location.getPlace()].setCar(car);
             car.setLocation(location);
-            numberOfOpenSpots--;
+            if(car.getCarType() == CarType.PASS)
+            	numberOfOpenPassHolderSpots--;
+            else
+            	numberOfOpenDefaultSpots--;
             return true;
         }
         return false;
@@ -566,21 +595,38 @@ public class ParkingGarageModel extends AbstractModel implements Runnable {
         }
         places[location.getFloor()][location.getRow()][location.getPlace()].setCar(null);
         car.setLocation(null);
-        numberOfOpenSpots++;
+        if(car.getCarType() == CarType.PASS)
+        	numberOfOpenPassHolderSpots++;
+        else
+            numberOfOpenDefaultSpots++;
+
         return car;
     }
 
     /**
      * @return The first free location in the parking garage.
      */
-    public Location getFirstFreeLocation() {
+    public Location getFirstFreeLocation(Car car) {
         for (int floor = 0; floor < getNumberOfFloors(); floor++) {
             for (int row = 0; row < getNumberOfRows(); row++) {
                 for (int place = 0; place < getNumberOfPlaces(); place++) {
+               
+                	CarType[] allowedTypes = places[floor][row][place].getCarTypes();
                     Location location = new Location(floor, row, place);
-                    if (getCarAt(location) == null) {
-                        return location;
-                    }
+                	
+                	if(allowedTypes == null) {
+                        if (getCarAt(location) == null) {
+                            return location;
+                        }
+                	}
+                	else {
+                    	for(CarType type : allowedTypes) {
+                    		if(car.getCarType() == type && getCarAt(location) == null) {
+                    			return location;
+                    		}
+                    	}
+                	}
+                	
                 }
             }
         }
@@ -788,12 +834,21 @@ public class ParkingGarageModel extends AbstractModel implements Runnable {
     		stayMinutes = (int) Math.floor(random.nextFloat() * (540 * Math.pow(timeArrivalFactor, 2)) + 15);
     }
     
-    
-    private void populatePlaces() {   	
+    /**
+     * Populates places[][][] with Place's
+     */
+    private void populatePlaces() {
+    	int count = 0;
+    	
     	for(int floor = 0; floor < numberOfFloors; floor++) {
     		for(int rows = 0; rows < numberOfRows; rows++) {
     			for(int place = 0; place < numberOfPlaces; place++) {
-    				places[floor][rows][place] = new Place();
+    				if(count < passHolderPlaceAmount)
+    					places[floor][rows][place] = new Place(CarType.PASS);
+    				else
+    					places[floor][rows][place] = new Place();
+    				
+    				count++;
     			}
     		}
     	}

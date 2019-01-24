@@ -1,6 +1,9 @@
 package parkeersimulator.model.car;
 
 import java.util.Random;
+
+import parkeersimulator.model.ParkingGarageModel.CarType;
+
 import java.awt.*;
 
 /**
@@ -26,4 +29,9 @@ public class ReservationCar extends Car {
     public Color getColor(){
     	return COLOR;
     }
+    
+	@Override
+	public CarType getCarType() {
+		return CarType.RESERVERATION_CAR;
+	}
 }

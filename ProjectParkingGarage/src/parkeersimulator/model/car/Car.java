@@ -2,6 +2,7 @@ package parkeersimulator.model.car;
 
 import java.awt.*;
 
+import parkeersimulator.model.ParkingGarageModel.CarType;
 import parkeersimulator.model.location.Location;
 
 /**
@@ -41,4 +42,6 @@ public abstract class Car {
      * @return The color of a car.
      */
     public abstract Color getColor();
+    
+    public abstract CarType getCarType();
 }
