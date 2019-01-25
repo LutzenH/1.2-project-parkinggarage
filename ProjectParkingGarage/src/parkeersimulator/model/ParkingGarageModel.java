@@ -32,6 +32,9 @@ public class ParkingGarageModel extends AbstractModel implements Runnable {
 	///boolean that is used for when threads need to stop running.
 	private boolean run;
 	
+	///Check if the garage is opened
+	private boolean isGarageOpen;
+	
 	///Declaration of the different queues in the simulation.
 	private CarQueue entranceCarQueue;
     private CarQueue entrancePassQueue;
@@ -85,6 +88,7 @@ public class ParkingGarageModel extends AbstractModel implements Runnable {
 	int eventStartingHour_SaturdayConcert = 19;
 	int eventStartingHour_SundayConcert = 15;
     
+	public enum CustomiseErrorMessages { ERROR_CUSTOMISE_NOTEMPTY, ERROR_CUSTOMISE_NOTCLOSED, ERROR_CUSTOMISE_NOTREADY }
 	
 	//Time arrival
 	//The double that holds the factor that gets applied to the number of arriving cars for simulating busy times
@@ -145,6 +149,8 @@ public class ParkingGarageModel extends AbstractModel implements Runnable {
 
         this.numberOfOpenDefaultSpots = (numberOfFloors * numberOfRows * numberOfPlaces) - passHolderPlaceAmount;
         this.numberOfOpenPassHolderSpots = passHolderPlaceAmount;
+        
+        this.isGarageOpen = false;
         
         ///Instantiation of the all possible car positions.
         places = new Place[numberOfFloors][numberOfRows][numberOfPlaces];
@@ -269,26 +275,28 @@ public class ParkingGarageModel extends AbstractModel implements Runnable {
     private void carsEntering(CarQueue queue){
         int i=0;
         
-        if(queue == entranceCarQueue )
-        {
-        	while (queue.carsInQueue()>0 && 
-        			getNumberOfOpenDefaultSpots()>0 && 
-        			i<enterSpeed) {
-                Car car = queue.removeCar();
-                Location freeLocation = getFirstFreeLocation(car);
-                setCarAt(freeLocation, car);
-                i++;
+        if(isGarageOpen) {
+            if(queue == entranceCarQueue )
+            {
+            	while (queue.carsInQueue()>0 && 
+            			getNumberOfOpenDefaultSpots()>0 && 
+            			i<enterSpeed) {
+                    Car car = queue.removeCar();
+                    Location freeLocation = getFirstFreeLocation(car);
+                    setCarAt(freeLocation, car);
+                    i++;
+                }
             }
-        }
-        else if (queue == entrancePassQueue)
-        {
-        	while (queue.carsInQueue()>0 && 
-        			getNumberOfOpenPassHolderSpots()>0 && 
-        			i<enterSpeed) {
-                Car car = queue.removeCar();
-                Location freeLocation = getFirstFreeLocation(car);
-                setCarAt(freeLocation, car);
-                i++;
+            else if (queue == entrancePassQueue)
+            {
+            	while (queue.carsInQueue()>0 && 
+            			getNumberOfOpenPassHolderSpots()>0 && 
+            			i<enterSpeed) {
+                    Car car = queue.removeCar();
+                    Location freeLocation = getFirstFreeLocation(car);
+                    setCarAt(freeLocation, car);
+                    i++;
+                }
             }
         }
     }
@@ -515,30 +523,32 @@ public class ParkingGarageModel extends AbstractModel implements Runnable {
      * Sets the prop to the next prop depending on its current state
      * @param index the index of the prop in props
      */
-    public void setProp(int index) {  
-		Coordinate position = Prop.calculateCoordinate(index, getNumberOfPlaces());
-		
-    	if(props[index] != null) {
-        	switch(props[index].getType()) {
-    			case PROP_ENTRANCE:
-    				props[index] = new ExitProp(position);
-    				break;
-    			case PROP_EXIT:
-    				props[index] = new TicketMachineProp(position);
-    				break;
-    			case PROP_TICKETMACHINE:
-    				props[index] = null;
-    				break;
-    			default:
-    				props[index] = new EntranceProp(position);
-    				break;
-        	}	
+    public void setProp(int index) {   	
+    	if(!isGarageOpen && isGarageEmpty()) {
+    		Coordinate position = Prop.calculateCoordinate(index, getNumberOfPlaces());
+    		
+        	if(props[index] != null) {
+            	switch(props[index].getType()) {
+        			case PROP_ENTRANCE:
+        				props[index] = new ExitProp(position);
+        				break;
+        			case PROP_EXIT:
+        				props[index] = new TicketMachineProp(position);
+        				break;
+        			case PROP_TICKETMACHINE:
+        				props[index] = null;
+        				break;
+        			default:
+        				props[index] = new EntranceProp(position);
+        				break;
+            	}	
+        	}
+        	else {
+        		props[index] = new EntranceProp(position);
+        	}
+        	
+        	updatePlacePreferences();
     	}
-    	else {
-    		props[index] = new EntranceProp(position);
-    	}
-    	
-    	updatePlacePreferences();
     }
     
     private void updatePlacePreferences() {
@@ -948,5 +958,77 @@ public class ParkingGarageModel extends AbstractModel implements Runnable {
     		}
     	}
     }
+
+	/**
+	 * @return the isGarageOpen
+	 */
+	public boolean isGarageOpen() {
+		return isGarageOpen;
+	}
+	
+	/**
+	 * Opens the garage when closed, closes the garage when open
+	 */
+	public void openGarage() {
+		if(getCustomisationErrorMessages() == null || getCustomisationErrorMessages() == CustomiseErrorMessages.ERROR_CUSTOMISE_NOTCLOSED)
+		{
+			if(isGarageOpen)
+				isGarageOpen = false;
+			else
+				isGarageOpen = true;
+		}
+	}
     
+	public boolean isGarageEmpty() {
+    	for(int floor = 0; floor < numberOfFloors; floor++) {
+    		for(int rows = 0; rows < numberOfRows; rows++) {
+    			for(int place = 0; place < numberOfPlaces; place++) {
+    				if(places[floor][rows][place].getCar() != null)
+    					return false;
+    			}
+    		}
+    	}
+    	return true;
+	}
+
+	/**
+	 * @return the customisationErrorMessages
+	 */
+	public CustomiseErrorMessages getCustomisationErrorMessages() {
+		if(!hasRequiredProps())
+			return CustomiseErrorMessages.ERROR_CUSTOMISE_NOTREADY;
+		else if(isGarageOpen)
+			return CustomiseErrorMessages.ERROR_CUSTOMISE_NOTCLOSED;
+		else if(!isGarageEmpty())
+			return CustomiseErrorMessages.ERROR_CUSTOMISE_NOTEMPTY;
+		else
+			return null;
+	}
+
+	private boolean hasRequiredProps() {
+		boolean hasEntrance = false;
+		boolean hasExit = false;
+		boolean hasTicketMachine = false;
+		
+		for(Prop prop : props) {
+			if(prop != null) {
+				switch(prop.getType()) {
+					case PROP_ENTRANCE:
+						hasEntrance = true;
+						break;
+					case PROP_EXIT:
+						hasExit = true;
+						break;
+					case PROP_TICKETMACHINE:
+						hasTicketMachine = true;
+						break;
+						
+					default:
+						break;
+				}
+			}
+		}
+		return (hasEntrance && hasExit && hasTicketMachine);
+	}
+	
 }

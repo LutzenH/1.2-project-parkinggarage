@@ -19,7 +19,8 @@ public class ParkingGarageController extends AbstractController {
 		EVENT_PASSWEEK_AMOUNT, EVENT_PASSWEEKEND_AMOUNT, EVENT_PASSEVENTWEEK_AMOUNT,
 		EVENT_TICKSTART, EVENT_TICKSTOP, 
 		EVENT_FRAME_RESIZE,
-		EVENT_CLICK_PROP
+		EVENT_CLICK_PROP,
+		EVENT_OPEN_GARAGE
 		};
 	
 	/**
@@ -82,6 +83,13 @@ public class ParkingGarageController extends AbstractController {
 			case EVENT_CLICK_PROP:
 				model.setProp((Integer)data.get("index"));
 				return true;
+		
+			case EVENT_OPEN_GARAGE:
+				model.openGarage();
+			break;
+			
+			default:
+				break;
 		}
 		return false;
 	}
