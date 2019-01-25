@@ -11,8 +11,10 @@ public class QueueGraphView extends GraphView {
 				model,
 				"Car Queue Size",
 				new XYSeries[] {
-						new XYSeries("AdHocCar"),
-						new XYSeries("ParkingPassCar")
+						new XYSeries("EntranceCarQueue"),
+						new XYSeries("EntrancePassQueue"),
+						new XYSeries("PaymentQueue"),
+						new XYSeries("ExitQueue")
 				},
 				"time (minutes)",
 				"amount",
@@ -24,6 +26,8 @@ public class QueueGraphView extends GraphView {
 	protected void updateDataset() {
 		graph_data[0].addOrUpdate(time, model.getEntranceCarQueue().carsInQueue());
 		graph_data[1].addOrUpdate(time, model.getEntrancePassQueue().carsInQueue());
+		graph_data[2].addOrUpdate(time, model.getPaymentCarQueue().carsInQueue());
+		graph_data[3].addOrUpdate(time, model.getExitCarQueue().carsInQueue());
 	}
 
 }

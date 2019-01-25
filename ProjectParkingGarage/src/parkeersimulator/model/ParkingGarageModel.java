@@ -100,13 +100,17 @@ public class ParkingGarageModel extends AbstractModel implements Runnable {
     ArrayList<Float> timeStamps_weekend = new ArrayList<Float>() {{ add(0f); add(4.5f); add(12f); add(14.5f); add(15.5f); add(16.75f); add(17.0f); add(24f); }};
     ArrayList<Float> arrivalFactors_weekend = new ArrayList<Float>() {{ add(0.6f); add(0f); add(1f); add(0.6f); add(0.3f); add(0.2f); add(1f); add(0.6f); }};
 
+    /// number of cars that can enter per minute per entrance
+    int baseEnterSpeed = 3;
+    /// number of cars that can pay per minute per ticketmachine
+    int basePaymentSpeed = 2;
+    /// number of cars that can leave per minute exits
+    int baseExitSpeed = 5;
     
-    /// number of cars that can enter per minute
-    int enterSpeed = 3; 
-    /// number of cars that can pay per minute
-    int paymentSpeed = 7;
-    /// number of cars that can leave per minute
-    int exitSpeed = 5;
+    // Declaration of variable queueSpeeds based on the amount of entrances, exits and paymentspots.
+    int enterSpeed = 0; 
+    int paymentSpeed = 0;
+    int exitSpeed = 0;
     
     ///Declaration of Multi-dimensional array of places, format: [numberOfFloors][numberOfRows][numberOfPlacesInRow]
     private Place[][][] places;
@@ -545,12 +549,32 @@ public class ParkingGarageModel extends AbstractModel implements Runnable {
 					
 					Coordinate position = Location.convertToCoordinate(location, getNumberOfRows());
 					
-					float preferenceFactor = 0f;
+					float preferenceFactor = Float.MAX_VALUE;
+					
+					paymentSpeed = 0;
+					exitSpeed = 0;
+					enterSpeed = 0;
 					
 					for(Prop prop : props) {
 						if(prop != null) {
-							preferenceFactor += Coordinate.calculateDistance(position, prop.getPosition());
-							//preferenceFactor *= prop.getPreferenceAmount();
+							switch(prop.getType()) {
+								case PROP_ENTRANCE:
+									enterSpeed += baseEnterSpeed;
+									break;
+								case PROP_EXIT:
+									exitSpeed += baseExitSpeed;
+									break;
+								case PROP_TICKETMACHINE:
+									paymentSpeed += basePaymentSpeed;
+									break;
+								default:
+									break;
+							}
+							
+							float distance = Coordinate.calculateDistance(position, prop.getPosition());
+							
+							if(distance < preferenceFactor)
+								preferenceFactor = distance * prop.getPreferenceAmount();
 						}
 					}
 					

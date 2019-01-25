@@ -50,8 +50,8 @@ public class Coordinate {
 	 * @param coord2 the second Coordinate
 	 * @return the distance between coord1 and coord2
 	 */
-	public static double calculateDistance(Coordinate coord1, Coordinate coord2) {
-		return Math.sqrt(Math.pow((coord2.getX() - coord1.getX()), 2) + Math.pow((coord2.getY() - coord1.getY()), 2));
+	public static float calculateDistance(Coordinate coord1, Coordinate coord2) {
+		return (float) Math.sqrt(Math.pow((coord2.getX() - coord1.getX()), 2) + Math.pow((coord2.getY() - coord1.getY()), 2));
 	}
 	
 }
