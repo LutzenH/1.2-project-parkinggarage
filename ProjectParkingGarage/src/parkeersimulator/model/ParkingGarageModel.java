@@ -319,6 +319,7 @@ if(isGarageOpen) {
         	}
         }
     }
+}
     
     /**
      * Adds leaving cars to the payment queue.
