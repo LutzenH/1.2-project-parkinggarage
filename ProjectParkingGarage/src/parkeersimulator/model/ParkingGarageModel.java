@@ -269,27 +269,46 @@ public class ParkingGarageModel extends AbstractModel implements Runnable {
     private void carsEntering(CarQueue queue){
         int i=0;
         
-        if(queue == entranceCarQueue )
-        {
-        	while (queue.carsInQueue()>0 && 
-        			getNumberOfOpenDefaultSpots()>0 && 
-        			i<enterSpeed) {
-                Car car = queue.removeCar();
-                Location freeLocation = getFirstFreeLocation(car);
-                setCarAt(freeLocation, car);
-                i++;
-            }
-        }
-        else if (queue == entrancePassQueue)
-        {
-        	while (queue.carsInQueue()>0 && 
+        if(queue == entrancePassQueue)
+        
+        	{while (queue.carsInQueue()>0 && 
         			getNumberOfOpenPassHolderSpots()>0 && 
         			i<enterSpeed) {
                 Car car = queue.removeCar();
                 Location freeLocation = getFirstFreeLocation(car);
                 setCarAt(freeLocation, car);
                 i++;
-            }
+        		}
+        	}
+        else if (queue == entranceCarQueue )
+        {
+        	while (queue.carsInQueue()>0 && 
+        			getNumberOfOpenDefaultSpots()>0 && 
+        			i<enterSpeed) { 
+                Car car = queue.removeCar();
+               	if (car.getCarType() == CarType.AD_HOC) {
+               		if(getFirstFreeUnreservedLocation() != null && locationIsValid(getFirstFreeUnreservedLocation())) {
+               			Location freeLocation = getFirstFreeUnreservedLocation();
+               			setCarAt(freeLocation, car);
+               		}
+               		else {
+               			queue.addCar(car);
+               		}
+               	}
+               	else if (car.getCarType() == CarType.RESERVERATION_CAR){
+               		if(getFirstFreeReservedLocation() != null && locationIsValid(getFirstFreeReservedLocation())) {
+               			Location freeLocation = getFirstFreeReservedLocation();
+               			setCarAt(freeLocation, car);
+               		}
+               		else {
+               			Location freeLocation = getFirstFreeUnreservedLocation();
+                   		setCarAt(freeLocation, car);
+                   		numberOfOpenDefaultSpots--;
+                   		
+               		}
+                }
+            i++;
+        	}
         }
     }
     
@@ -374,8 +393,12 @@ public class ParkingGarageModel extends AbstractModel implements Runnable {
     	case RESERVERATION_CAR:
             for (int i = 0; i < numberOfCars; i++) {
             	entranceCarQueue.addCar(new ReservationCar());
+            	if (getFirstFreeUnreservedLocation() != null) {
+            	places [getFirstFreeUnreservedLocation().getFloor()][getFirstFreeUnreservedLocation().getRow()][getFirstFreeUnreservedLocation().getPlace()].setReserved(true);
+            	numberOfOpenDefaultSpots--;
+            	}            	
             }
-    		break;
+      		break;
     	}
     }
     
@@ -385,6 +408,7 @@ public class ParkingGarageModel extends AbstractModel implements Runnable {
      * @param car The car that should leave its location.
      */
     private void carLeavesSpot(Car car){
+    	places [car.getLocation().getFloor()][car.getLocation().getRow()][car.getLocation().getPlace()].setReserved(false);
     	removeCarAt(car.getLocation());
         exitCarQueue.addCar(car);
     }
@@ -670,8 +694,10 @@ public class ParkingGarageModel extends AbstractModel implements Runnable {
             car.setLocation(location);
             if(car.getCarType() == Car.CarType.PASS)
             	numberOfOpenPassHolderSpots--;
-            else
+            else if(car.getCarType() == Car.CarType.AD_HOC) {
             	numberOfOpenDefaultSpots--;
+            	}
+            
             return true;
         }
         return false;
@@ -710,19 +736,44 @@ public class ParkingGarageModel extends AbstractModel implements Runnable {
         	CarType allowedType = place.getCarType();
             Location location = place.getLocation();
 
-        	if(allowedType == null) {
-        		if(car.getCarType() != CarType.PASS) {
+        	
+        		if(car.getCarType() == allowedType && getCarAt(location) == null) {
+        			return location;
+        		}
+    	}
+        return null;
+    }
+   /**
+    *  first free reserved and unreserved location finders
+    *  
+    * @return location
+    */
+    public Location getFirstFreeUnreservedLocation() {
+    	for(Place place : preferredPlaces) {
+            
+        	CarType allowedType = place.getCarType();
+            Location location = place.getLocation();
+
+        	if(allowedType == null && !place.getReserved()) {
                     if (getCarAt(location) == null) {
                         return location;
                     }
         		}
-        	}
-        	else {
-        		if(car.getCarType() == allowedType && getCarAt(location) == null) {
-        			return location;
+    		}
+        return null;
+    }
+    public Location getFirstFreeReservedLocation() {
+    	for(Place place : preferredPlaces) {
+            
+        	CarType allowedType = place.getCarType();
+            Location location = place.getLocation();
+
+        	if(allowedType == null && place.getReserved()) {
+                    if (getCarAt(location) == null) {
+                        return location;
+                    }
         		}
-        	}
-    	}
+    		}
         return null;
     }
 
@@ -770,7 +821,7 @@ public class ParkingGarageModel extends AbstractModel implements Runnable {
         int floor = location.getFloor();
         int row = location.getRow();
         int place = location.getPlace();
-        if (floor < 0 || floor >= numberOfFloors || row < 0 || row > numberOfRows || place < 0 || place > numberOfPlaces) {
+        if (floor < 0 || floor >= numberOfFloors || row < 0 || row >= numberOfRows || place < 0 || place >= numberOfPlaces) {
             return false;
         }
         return true;
