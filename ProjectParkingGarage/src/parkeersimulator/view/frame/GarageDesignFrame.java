@@ -1,7 +1,6 @@
 package parkeersimulator.view.frame;
 
 import java.awt.BorderLayout;
-import java.awt.EventQueue;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -10,6 +9,7 @@ import javax.swing.border.EmptyBorder;
 import parkeersimulator.controller.ParkingGarageController;
 import parkeersimulator.model.ParkingGarageModel;
 import parkeersimulator.view.GarageCustomisationView;
+import parkeersimulator.view.OpenGarageView;
 
 public class GarageDesignFrame extends JFrame {
 
@@ -29,6 +29,9 @@ public class GarageDesignFrame extends JFrame {
 		
 		JPanel panel = new GarageCustomisationView(model, controller);
 		contentPane.add(panel, BorderLayout.CENTER);
+		
+		JPanel panel_1 = new OpenGarageView(model, controller);
+		contentPane.add(panel_1, BorderLayout.SOUTH);
 	}
 
 }

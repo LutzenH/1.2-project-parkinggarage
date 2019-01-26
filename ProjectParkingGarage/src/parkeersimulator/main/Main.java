@@ -80,7 +80,8 @@ public class Main {
 		
 		GarageDesignFrame temp = new GarageDesignFrame(model, controller);
 		temp.setVisible(true);
-		temp.setSize(new Dimension(732, 410));
+		temp.setSize(new Dimension(732, 450));
+		temp.setResizable(false);
 	}
 	
 	/**

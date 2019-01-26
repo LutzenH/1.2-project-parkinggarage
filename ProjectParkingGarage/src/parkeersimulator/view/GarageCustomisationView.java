@@ -133,10 +133,11 @@ public class GarageCustomisationView extends AbstractControllableView implements
     		
     		if(rectangles[i].contains(e.getPoint())) {
     			controller.performAction(ActionType.EVENT_CLICK_PROP, new HashMap<String, Object>() {{ put("index", index); }});
-    			updateView();
+    			model.notifyViews();
     		}
     	}
     }
+    
 
 	@Override
 	public void mousePressed(MouseEvent e) {}

@@ -7,7 +7,7 @@ import parkeersimulator.model.location.Coordinate;
 public class TicketMachineProp extends Prop {
 
 	public TicketMachineProp(Coordinate position) {
-		super(0.5f, position);
+		super(0.6f, position);
 	}
 
 	@Override

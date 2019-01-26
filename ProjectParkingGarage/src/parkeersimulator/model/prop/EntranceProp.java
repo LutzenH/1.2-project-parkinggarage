@@ -7,7 +7,7 @@ import parkeersimulator.model.location.Coordinate;
 public class EntranceProp extends Prop {
 
 	public EntranceProp(Coordinate position) {
-		super(0.9f, position);
+		super(0.3f, position);
 	}
 
 	@Override
