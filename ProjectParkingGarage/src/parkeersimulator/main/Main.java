@@ -72,7 +72,7 @@ public class Main {
 		//screen.addResizeProperty(controller);
 		
 		GarageDesignFrame temp = new GarageDesignFrame(model, controller);
-		temp.setSize(new Dimension(732, 450));
+		temp.setSize(new Dimension(740, 450));
 		temp.setVisible(true);
 		temp.setResizable(false);
 		
