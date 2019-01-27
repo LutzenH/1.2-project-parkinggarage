@@ -49,6 +49,9 @@ public class ParkingGarageModel extends AbstractModel implements Runnable {
     private int hour = 0;
     private int minute = 0;
     private int week = 0;
+    
+    ///total amount of ticks
+    private int ticks = 0;
 
     ///The amount of time the thread should wait before executing the next tick().
     private int tickPause = 100;
@@ -130,12 +133,15 @@ public class ParkingGarageModel extends AbstractModel implements Runnable {
 	private int numberOfRows = 8;
 	private int numberOfPlaces = 30;
 	
-	//Number of open spots.
+	///Number of open spots.
 	private int numberOfOpenDefaultSpots;
 	private int numberOfOpenPassHolderSpots;
 	
-    //Amount of spots for Pass holders
+    ///Amount of spots for Pass holders
     private int passHolderPlaceAmount = 100;
+    
+    ///Amount of leaving cars
+    private int amountOfLeavingCars = 0;
 
 	/**
 	 * Constructor of ParkingGarageModel
@@ -222,6 +228,7 @@ public class ParkingGarageModel extends AbstractModel implements Runnable {
     private void advanceTime(){
         // Advance the time by one minute.
         minute++;
+        ticks++;
         while (minute > 59) {
             minute -= 60;
             hour++;
@@ -371,7 +378,12 @@ public class ParkingGarageModel extends AbstractModel implements Runnable {
     	switch(type) {
     	case AD_HOC: 
             for (int i = 0; i < numberOfCars; i++) {
+            	int queueLengthBeforeLeving = new Random().nextInt(6) + 15;
             	entranceCarQueue.addCar(new AdHocCar(stayMinutes));
+            	if(getEntranceCarQueue().carsInQueue() >= queueLengthBeforeLeving) {
+            		entranceCarQueue.removeCar();
+            		amountOfLeavingCars ++;
+            	}
             }
             break;
     	case PASS:
@@ -453,7 +465,6 @@ public class ParkingGarageModel extends AbstractModel implements Runnable {
      */
     public void setPassArrivals_eventWeek(float amount) {passArrivals_event = amount / 100f; }
     
-    
     /**
      * @return The current pause between ticks.
      */
@@ -462,6 +473,11 @@ public class ParkingGarageModel extends AbstractModel implements Runnable {
      * Sets the pause between ticks.
      */
     public void setTickPause(int amount) { tickPause = amount; }
+    
+    /**
+     * @return The total amount of ticks
+     */
+    public int getTicks() { return ticks; }
     
     /**
      * @return The current day of the week.
@@ -482,6 +498,11 @@ public class ParkingGarageModel extends AbstractModel implements Runnable {
      * @return The current time in the format: int[day][hour][minute].
      */
     public int[] getTime() { return new int[] { day, hour, minute }; }
+    
+    /**
+     * @return The amount of cars that has leaved the entranceCarqueue.
+     */
+    public int getAmountOfLeavingCars() {return amountOfLeavingCars;}
     
     /**
      * @return The number of floors in the parking garage.
@@ -769,6 +790,11 @@ public class ParkingGarageModel extends AbstractModel implements Runnable {
                 }
             }
         }
+    }
+    
+    public int leaveTheEntranceCarQueueOnAverageEveryDay() {
+    		double amount = (amountOfLeavingCars / (ticks / 60d / 24d));
+    		return (int) Math.round(amount);
     }
 
     /**

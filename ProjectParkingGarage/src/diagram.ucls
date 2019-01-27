@@ -74,17 +74,7 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <enumeration id="9" language="java" name="parkeersimulator.model.ParkingGarageModel.carType" 
-    project="ProjectParkingGarage" file="/ProjectParkingGarage/src/parkeersimulator/model/ParkingGarageModel.java" 
-    binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="664" y="1501"/>    
-    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
-      sort-features="false" accessors="true" visibility="true">      
-      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
-      <operations public="true" package="true" protected="true" private="true" static="true"/>    
-    </display>  
-  </enumeration>  
-  <class id="10" language="java" name="parkeersimulator.controller.ParkingGarageController" 
+  <class id="9" language="java" name="parkeersimulator.controller.ParkingGarageController" 
     project="ProjectParkingGarage" 
     file="/ProjectParkingGarage/src/parkeersimulator/controller/ParkingGarageController.java" binary="false" 
     corner="BOTTOM_RIGHT">    
@@ -95,7 +85,7 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="11" language="java" name="parkeersimulator.model.location.Location" project="ProjectParkingGarage" 
+  <class id="10" language="java" name="parkeersimulator.model.location.Location" project="ProjectParkingGarage" 
     file="/ProjectParkingGarage/src/parkeersimulator/model/location/Location.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="562" y="2479"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
@@ -104,7 +94,7 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="12" language="java" name="parkeersimulator.model.location.Place" project="ProjectParkingGarage" 
+  <class id="11" language="java" name="parkeersimulator.model.location.Place" project="ProjectParkingGarage" 
     file="/ProjectParkingGarage/src/parkeersimulator/model/location/Place.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="665" y="1773"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
@@ -113,7 +103,7 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="13" language="java" name="parkeersimulator.model.queue.CarQueue" project="ProjectParkingGarage" 
+  <class id="12" language="java" name="parkeersimulator.model.queue.CarQueue" project="ProjectParkingGarage" 
     file="/ProjectParkingGarage/src/parkeersimulator/model/queue/CarQueue.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="319" y="2104"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
@@ -122,7 +112,7 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="14" language="java" name="parkeersimulator.main.Main" project="ProjectParkingGarage" 
+  <class id="13" language="java" name="parkeersimulator.main.Main" project="ProjectParkingGarage" 
     file="/ProjectParkingGarage/src/parkeersimulator/main/Main.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="1628" y="233"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
@@ -131,7 +121,7 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="15" language="java" name="parkeersimulator.model.car.ParkingPassCar" project="ProjectParkingGarage" 
+  <class id="14" language="java" name="parkeersimulator.model.car.ParkingPassCar" project="ProjectParkingGarage" 
     file="/ProjectParkingGarage/src/parkeersimulator/model/car/ParkingPassCar.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="715" y="2413"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
@@ -140,7 +130,7 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="16" language="java" name="parkeersimulator.model.car.Car" project="ProjectParkingGarage" 
+  <class id="15" language="java" name="parkeersimulator.model.car.Car" project="ProjectParkingGarage" 
     file="/ProjectParkingGarage/src/parkeersimulator/model/car/Car.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="560" y="2103"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
@@ -149,7 +139,7 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="17" language="java" name="parkeersimulator.controller.AbstractController" project="ProjectParkingGarage" 
+  <class id="16" language="java" name="parkeersimulator.controller.AbstractController" project="ProjectParkingGarage" 
     file="/ProjectParkingGarage/src/parkeersimulator/controller/AbstractController.java" binary="false" 
     corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="910" y="1234"/>    
@@ -159,7 +149,7 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="18" language="java" name="parkeersimulator.view.CarParkStepControlView" project="ProjectParkingGarage" 
+  <class id="17" language="java" name="parkeersimulator.view.CarParkStepControlView" project="ProjectParkingGarage" 
     file="/ProjectParkingGarage/src/parkeersimulator/view/CarParkStepControlView.java" binary="false" 
     corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="1863" y="1031"/>    
@@ -169,7 +159,7 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="19" language="java" name="parkeersimulator.view.TimeView" project="ProjectParkingGarage" 
+  <class id="18" language="java" name="parkeersimulator.view.TimeView" project="ProjectParkingGarage" 
     file="/ProjectParkingGarage/src/parkeersimulator/view/TimeView.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="1220" y="528"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
@@ -178,7 +168,7 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <enumeration id="20" language="java" name="parkeersimulator.controller.ParkingGarageController.ActionType" 
+  <enumeration id="19" language="java" name="parkeersimulator.controller.ParkingGarageController.ActionType" 
     project="ProjectParkingGarage" 
     file="/ProjectParkingGarage/src/parkeersimulator/controller/ParkingGarageController.java" binary="false" 
     corner="BOTTOM_RIGHT">    
@@ -189,16 +179,7 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </enumeration>  
-  <class id="21" language="java" name="parkeersimulator.view.viewWindow" project="ProjectParkingGarage" 
-    file="/ProjectParkingGarage/src/parkeersimulator/view/viewWindow.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="197" y="152"/>    
-    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
-      sort-features="false" accessors="true" visibility="true">      
-      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
-      <operations public="true" package="true" protected="true" private="true" static="true"/>    
-    </display>  
-  </class>  
-  <class id="22" language="java" name="parkeersimulator.model.ParkingGarageModel" project="ProjectParkingGarage" 
+  <class id="20" language="java" name="parkeersimulator.model.ParkingGarageModel" project="ProjectParkingGarage" 
     file="/ProjectParkingGarage/src/parkeersimulator/model/ParkingGarageModel.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="393" y="1094"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
@@ -207,7 +188,7 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="23" language="java" name="parkeersimulator.model.car.AdHocCar" project="ProjectParkingGarage" 
+  <class id="21" language="java" name="parkeersimulator.model.car.AdHocCar" project="ProjectParkingGarage" 
     file="/ProjectParkingGarage/src/parkeersimulator/model/car/AdHocCar.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="859" y="2415"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
@@ -216,228 +197,272 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <generalization id="24">    
-    <end type="SOURCE" refId="7"/>    
-    <end type="TARGET" refId="4"/>  
-  </generalization>  
-  <generalization id="25">    
-    <end type="SOURCE" refId="10"/>    
-    <end type="TARGET" refId="17"/>  
-  </generalization>  
-  <nesting id="26">    
-    <end type="SOURCE" refId="10"/>    
-    <end type="TARGET" refId="20"/>  
-  </nesting>  
-  <association id="27">    
-    <end type="SOURCE" refId="22" navigable="false">      
-      <attribute id="28" name="entranceCarQueue"/>      
-      <multiplicity id="29" minimum="0" maximum="1"/>    
-    </end>    
-    <end type="TARGET" refId="13" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <association id="30">    
-    <end type="SOURCE" refId="22" navigable="false">      
-      <attribute id="31" name="exitCarQueue"/>      
-      <multiplicity id="32" minimum="0" maximum="1"/>    
-    </end>    
-    <end type="TARGET" refId="13" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <generalization id="33">    
-    <end type="SOURCE" refId="1"/>    
-    <end type="TARGET" refId="16"/>  
-  </generalization>  
-  <generalization id="34">    
-    <end type="SOURCE" refId="19"/>    
-    <end type="TARGET" refId="4"/>  
-  </generalization>  
-  <association id="35">    
-    <bendpoint x="1870" y="468"/>    
-    <end type="SOURCE" refId="14" navigable="false">      
-      <attribute id="36" name="carparkstepcontrolview"/>      
-      <multiplicity id="37" minimum="0" maximum="1"/>    
-    </end>    
-    <end type="TARGET" refId="18" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <generalization id="38">    
-    <end type="SOURCE" refId="18"/>    
-    <end type="TARGET" refId="2"/>  
-  </generalization>  
-  <association id="39">    
-    <end type="SOURCE" refId="22" navigable="false">      
-      <attribute id="40" name="cars"/>      
-      <multiplicity id="41" minimum="0" maximum="2147483647"/>    
-    </end>    
-    <end type="TARGET" refId="16" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <generalization id="42">    
-    <end type="SOURCE" refId="6"/>    
-    <end type="TARGET" refId="16"/>  
-  </generalization>  
-  <association id="43">    
-    <end type="SOURCE" refId="13" navigable="false">      
-      <attribute id="44" name="queue"/>      
-      <multiplicity id="45" minimum="0" maximum="2147483647"/>    
-    </end>    
-    <end type="TARGET" refId="16" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <association id="46">    
-    <end type="SOURCE" refId="14" navigable="false">      
-      <attribute id="47" name="timeview"/>      
-      <multiplicity id="48" minimum="0" maximum="1"/>    
-    </end>    
-    <end type="TARGET" refId="19" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <association id="49">    
-    <end type="SOURCE" refId="5" navigable="false">      
-      <attribute id="50" name="views"/>      
-      <multiplicity id="51" minimum="0" maximum="2147483647"/>    
-    </end>    
-    <end type="TARGET" refId="4" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <association id="52">    
-    <end type="SOURCE" refId="12" navigable="false">      
-      <attribute id="53" name="car">        
-        <position height="18" width="24" x="635" y="1894"/>      
+  <association id="22">    
+    <end type="SOURCE" refId="20" navigable="false">      
+      <attribute id="23" name="entranceCarQueue">        
+        <position height="0" width="0" x="0" y="0"/>      
       </attribute>      
-      <multiplicity id="54" minimum="0" maximum="1"/>    
+      <multiplicity id="24" minimum="0" maximum="1">        
+        <position height="0" width="0" x="0" y="0"/>      
+      </multiplicity>    
     </end>    
-    <end type="TARGET" refId="16" navigable="true"/>    
+    <end type="TARGET" refId="12" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
-  <association id="55">    
-    <end type="SOURCE" refId="2" navigable="false">      
-      <attribute id="56" name="controller"/>      
-      <multiplicity id="57" minimum="0" maximum="1"/>    
+  <association id="25">    
+    <bendpoint x="1628" y="111"/>    
+    <bendpoint x="225" y="115"/>    
+    <bendpoint x="228" y="1030"/>    
+    <end type="SOURCE" refId="13" navigable="false">      
+      <attribute id="26" name="model">        
+        <position height="0" width="0" x="0" y="0"/>      
+      </attribute>      
+      <multiplicity id="27" minimum="0" maximum="1">        
+        <position height="0" width="0" x="0" y="0"/>      
+      </multiplicity>    
     </end>    
-    <end type="TARGET" refId="10" navigable="true"/>    
+    <end type="TARGET" refId="20" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
-  <association id="58">    
-    <end type="SOURCE" refId="4" navigable="false">      
-      <attribute id="59" name="model"/>      
-      <multiplicity id="60" minimum="0" maximum="1"/>    
-    </end>    
-    <end type="TARGET" refId="22" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <generalization id="61">    
-    <end type="SOURCE" refId="23"/>    
-    <end type="TARGET" refId="16"/>  
-  </generalization>  
-  <association id="62">    
-    <end type="SOURCE" refId="22" navigable="false">      
-      <attribute id="63" name="paymentCarQueue"/>      
-      <multiplicity id="64" minimum="0" maximum="1"/>    
-    </end>    
-    <end type="TARGET" refId="13" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <association id="65">    
-    <end type="SOURCE" refId="14" navigable="false">      
-      <attribute id="66" name="queuecountview"/>      
-      <multiplicity id="67" minimum="0" maximum="1"/>    
-    </end>    
-    <end type="TARGET" refId="3" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <association id="68">    
-    <end type="SOURCE" refId="14" navigable="false">      
-      <attribute id="69" name="carparkview"/>      
-      <multiplicity id="70" minimum="0" maximum="1"/>    
+  <association id="28">    
+    <end type="SOURCE" refId="13" navigable="false">      
+      <attribute id="29" name="carparkview">        
+        <position height="0" width="0" x="0" y="0"/>      
+      </attribute>      
+      <multiplicity id="30" minimum="0" maximum="1">        
+        <position height="0" width="0" x="0" y="0"/>      
+      </multiplicity>    
     </end>    
     <end type="TARGET" refId="7" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
-  <association id="71">    
-    <end type="SOURCE" refId="16" navigable="false">      
-      <attribute id="72" name="location"/>      
-      <multiplicity id="73" minimum="0" maximum="1"/>    
+  <association id="31">    
+    <end type="SOURCE" refId="20" navigable="false">      
+      <attribute id="32" name="entrancePassQueue">        
+        <position height="0" width="0" x="0" y="0"/>      
+      </attribute>      
+      <multiplicity id="33" minimum="0" maximum="1">        
+        <position height="0" width="0" x="0" y="0"/>      
+      </multiplicity>    
     </end>    
-    <end type="TARGET" refId="11" navigable="true"/>    
+    <end type="TARGET" refId="12" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
-  <generalization id="74">    
-    <end type="SOURCE" refId="3"/>    
-    <end type="TARGET" refId="4"/>  
-  </generalization>  
-  <association id="75">    
-    <end type="SOURCE" refId="12" navigable="false">      
-      <attribute id="76" name="allowedCars"/>      
-      <multiplicity id="77" minimum="0" maximum="2147483647"/>    
-    </end>    
-    <end type="TARGET" refId="9" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <association id="78">    
-    <bendpoint x="2160" y="434"/>    
-    <bendpoint x="2160" y="1228"/>    
-    <end type="SOURCE" refId="14" navigable="false">      
-      <attribute id="79" name="controller"/>      
-      <multiplicity id="80" minimum="0" maximum="1"/>    
+  <association id="34">    
+    <end type="SOURCE" refId="15" navigable="false">      
+      <attribute id="35" name="location">        
+        <position height="0" width="0" x="0" y="0"/>      
+      </attribute>      
+      <multiplicity id="36" minimum="0" maximum="1">        
+        <position height="0" width="0" x="0" y="0"/>      
+      </multiplicity>    
     </end>    
     <end type="TARGET" refId="10" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
-  <association id="81">    
-    <end type="SOURCE" refId="17" navigable="false">      
-      <attribute id="82" name="model"/>      
-      <multiplicity id="83" minimum="0" maximum="1"/>    
+  <association id="37">    
+    <end type="SOURCE" refId="20" navigable="false">      
+      <attribute id="38" name="exitCarQueue">        
+        <position height="0" width="0" x="0" y="0"/>      
+      </attribute>      
+      <multiplicity id="39" minimum="0" maximum="1">        
+        <position height="0" width="0" x="0" y="0"/>      
+      </multiplicity>    
     </end>    
-    <end type="TARGET" refId="22" navigable="true"/>    
+    <end type="TARGET" refId="12" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
-  <association id="84">    
-    <end type="SOURCE" refId="14" navigable="false">      
-      <attribute id="85" name="screen"/>      
-      <multiplicity id="86" minimum="0" maximum="1"/>    
+  <generalization id="40">    
+    <end type="SOURCE" refId="2"/>    
+    <end type="TARGET" refId="4"/>  
+  </generalization>  
+  <association id="41">    
+    <bendpoint x="1870" y="468"/>    
+    <end type="SOURCE" refId="13" navigable="false">      
+      <attribute id="42" name="carparkstepcontrolview">        
+        <position height="0" width="0" x="0" y="0"/>      
+      </attribute>      
+      <multiplicity id="43" minimum="0" maximum="1">        
+        <position height="0" width="0" x="0" y="0"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="17" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="44">    
+    <end type="SOURCE" refId="11" navigable="false">      
+      <attribute id="45" name="car">        
+        <position height="18" width="24" x="635" y="1894"/>      
+      </attribute>      
+      <multiplicity id="46" minimum="0" maximum="1">        
+        <position height="0" width="0" x="0" y="0"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="15" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <generalization id="47">    
+    <end type="SOURCE" refId="21"/>    
+    <end type="TARGET" refId="15"/>  
+  </generalization>  
+  <association id="48">    
+    <end type="SOURCE" refId="2" navigable="false">      
+      <attribute id="49" name="controller">        
+        <position height="0" width="0" x="0" y="0"/>      
+      </attribute>      
+      <multiplicity id="50" minimum="0" maximum="1">        
+        <position height="0" width="0" x="0" y="0"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="9" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="51">    
+    <end type="SOURCE" refId="12" navigable="false">      
+      <attribute id="52" name="queue">        
+        <position height="0" width="0" x="0" y="0"/>      
+      </attribute>      
+      <multiplicity id="53" minimum="0" maximum="2147483647">        
+        <position height="0" width="0" x="0" y="0"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="15" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="54">    
+    <end type="SOURCE" refId="13" navigable="false">      
+      <attribute id="55" name="queuecountview">        
+        <position height="0" width="0" x="0" y="0"/>      
+      </attribute>      
+      <multiplicity id="56" minimum="0" maximum="1">        
+        <position height="0" width="0" x="0" y="0"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="3" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="57">    
+    <end type="SOURCE" refId="4" navigable="false">      
+      <attribute id="58" name="model">        
+        <position height="0" width="0" x="0" y="0"/>      
+      </attribute>      
+      <multiplicity id="59" minimum="0" maximum="1">        
+        <position height="0" width="0" x="0" y="0"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="20" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <generalization id="60">    
+    <end type="SOURCE" refId="20"/>    
+    <end type="TARGET" refId="5"/>  
+  </generalization>  
+  <association id="61">    
+    <end type="SOURCE" refId="13" navigable="false">      
+      <attribute id="62" name="screen">        
+        <position height="0" width="0" x="0" y="0"/>      
+      </attribute>      
+      <multiplicity id="63" minimum="0" maximum="1">        
+        <position height="0" width="0" x="0" y="0"/>      
+      </multiplicity>    
     </end>    
     <end type="TARGET" refId="8" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
-  <association id="87">    
-    <bendpoint x="232" y="238"/>    
-    <bendpoint x="228" y="1030"/>    
-    <end type="SOURCE" refId="14" navigable="false">      
-      <attribute id="88" name="model"/>      
-      <multiplicity id="89" minimum="0" maximum="1"/>    
-    </end>    
-    <end type="TARGET" refId="22" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <generalization id="90">    
-    <end type="SOURCE" refId="2"/>    
+  <generalization id="64">    
+    <end type="SOURCE" refId="6"/>    
+    <end type="TARGET" refId="15"/>  
+  </generalization>  
+  <generalization id="65">    
+    <end type="SOURCE" refId="3"/>    
     <end type="TARGET" refId="4"/>  
   </generalization>  
-  <association id="91">    
-    <end type="SOURCE" refId="22" navigable="false">      
-      <attribute id="92" name="entrancePassQueue"/>      
-      <multiplicity id="93" minimum="0" maximum="1"/>    
+  <association id="66">    
+    <bendpoint x="2160" y="434"/>    
+    <bendpoint x="2160" y="1228"/>    
+    <end type="SOURCE" refId="13" navigable="false">      
+      <attribute id="67" name="controller">        
+        <position height="0" width="0" x="0" y="0"/>      
+      </attribute>      
+      <multiplicity id="68" minimum="0" maximum="1">        
+        <position height="0" width="0" x="0" y="0"/>      
+      </multiplicity>    
     </end>    
-    <end type="TARGET" refId="13" navigable="true"/>    
+    <end type="TARGET" refId="9" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
-  <generalization id="94">    
-    <end type="SOURCE" refId="15"/>    
+  <association id="69">    
+    <end type="SOURCE" refId="13" navigable="false">      
+      <attribute id="70" name="timeview">        
+        <position height="0" width="0" x="0" y="0"/>      
+      </attribute>      
+      <multiplicity id="71" minimum="0" maximum="1">        
+        <position height="0" width="0" x="0" y="0"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="18" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <generalization id="72">    
+    <end type="SOURCE" refId="18"/>    
+    <end type="TARGET" refId="4"/>  
+  </generalization>  
+  <generalization id="73">    
+    <end type="SOURCE" refId="9"/>    
     <end type="TARGET" refId="16"/>  
   </generalization>  
-  <generalization id="95">    
-    <bendpoint x="309" y="331"/>    
-    <bendpoint x="308" y="294"/>    
-    <bendpoint x="742" y="296"/>    
-    <end type="SOURCE" refId="22"/>    
-    <end type="TARGET" refId="5"/>  
-  </generalization>  
-  <nesting id="96">    
-    <end type="SOURCE" refId="22"/>    
-    <end type="TARGET" refId="9"/>  
+  <nesting id="74">    
+    <end type="SOURCE" refId="9"/>    
+    <end type="TARGET" refId="19"/>  
   </nesting>  
+  <generalization id="75">    
+    <end type="SOURCE" refId="17"/>    
+    <end type="TARGET" refId="2"/>  
+  </generalization>  
+  <generalization id="76">    
+    <end type="SOURCE" refId="14"/>    
+    <end type="TARGET" refId="15"/>  
+  </generalization>  
+  <association id="77">    
+    <end type="SOURCE" refId="16" navigable="false">      
+      <attribute id="78" name="model">        
+        <position height="0" width="0" x="0" y="0"/>      
+      </attribute>      
+      <multiplicity id="79" minimum="0" maximum="1">        
+        <position height="0" width="0" x="0" y="0"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="20" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="80">    
+    <end type="SOURCE" refId="5" navigable="false">      
+      <attribute id="81" name="views">        
+        <position height="0" width="0" x="0" y="0"/>      
+      </attribute>      
+      <multiplicity id="82" minimum="0" maximum="2147483647">        
+        <position height="0" width="0" x="0" y="0"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="4" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <generalization id="83">    
+    <end type="SOURCE" refId="7"/>    
+    <end type="TARGET" refId="4"/>  
+  </generalization>  
+  <association id="84">    
+    <end type="SOURCE" refId="20" navigable="false">      
+      <attribute id="85" name="paymentCarQueue">        
+        <position height="0" width="0" x="0" y="0"/>      
+      </attribute>      
+      <multiplicity id="86" minimum="0" maximum="1">        
+        <position height="0" width="0" x="0" y="0"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="12" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
   <classifier-display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
     sort-features="false" accessors="true" visibility="true">    
     <attributes public="true" package="true" protected="true" private="true" static="true"/>    

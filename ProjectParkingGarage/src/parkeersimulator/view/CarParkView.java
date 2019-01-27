@@ -25,7 +25,7 @@ public class CarParkView extends AbstractView {
 	int height = screenSize.height;
 	
 	///The x and y offset used for positioning the entire parking garage on the window
-    private static int X_OFFSET = 50; 
+    private static int X_OFFSET = 10; 
     private static int Y_OFFSET = 10;
     
     ///The x and y offset used for spacing between parking places
