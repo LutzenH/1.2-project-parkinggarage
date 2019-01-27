@@ -3,6 +3,7 @@ package parkeersimulator.view;
 import java.awt.Color;
 
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 
 import parkeersimulator.controller.ParkingGarageController;
@@ -13,6 +14,7 @@ import parkeersimulator.model.ParkingGarageModel.CustomiseErrorMessages;
 public class OpenGarageView extends AbstractControllableView {
 	
 	private JButton openGarageButton;
+	private JCheckBox drawCheapCheckBox;
 	private JLabel openGarageHint;
 	
 	private CustomiseErrorMessages errorMessage = CustomiseErrorMessages.ERROR_CUSTOMISE_NOTREADY;
@@ -23,6 +25,10 @@ public class OpenGarageView extends AbstractControllableView {
 		openGarageButton = new JButton("Open Garage");
 		openGarageButton.addActionListener(e -> clickOpenButton());
 		add(openGarageButton);	
+		
+		drawCheapCheckBox = new JCheckBox("Draw Cheap");
+		drawCheapCheckBox.addActionListener(e -> clickDrawCheapCheckBox());
+		add(drawCheapCheckBox);
 		
 		openGarageHint = new JLabel();
 		setHintMessage(errorMessage);
@@ -47,6 +53,11 @@ public class OpenGarageView extends AbstractControllableView {
     private void clickOpenButton() {
     	controller.performAction(ActionType.EVENT_OPEN_GARAGE);
     	updateView();
+    }
+    
+    private void clickDrawCheapCheckBox() {
+    	controller.performAction(ActionType.EVENT_SET_DRAWCHEAP);
+    	model.notifyViews();
     }
     
     private void setHintMessage(CustomiseErrorMessages errorMessage) {

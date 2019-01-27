@@ -1,7 +1,6 @@
 package parkeersimulator.view.graph;
 
 import java.awt.BorderLayout;
-import java.awt.FlowLayout;
 
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;

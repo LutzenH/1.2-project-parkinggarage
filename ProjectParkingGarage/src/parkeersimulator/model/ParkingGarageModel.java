@@ -32,6 +32,8 @@ public class ParkingGarageModel extends AbstractModel implements Runnable {
 	///boolean that is used for when threads need to stop running.
 	private boolean run;
 	
+	private boolean drawCheap;
+	
 	///Check if the garage is opened
 	private boolean isGarageOpen;
 	
@@ -151,6 +153,7 @@ public class ParkingGarageModel extends AbstractModel implements Runnable {
         this.numberOfOpenPassHolderSpots = passHolderPlaceAmount;
         
         this.isGarageOpen = false;
+        this.drawCheap = false;
         
         ///Instantiation of the all possible car positions.
         places = new Place[numberOfFloors][numberOfRows][numberOfPlaces];
@@ -260,12 +263,12 @@ public class ParkingGarageModel extends AbstractModel implements Runnable {
      */
     private void carsArriving(){
     	if(isGarageOpen) {
-        	int numberOfCars=getNumberOfCars(adHocArrivals);  
+            int numberOfCars=getNumberOfCars(reservationArrivals);
+            addArrivingCars(numberOfCars, CarType.RESERVERATION_CAR);
+        	numberOfCars=getNumberOfCars(adHocArrivals);  
     		addArrivingCars(numberOfCars, CarType.AD_HOC); 
         	numberOfCars=getNumberOfCars(passArrivals);
             addArrivingCars(numberOfCars, CarType.PASS); 
-            numberOfCars=getNumberOfCars(reservationArrivals);
-            addArrivingCars(numberOfCars, CarType.RESERVERATION_CAR);
     	}
     }
 
@@ -613,6 +616,20 @@ public class ParkingGarageModel extends AbstractModel implements Runnable {
 		}
 	}
 
+	/**
+	 * @return the drawCheap
+	 */
+	public boolean getDrawCheap() {
+		return drawCheap;
+	}
+
+	/**
+	 * @param drawCheap the drawCheap to set
+	 */
+	public void setDrawCheap() {
+		this.drawCheap = this.drawCheap ? false : true;
+	}
+    
 	//TODO Optimize this method.
     /**
      * Get the total car count of a certain car type.
@@ -992,10 +1009,7 @@ public class ParkingGarageModel extends AbstractModel implements Runnable {
 	public void openGarage() {
 		if(getCustomisationErrorMessages() == null || getCustomisationErrorMessages() == CustomiseErrorMessages.ERROR_CUSTOMISE_NOTCLOSED)
 		{
-			if(isGarageOpen)
-				isGarageOpen = false;
-			else
-				isGarageOpen = true;
+			isGarageOpen = isGarageOpen ? false : true;
 		}
 	}
     

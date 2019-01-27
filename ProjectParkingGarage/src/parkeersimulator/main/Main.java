@@ -1,16 +1,10 @@
 package parkeersimulator.main;
 
-import java.awt.Dimension;
-
-import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 import parkeersimulator.controller.ParkingGarageController;
 import parkeersimulator.model.ParkingGarageModel;
 import parkeersimulator.view.CarParkStepControlView;
-import parkeersimulator.view.CarParkView;
-import parkeersimulator.view.QueueCountView;
-import parkeersimulator.view.TimeView;
 import parkeersimulator.view.frame.MainFrame;
 import parkeersimulator.view.frame.GarageDesignFrame;
 import parkeersimulator.view.graph.CarCountGraphView;
@@ -33,9 +27,7 @@ public class Main {
 	private ParkingGarageController controller;
 	
 	///Declaration of the views this program uses.
-	private TimeView timeview;
-	private CarParkView carparkview;
-	private QueueCountView queuecountview;
+	private GarageDesignFrame carparkview;
 	private CarParkStepControlView carparkstepcontrolview;
 	private JPanel[] tabbedviews;
 
@@ -52,9 +44,7 @@ public class Main {
 		controller = new ParkingGarageController(model);
 		
 		///Instantiation of this programs' views.
-		carparkview = new CarParkView(model);
-		queuecountview = new QueueCountView(model);
-		timeview = new TimeView(model);
+		carparkview = new GarageDesignFrame(model, controller);
 		carparkstepcontrolview = new CarParkStepControlView(model, controller);
 		
 		tabbedviews = new JPanel[2];
@@ -68,13 +58,6 @@ public class Main {
 		
 		///Makes this JFrame visible.
 		screen.setVisible(true);
-		
-		//screen.addResizeProperty(controller);
-		
-		GarageDesignFrame temp = new GarageDesignFrame(model, controller);
-		temp.setSize(new Dimension(740, 450));
-		temp.setVisible(true);
-		temp.setResizable(false);
 		
 		///the views will be notified before the simulation runs in order to display an empty CarParkView.
 		model.notifyViews();

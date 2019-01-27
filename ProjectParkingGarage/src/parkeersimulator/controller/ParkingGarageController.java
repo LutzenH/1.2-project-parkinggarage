@@ -20,7 +20,8 @@ public class ParkingGarageController extends AbstractController {
 		EVENT_TICKSTART, EVENT_TICKSTOP, 
 		EVENT_FRAME_RESIZE,
 		EVENT_CLICK_PROP,
-		EVENT_OPEN_GARAGE
+		EVENT_OPEN_GARAGE,
+		EVENT_SET_DRAWCHEAP
 		};
 	
 	/**
@@ -86,6 +87,10 @@ public class ParkingGarageController extends AbstractController {
 		
 			case EVENT_OPEN_GARAGE:
 				model.openGarage();
+			break;
+			
+			case EVENT_SET_DRAWCHEAP:
+				model.setDrawCheap();
 			break;
 			
 			default:
