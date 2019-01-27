@@ -275,51 +275,31 @@ public class ParkingGarageModel extends AbstractModel implements Runnable {
     private void carsEntering(CarQueue queue){
         int i=0;
         
-
-if(isGarageOpen) {
-        if(queue == entrancePassQueue)
-        
-        	{while (queue.carsInQueue()>0 && 
-        			getNumberOfOpenPassHolderSpots()>0 && 
-        			i<enterSpeed) {
-                Car car = queue.removeCar();
-                Location freeLocation = getFirstFreeLocation(car);
-                setCarAt(freeLocation, car);
-                i++;
-        		}
-        	}
-        else if (queue == entranceCarQueue )
-        {
-        	while (queue.carsInQueue()>0 && 
-        			getNumberOfOpenDefaultSpots()>0 && 
-        			i<enterSpeed) { 
-                Car car = queue.removeCar();
-               	if (car.getCarType() == CarType.AD_HOC) {
-               		if(getFirstFreeUnreservedLocation() != null && locationIsValid(getFirstFreeUnreservedLocation())) {
-               			Location freeLocation = getFirstFreeUnreservedLocation();
-               			setCarAt(freeLocation, car);
-               		}
-               		else {
-               			queue.addCar(car);
-               		}
-               	}
-               	else if (car.getCarType() == CarType.RESERVERATION_CAR){
-               		if(getFirstFreeReservedLocation() != null && locationIsValid(getFirstFreeReservedLocation())) {
-               			Location freeLocation = getFirstFreeReservedLocation();
-               			setCarAt(freeLocation, car);
-               		}
-               		else {
-               			Location freeLocation = getFirstFreeUnreservedLocation();
-                   		setCarAt(freeLocation, car);
-                   		numberOfOpenDefaultSpots--;
-                   		
-               		}
-                }
-            i++;
-        	}
-        }
+		if(isGarageOpen) {
+	        if(queue == entrancePassQueue) {
+	        	while (queue.carsInQueue()>0 && 
+	        			getNumberOfOpenPassHolderSpots()>0 && 
+	        			i<enterSpeed) {
+	                Car car = queue.removeCar();
+	                Location freeLocation = getFirstFreeLocation(car.getCarType());
+	                setCarAt(freeLocation, car);
+	                i++;
+	        	}
+	        }
+	        else if (queue == entranceCarQueue ) {
+	        	while (queue.carsInQueue()>0 && getNumberOfOpenDefaultSpots() > 0 && i<enterSpeed) {
+	        		Car car = queue.removeCar();
+                    Location freeLocation = getFirstFreeLocation(car.getCarType());
+                    
+                    if(freeLocation == null)
+                    	System.out.println("freeLocation is null");
+                    
+                    setCarAt(freeLocation, car);
+                    i++;
+	        	}
+	        }
+		}
     }
-}
     
     /**
      * Adds leaving cars to the payment queue.
@@ -387,27 +367,30 @@ if(isGarageOpen) {
      * @param numberOfCars Amount of cars that should be added to the queue.
      * @param type Type of car that should be added to the queue.
      */
-    private void addArrivingCars(int numberOfCars, Car.CarType type){
+    private void addArrivingCars(int numberOfCars, CarType type){
     	switch(type) {
-    	case AD_HOC: 
-            for (int i = 0; i < numberOfCars; i++) {
-            	entranceCarQueue.addCar(new AdHocCar(stayMinutes));
-            }
-            break;
-    	case PASS:
-            for (int i = 0; i < numberOfCars; i++) {
-            	entrancePassQueue.addCar(new ParkingPassCar(stayMinutes));
-            }
-            break;	     
-    	case RESERVERATION_CAR:
-            for (int i = 0; i < numberOfCars; i++) {
-            	entranceCarQueue.addCar(new ReservationCar());
-            	if (getFirstFreeUnreservedLocation() != null) {
-            	places [getFirstFreeUnreservedLocation().getFloor()][getFirstFreeUnreservedLocation().getRow()][getFirstFreeUnreservedLocation().getPlace()].setReserved(true);
-            	numberOfOpenDefaultSpots--;
-            	}            	
-            }
-      		break;
+	    	case AD_HOC:
+	            for (int i = 0; i < numberOfCars; i++) {
+	            	entranceCarQueue.addCar(new AdHocCar(stayMinutes));
+	            }
+	            break;
+	    	case PASS:
+	            for (int i = 0; i < numberOfCars; i++) {
+	            	entrancePassQueue.addCar(new ParkingPassCar(stayMinutes));
+	            }
+	            break;
+	        //If the car is a RESERVERATION_CAR check for an open spot for a AD_HOC car and set it to reserved
+	    	case RESERVERATION_CAR:
+	            for (int i = 0; i < numberOfCars; i++) {	            	
+	            	Location location = getFirstFreeLocation(CarType.AD_HOC);
+	            	
+	            	if (location != null) {
+		            	entranceCarQueue.addCar(new ReservationCar());
+		            	places [location.getFloor()][location.getRow()][location.getPlace()].setReserved(true);
+		            	numberOfOpenDefaultSpots--; 
+	            	}            	
+	            }
+	      		break;
     	}
     }
     
@@ -741,50 +724,35 @@ if(isGarageOpen) {
     /**
      * @return The first free location in the parking garage.
      */
-    public Location getFirstFreeLocation(Car car) {
+    public Location getFirstFreeLocation(CarType carType) {
     	for(Place place : preferredPlaces) {
-            
-        	CarType allowedType = place.getCarType();
             Location location = place.getLocation();
-
-        	
-        		if(car.getCarType() == allowedType && getCarAt(location) == null) {
-        			return location;
-        		}
+            
+            //Check if the location contains a car.
+            if(getCarAt(location) == null) {
+            	CarType allowedType = place.getCarType();
+            	
+            	//Check if the arrived car is allowed to stand at this spot.
+                if(allowedType != null) {
+            		if(carType == allowedType) {        			
+            			return location;
+            		}
+                }
+                //If any type of car is allowed at this spot: 
+                else {
+                	//If the arrived car is a reservation car check if the spot is reserved or not.
+                	if(carType == CarType.RESERVERATION_CAR) {
+                		if(place.getReserved())
+                			return location;
+                	}
+                	//If the arrived car is not a reservation car check if spot is unreserved.
+                	else {
+                		if(!place.getReserved())
+                			return location;
+                	}
+                }
+            }
     	}
-        return null;
-    }
-   /**
-    *  first free reserved and unreserved location finders
-    *  
-    * @return location
-    */
-    public Location getFirstFreeUnreservedLocation() {
-    	for(Place place : preferredPlaces) {
-            
-        	CarType allowedType = place.getCarType();
-            Location location = place.getLocation();
-
-        	if(allowedType == null && !place.getReserved()) {
-                    if (getCarAt(location) == null) {
-                        return location;
-                    }
-        		}
-    		}
-        return null;
-    }
-    public Location getFirstFreeReservedLocation() {
-    	for(Place place : preferredPlaces) {
-            
-        	CarType allowedType = place.getCarType();
-            Location location = place.getLocation();
-
-        	if(allowedType == null && place.getReserved()) {
-                    if (getCarAt(location) == null) {
-                        return location;
-                    }
-        		}
-    		}
         return null;
     }
 
@@ -832,9 +800,11 @@ if(isGarageOpen) {
         int floor = location.getFloor();
         int row = location.getRow();
         int place = location.getPlace();
-        if (floor < 0 || floor >= numberOfFloors || row < 0 || row >= numberOfRows || place < 0 || place >= numberOfPlaces) {
+        
+        if (floor < 0 || floor > numberOfFloors || row < 0 || row > numberOfRows || place < 0 || place > numberOfPlaces) {
             return false;
         }
+        
         return true;
     }
     
@@ -1057,6 +1027,10 @@ if(isGarageOpen) {
 			return null;
 	}
 
+	/**
+	 * Checks if the garage has the required props inorder to be opened.
+	 * @return true if it has the required props
+	 */
 	private boolean hasRequiredProps() {
 		boolean hasEntrance = false;
 		boolean hasExit = false;

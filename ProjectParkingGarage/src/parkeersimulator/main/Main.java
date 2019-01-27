@@ -65,13 +65,6 @@ public class Main {
 		
 		///Layout and instantiation of the JFrame.
 		screen = new MainFrame("Parking Garage Simulator", carparkstepcontrolview, tabbedviews, carparkview);
-
-		
-		//screen.getContentPane().add(queuecountview);
-		//screen.getContentPane().add(timeview);
-		
-		///the views will be notified before the simulation runs in order to display an empty CarParkView.
-		model.notifyViews();
 		
 		///Makes this JFrame visible.
 		screen.setVisible(true);
@@ -79,9 +72,12 @@ public class Main {
 		//screen.addResizeProperty(controller);
 		
 		GarageDesignFrame temp = new GarageDesignFrame(model, controller);
-		temp.setVisible(true);
 		temp.setSize(new Dimension(732, 450));
+		temp.setVisible(true);
 		temp.setResizable(false);
+		
+		///the views will be notified before the simulation runs in order to display an empty CarParkView.
+		model.notifyViews();
 	}
 	
 	/**
