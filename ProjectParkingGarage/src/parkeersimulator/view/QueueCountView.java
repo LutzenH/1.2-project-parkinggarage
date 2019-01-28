@@ -51,10 +51,12 @@ public class QueueCountView extends AbstractView {
 	 */
     @Override
     public void updateView() {
-    	entranceCarQueueLabel.setText("entranceCarQueue: " + model.getEntranceCarQueue().carsInQueue());
-    	entrancePassQueueLabel.setText("entrancePassQueue: " + model.getEntrancePassQueue().carsInQueue());
-    	paymentCarQueueLabel.setText("paymentCarQueue: " + model.getPaymentCarQueue().carsInQueue());
-    	exitCarQueueLabel.setText("exitCarQueue: " + model.getExitCarQueue().carsInQueue());
+    	ParkingGarageModel parkingGarageModel = (ParkingGarageModel) model;
+    	
+    	entranceCarQueueLabel.setText("entranceCarQueue: " + parkingGarageModel.getEntranceCarQueue().carsInQueue());
+    	entrancePassQueueLabel.setText("entrancePassQueue: " + parkingGarageModel.getEntrancePassQueue().carsInQueue());
+    	paymentCarQueueLabel.setText("paymentCarQueue: " + parkingGarageModel.getPaymentCarQueue().carsInQueue());
+    	exitCarQueueLabel.setText("exitCarQueue: " + parkingGarageModel.getExitCarQueue().carsInQueue());
     	
     	repaint();
     }

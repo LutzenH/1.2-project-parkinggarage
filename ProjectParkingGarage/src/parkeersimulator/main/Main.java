@@ -3,7 +3,9 @@ package parkeersimulator.main;
 import javax.swing.JPanel;
 
 import parkeersimulator.controller.ParkingGarageController;
+import parkeersimulator.model.FinanceModel;
 import parkeersimulator.model.ParkingGarageModel;
+import parkeersimulator.model.handler.ModelHandler;
 import parkeersimulator.view.CarParkStepControlView;
 import parkeersimulator.view.CarParkView;
 import parkeersimulator.view.MainFrame;
@@ -11,6 +13,7 @@ import parkeersimulator.view.QueueCountView;
 import parkeersimulator.view.TimeView;
 import parkeersimulator.view.graph.CarCountGraphView;
 import parkeersimulator.view.graph.QueueGraphView;
+import parkeersimulator.view.graph.FinanceGraphView;
 
 /**
  * The Entry point for launching the program.
@@ -22,8 +25,10 @@ import parkeersimulator.view.graph.QueueGraphView;
  */
 public class Main {
 	
-	///Declaration of the model this program should use.
-	private ParkingGarageModel model;
+	///Declaration of the main handler that initiates the models this program should use.
+	private ModelHandler modelHandler;
+	private ParkingGarageModel parkingGarageModel;
+	private FinanceModel financeModel;
 	
 	///Declaration of the controllers this program uses.
 	private ParkingGarageController controller;
@@ -41,23 +46,27 @@ public class Main {
 	 * Constructor of the class Main.
 	 */
 	public Main() {
-		///Instantiation of the ParkingGarageModel.
-		model = new ParkingGarageModel();
+		//Instantiation of this programs' models
+		modelHandler = new ModelHandler();
+		parkingGarageModel = new ParkingGarageModel(modelHandler);
+		financeModel = new FinanceModel(modelHandler, parkingGarageModel);
 		
 		///Instantiation of this programs' controllers.
-		controller = new ParkingGarageController(model);
+		controller = new ParkingGarageController(modelHandler, parkingGarageModel);
 		
 		///Instantiation of this programs' views.
-		carparkview = new CarParkView(model);
-		queuecountview = new QueueCountView(model);
-		timeview = new TimeView(model);
-		carparkstepcontrolview = new CarParkStepControlView(model, controller);
+		carparkview = new CarParkView(parkingGarageModel);
+		queuecountview = new QueueCountView(parkingGarageModel);
+		timeview = new TimeView(parkingGarageModel);
+		carparkstepcontrolview = new CarParkStepControlView(parkingGarageModel, controller);
 		
-		tabbedviews = new JPanel[2];
-		tabbedviews[0] = new QueueGraphView(model);
+		tabbedviews = new JPanel[3];
+		tabbedviews[0] = new QueueGraphView(parkingGarageModel);
 		tabbedviews[0].setName("Cars in queue");
-		tabbedviews[1] = new CarCountGraphView(model);
+		tabbedviews[1] = new CarCountGraphView(parkingGarageModel);
 		tabbedviews[1].setName("Car Count");
+		tabbedviews[2] = new FinanceGraphView(parkingGarageModel, financeModel);
+		tabbedviews[2].setName("Finance");
 		
 		///Layout and instantiation of the JFrame.
 		screen = new MainFrame("Parking Garage Simulator", carparkstepcontrolview, tabbedviews, carparkview);
@@ -69,7 +78,7 @@ public class Main {
 		screen.setSize(800, 800);
 		
 		///the views will be notified before the simulation runs in order to display an empty CarParkView.
-		model.notifyViews();
+		parkingGarageModel.notifyViews();
 		
 		///Makes this JFrame visible.
 		screen.setVisible(true);

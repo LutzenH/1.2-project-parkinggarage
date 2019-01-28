@@ -3,6 +3,7 @@ package parkeersimulator.controller;
 import java.util.HashMap;
 
 import parkeersimulator.model.ParkingGarageModel;
+import parkeersimulator.model.handler.ModelHandler;
 /**
  * The controller used in the simulation of the parking garage.
  * 
@@ -11,6 +12,8 @@ import parkeersimulator.model.ParkingGarageModel;
  * @author b-kuiper
  */
 public class ParkingGarageController extends AbstractController {
+	ModelHandler modelHandler; //TODO: LUTZEN NOT FINT NETJUS
+	ParkingGarageModel parkingGarageModel;
 	
 	///The type of event that should be performed when a certain button or field has been triggered. 
 	public enum ActionType {
@@ -26,8 +29,10 @@ public class ParkingGarageController extends AbstractController {
 	 * 
 	 * @param model The model this controller should be controlling.
 	 */
-	public ParkingGarageController(ParkingGarageModel model) {
-		super(model);
+	public ParkingGarageController(ModelHandler modelHandler, ParkingGarageModel parkingGarageModel) {
+		super(parkingGarageModel);
+		this.modelHandler = modelHandler;
+		this.parkingGarageModel = parkingGarageModel;
 	}
 	
 	/**
@@ -41,37 +46,37 @@ public class ParkingGarageController extends AbstractController {
 		switch(actionType)
 		{
 			case EVENT_TICKPAUSEAMOUNT:
-				model.setTickPause((Integer)data.get("amount"));
+				modelHandler.setTickPause((Integer)data.get("amount"));
 				return true;
 			case EVENT_TICKAMOUNT:
-				model.tick((Integer)data.get("amount"));
+				modelHandler.tick((Integer)data.get("amount"));
 				return true;
 				
 			case EVENT_ADHOCWEEK_AMOUNT:
-				model.setAdHocArrivals_week((Integer)data.get("amount"));
+				parkingGarageModel.setAdHocArrivals_week((Integer)data.get("amount"));
 				return true;
 			case EVENT_ADHOCWEEKEND_AMOUNT:
-				model.setAdHocArrivals_weekend((Integer)data.get("amount"));
+				parkingGarageModel.setAdHocArrivals_weekend((Integer)data.get("amount"));
 				return true;
 			case EVENT_ADHOCEVENT_AMOUNT:
-				model.setAdHocArrivals_event((Integer)data.get("amount"));
+				parkingGarageModel.setAdHocArrivals_event((Integer)data.get("amount"));
 				return true;
 				
 			case EVENT_PASSWEEK_AMOUNT:
-				model.setPassArrivals_week((Integer)data.get("amount"));
+				parkingGarageModel.setPassArrivals_week((Integer)data.get("amount"));
 				return true;
 			case EVENT_PASSWEEKEND_AMOUNT:
-				model.setPassArrivals_weekend((Integer)data.get("amount"));
+				parkingGarageModel.setPassArrivals_weekend((Integer)data.get("amount"));
 				return true;
 			case EVENT_PASSEVENTWEEK_AMOUNT:
-				model.setPassArrivals_eventWeek((Integer)data.get("amount"));
+				parkingGarageModel.setPassArrivals_eventWeek((Integer)data.get("amount"));
 				return true;
 				
 			case EVENT_TICKSTART:
-				model.start();
+				modelHandler.start();
 				return true;
 			case EVENT_TICKSTOP:
-				model.stop();
+				modelHandler.stop();
 				return true;
 				
 			case EVENT_FRAME_RESIZE:

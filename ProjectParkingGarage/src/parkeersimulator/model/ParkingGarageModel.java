@@ -7,6 +7,7 @@ import parkeersimulator.model.car.AdHocCar;
 import parkeersimulator.model.car.Car;
 import parkeersimulator.model.car.ParkingPassCar;
 import parkeersimulator.model.car.ReservationCar;
+import parkeersimulator.model.handler.ModelHandler;
 import parkeersimulator.model.location.Location;
 import parkeersimulator.model.location.Place;
 import parkeersimulator.model.queue.CarQueue;
@@ -20,10 +21,7 @@ import parkeersimulator.model.queue.CarQueue;
  * @author shand
  * 
  */
-public class ParkingGarageModel extends AbstractModel implements Runnable {
-
-	///boolean that is used for when threads need to stop running.
-	private boolean run;
+public class ParkingGarageModel extends AbstractModel {
 	
 	//TODO Replace these different types with an Enum.
 	///Id of the different types of cars.
@@ -33,19 +31,29 @@ public class ParkingGarageModel extends AbstractModel implements Runnable {
 	private CarQueue entranceCarQueue;
     private CarQueue entrancePassQueue;
     private CarQueue paymentCarQueue;
+    private CarQueue paymentCarQueue_entireTick; //Holds all the cars that were in the paymentCarQueue in a tick
     private CarQueue exitCarQueue;
     
     private int eventChancePercentage = 10;
 
-    //TODO Replace this with a more robust system.
-    ///Declaration of the time of the week.
+    ///Declaration of the time.
+    private int year = 0;
+    private int month = 0;
+    private int week = 0;
     private int day = 0;
     private int hour = 0;
     private int minute = 0;
-    private int week = 0;
-
-    ///The amount of time the thread should wait before executing the next tick().
-    private int tickPause = 100;
+    
+    //Tells us if it's the first day of the month
+    private boolean isFirstDayOfMonth;
+    
+    //Keeps track of the current day in the month
+    private int currentDayInMonth;
+    
+    //Declaration of the amount of days in each month
+    private int daysInFeb = 28;
+    private int[] dayAmountMonth = new int[] {31, daysInFeb, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+    
 
     //Arrivals and stay times
     ///The baseline number of cars arriving in an hour.
@@ -123,11 +131,14 @@ public class ParkingGarageModel extends AbstractModel implements Runnable {
 	/**
 	 * Constructor of ParkingGarageModel
 	 */
-    public ParkingGarageModel() {
+    public ParkingGarageModel(ModelHandler handler) {
+    	super(handler);
+    	
     	///Instantiation of the queue's
         entranceCarQueue = new CarQueue();
         entrancePassQueue = new CarQueue();
         paymentCarQueue = new CarQueue();
+        paymentCarQueue_entireTick = new CarQueue();
         exitCarQueue = new CarQueue();
 
         this.numberOfOpenDefaultSpots = (numberOfFloors * numberOfRows * numberOfPlaces) - passHolderPlaceAmount;
@@ -137,37 +148,6 @@ public class ParkingGarageModel extends AbstractModel implements Runnable {
         places = new Place[numberOfFloors][numberOfRows][numberOfPlaces];
         populatePlaces();
     }
-
-    /**
-     * Starts the simulation on a different thread.
-     */
-	public void start() {
-		if(!run)
-			new Thread(this).start();
-	}
-	
-	/**
-	 * Stops the currently running simulation on a different thread.
-	 */
-	public void stop() {
-		run=false;
-	}
-	
-	/**
-	 * Simulation that runs on a different thread when started.
-	 */
-	@Override
-	public void run() {
-		run=true;
-		while(run) {
-            tick();
-			try {
-				Thread.sleep(tickPause);
-			} 
-			catch (Exception e) {
-			}
-		}
-	}
 
 	/**
 	 * Responsible for what happens every iteration in the simulation.
@@ -181,18 +161,6 @@ public class ParkingGarageModel extends AbstractModel implements Runnable {
     	eventManager();
     	handleEntrance();
     }
-    
-    /**
-     * Runs a certain amount of simulation iterations
-     * 
-     * @param amount The amount of ticks that should run.
-     */
-    public void tick(int amount) {
-    	for(int i = 0; i < amount; i++)
-    	{
-    		tick();
-    	}
-    }
 
     /**
      * A method that is used for incrementing the current time.
@@ -200,19 +168,40 @@ public class ParkingGarageModel extends AbstractModel implements Runnable {
     private void advanceTime(){
         // Advance the time by one minute.
         minute++;
-        while (minute > 59) {
-            minute -= 60;
+        
+        while (minute > 59) { //Reset minutes and set hours
+            minute -= minute;
             hour++;
         }
-        while (hour > 23) {
-            hour -= 24;
+        while (hour > 23) { //Reset hours and set days
+            hour -= hour;
             day++;
+            isFirstDayOfMonth = false;
         }
-        while (day > 6) {
-            day -= 7;
+        while (day > 6) { //Reset days and set weeks
+            day -= day;
             week++;
         }
+        
+        currentDayInMonth = (week * 7) + day;
+        while(currentDayInMonth > dayAmountMonth[month] - 1) { //Reset weeks and set months
+        	currentDayInMonth = day;
+        	week -= week;
+        	month++;
+        	isFirstDayOfMonth = true;
+        }
+        
+        while(month > 11) { //Reset months and set years
+        	month -= month;
+        	year++;
+        	
+        	if((year + 1) % 4 == 0) //leap year
+        		daysInFeb = 29;
+        	else
+        		daysInFeb = 28;
+        }
 
+        
     }
 
     /**
@@ -286,6 +275,7 @@ public class ParkingGarageModel extends AbstractModel implements Runnable {
         	if (car.getHasToPay()){
 	            car.setIsPaying(true);
 	            paymentCarQueue.addCar(car);
+	            paymentCarQueue_entireTick.addCar(car);
         	}
         	else {
         		carLeavesSpot(car);
@@ -429,15 +419,20 @@ public class ParkingGarageModel extends AbstractModel implements Runnable {
      */
     public void setPassArrivals_eventWeek(float amount) {passArrivals_event = amount / 100f; }
     
+    /**
+     * @return The current year.
+     */
+    public int getYear() { return year; }
     
     /**
-     * @return The current pause between ticks.
+     * @return The current month of a year.
      */
-    public int getTickPause() { return tickPause; }
+    public int getMonth() { return month; }
+    
     /**
-     * Sets the pause between ticks.
+     * @return The current week of a month.
      */
-    public void setTickPause(int amount) { tickPause = amount; }
+    public int getWeek() { return week; }
     
     /**
      * @return The current day of the week.
@@ -458,6 +453,11 @@ public class ParkingGarageModel extends AbstractModel implements Runnable {
      * @return The current time in the format: int[day][hour][minute].
      */
     public int[] getTime() { return new int[] { day, hour, minute }; }
+    
+    /**
+     * @return The bool that tells the program if it is the first day of the month
+     */
+    public boolean getIsFirstDayOfMonth() { return isFirstDayOfMonth; }
     
     /**
      * @return The number of floors in the parking garage.
@@ -538,9 +538,19 @@ public class ParkingGarageModel extends AbstractModel implements Runnable {
     public CarQueue getPaymentCarQueue() { return paymentCarQueue; }
     
     /**
+     * @return The paymentCarQueue for the entire tick 
+     */
+    public CarQueue getPaymentCarQueue_entireTick() { return paymentCarQueue_entireTick; }
+    
+    /**
      * @return The exitCarQueue.
      */
     public CarQueue getExitCarQueue() { return exitCarQueue; }
+    
+    /**
+     * 
+     */
+    public int getPaymentSpeed() { return paymentSpeed; }
     
     /**
      * Returns the car at a certain location.

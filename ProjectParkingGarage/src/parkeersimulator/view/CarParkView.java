@@ -88,18 +88,20 @@ public class CarParkView extends AbstractView {
      */
     @Override
     public void updateView() {
+    	ParkingGarageModel parkingGarageModel = (ParkingGarageModel) model;
+    	
         // Create a new car park image if the size has changed.
         if (!size.equals(getSize())) {
             size = getSize();
             carParkImage = createImage(size.width, size.height);
         }
         Graphics graphics = carParkImage.getGraphics();
-        for(int floor = 0; floor < model.getNumberOfFloors(); floor++) {
-            for(int row = 0; row < model.getNumberOfRows(); row++) {
-                for(int places = 0; places < model.getNumberOfPlaces(); places++) {
+        for(int floor = 0; floor < parkingGarageModel.getNumberOfFloors(); floor++) {
+            for(int row = 0; row < parkingGarageModel.getNumberOfRows(); row++) {
+                for(int places = 0; places < parkingGarageModel.getNumberOfPlaces(); places++) {
                     Location location = new Location(floor, row, places);
                     
-                    Place place = model.getPlaces()[floor][row][places];
+                    Place place = parkingGarageModel.getPlaces()[floor][row][places];
                     Car car = place.getCar();
 
                     Color color = Color.WHITE;

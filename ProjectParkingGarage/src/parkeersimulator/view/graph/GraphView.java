@@ -14,6 +14,7 @@ import org.jfree.data.xy.XYDataset;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
 
+import parkeersimulator.model.AbstractModel;
 import parkeersimulator.model.ParkingGarageModel;
 import parkeersimulator.view.AbstractView;
 
@@ -45,7 +46,7 @@ public abstract class GraphView extends AbstractView {
 	 * Constructor of GraphView
 	 * @param model The ParkingGarageModel this view uses to display data.
 	 */
-    public GraphView(ParkingGarageModel model, String tableName, XYSeries[] dataSeries, String xAxisName, String yAxisName, int dataCollectFrequency) {
+    public GraphView(AbstractModel model, String tableName, XYSeries[] dataSeries, String xAxisName, String yAxisName, int dataCollectFrequency) {
         super(model);
         
         this.dataCollectFrequency = dataCollectFrequency;

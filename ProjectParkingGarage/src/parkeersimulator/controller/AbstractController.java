@@ -1,5 +1,6 @@
 package parkeersimulator.controller;
 
+import parkeersimulator.model.AbstractModel;
 import parkeersimulator.model.ParkingGarageModel;
 
 /**
@@ -7,7 +8,7 @@ import parkeersimulator.model.ParkingGarageModel;
  */
 public abstract class AbstractController {
 	///Declaration of the model this controller should be controlling.
-	protected ParkingGarageModel model;
+	protected AbstractModel model;
 	
 	/**
 	 * The constructor of AbstractController

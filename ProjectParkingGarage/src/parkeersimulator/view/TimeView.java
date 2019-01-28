@@ -43,8 +43,9 @@ public class TimeView extends AbstractView {
 	 */
     @Override
     public void updateView() {
+    	ParkingGarageModel parkingGarageModel = (ParkingGarageModel) model;
     	
-    	timeLabel.setText("d: " + model.getDay() + ", h: " + model.getHour() + ", m: " + model.getMinute());
+    	timeLabel.setText("d: " + parkingGarageModel.getDay() + ", h: " + parkingGarageModel.getHour() + ", m: " + parkingGarageModel.getMinute());
     	
     	repaint();
     }

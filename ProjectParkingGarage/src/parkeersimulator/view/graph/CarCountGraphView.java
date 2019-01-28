@@ -24,9 +24,10 @@ public class CarCountGraphView extends GraphView {
 
 	@Override
 	protected void updateDataset() {
-		graph_data[0].addOrUpdate(time, model.getCarCount(CarType.AD_HOC));
-		graph_data[1].addOrUpdate(time, model.getCarCount(CarType.PASS));
-		graph_data[2].addOrUpdate(time, model.getCarCount(CarType.RESERVERATION_CAR));
+		ParkingGarageModel parkingGarageModel = (ParkingGarageModel) model;
+		graph_data[0].addOrUpdate(time, parkingGarageModel.getCarCount(CarType.AD_HOC));
+		graph_data[1].addOrUpdate(time, parkingGarageModel.getCarCount(CarType.PASS));
+		graph_data[2].addOrUpdate(time, parkingGarageModel.getCarCount(CarType.RESERVERATION_CAR));
 	}
 
 }

@@ -11,6 +11,7 @@ import parkeersimulator.model.location.Location;
 public abstract class Car {
 
     private Location location;
+    private int minutesStayed;
     private int minutesLeft;
     private boolean isPaying;
 
@@ -27,6 +28,8 @@ public abstract class Car {
     public int getMinutesLeft() { return minutesLeft; }
     public void setMinutesLeft(int minutesLeft) { this.minutesLeft = minutesLeft; }
     
+    public int getMinutesStayed() { return minutesStayed; }
+    
     public boolean getIsPaying() { return isPaying; }
     public void setIsPaying(boolean isPaying) { this.isPaying = isPaying; }
 
@@ -34,6 +37,7 @@ public abstract class Car {
 
     public void tick() {
         minutesLeft--;
+        minutesStayed++;
     }
     
     /**
