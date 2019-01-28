@@ -30,8 +30,6 @@ public class FinanceModel extends AbstractModel {
 	public void tick() {
 		collectMoney();
 		payMoney();
-
-		System.out.println("Money this month: " + moneyMonth);
 	}
 
 	private void collectMoney() {
@@ -53,32 +51,29 @@ public class FinanceModel extends AbstractModel {
 	
 	private void payMoney() {
 		if(parkingGarageModel.getIsFirstDayOfMonth() && parkingGarageModel.getHour() == 8 && parkingGarageModel.getMinute() == 30) {
-			System.out.println("time for taxes...");
-			
 			moneyMonth = payMoney_taxes(moneyMonth);
 			moneyMonth = payMoney_maintenance(moneyMonth);
 			
 			moneyTotal += moneyMonth;
 			moneyMonth = 0;
-			
-			System.out.println("Total money: " + moneyTotal);
 		}
 	}
 	
 	private float payMoney_taxes(float amount) {
 		//We pay taxes at 8.30 in the morning
-			if(amount > 0 && amount <= 20384)
-				amount *= (1f - 0.3665f);
-			if(amount > 20384 && amount <= 68507)
-				amount *= (1f - 0.3810f);
-			if(amount > 68507)
-				amount *= (1f - 0.5175f);
-			
-			return amount;
+		if(amount > 0 && amount <= 20384)
+			amount *= (1f - 0.3665f);
+		if(amount > 20384 && amount <= 68507)
+			amount *= (1f - 0.3810f);
+		if(amount > 68507)
+			amount *= (1f - 0.5175f);
+		
+		return amount;
 	}
 	private float payMoney_maintenance(float amount) {
+		//Pay maintenance costs
 		amount -= maintenanceCosts;
-				
+		
 		return amount;
 	}
 	

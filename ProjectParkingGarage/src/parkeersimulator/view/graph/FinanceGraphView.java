@@ -4,7 +4,6 @@ import org.jfree.data.xy.XYSeries;
 
 import parkeersimulator.model.FinanceModel;
 import parkeersimulator.model.ParkingGarageModel;
-import parkeersimulator.model.ParkingGarageModel.CarType;
 
 public class FinanceGraphView extends GraphView {
 	

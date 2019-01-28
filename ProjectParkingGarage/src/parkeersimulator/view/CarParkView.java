@@ -4,12 +4,11 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Image;
-
-import javax.swing.BorderFactory;
+import java.awt.Toolkit;
 
 import parkeersimulator.model.ParkingGarageModel;
-import parkeersimulator.model.ParkingGarageModel.CarType;
 import parkeersimulator.model.car.Car;
+import parkeersimulator.model.car.Car.CarType;
 import parkeersimulator.model.location.Location;
 import parkeersimulator.model.location.Place;
 
@@ -17,30 +16,36 @@ import parkeersimulator.model.location.Place;
  * class of the view of the simulation.
  */
 public class CarParkView extends AbstractView {
+	
+	///get screen size
+	Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+	int width = screenSize.width;
+	int height = screenSize.height;
+	
 	///The x and y offset used for positioning the entire parking garage on the window
-    private static final int X_OFFSET = 10; 
-    private static final int Y_OFFSET = 10;
+    private static int X_OFFSET = 50; 
+    private static int Y_OFFSET = 10;
     
     ///The x and y offset used for spacing between parking places
-    private static final int X_OFFSET_PLACE = 21;
-    private static final int Y_OFFSET_PLACE = 10;
+    public static int X_OFFSET_PLACE = 20;
+    public static int Y_OFFSET_PLACE = 10;
     
   ///The x and y values used for sizing parking places
-    private static final int X_WIDTH_PLACE = 20;
-    private static final int Y_WIDTH_PLACE = 10;
+    public static int X_WIDTH_PLACE = 20;
+    public static int Y_WIDTH_PLACE = 10;
     
     ///The t offset used for spacing between each level of the parking garage
-    private static final int Y_OFFSET_FLOORS = 20;
-    private static final int Y_OFFSET_FLOORS_DEFAULT = 300;
+    public static int Y_OFFSET_FLOORS = 240;
+    public static int Y_OFFSET_FLOORS_DEFAULT = 20;
     
     ///The x offset used for spacing between each column of parking placed
-    private static final int X_OFFSET_COLUMN = 55;
+    public static int X_OFFSET_COLUMN = 55;
     
     ///The x factor used for calculating which row each parking space goes in
-    private static final float X_ROWPOS_FACTOR = 0.5f;
+    private static float X_ROWPOS_FACTOR = 0.5f;
     
   ///The factor used sizing the entire parking garage
-    private static final int SIZE_FACTOR = 1;
+    private static int SIZE_FACTOR = 1;
     
     private Dimension size;
     private Image carParkImage;    
@@ -52,16 +57,13 @@ public class CarParkView extends AbstractView {
     	super(model);
     	    	
         size = new Dimension(0, 0);
-        
-		this.setBorder(BorderFactory.createLineBorder(Color.black));
-
     }
 
     /**
      * Overridden. Tell the GUI manager how big we would like to be.
      */
     public Dimension getPreferredSize() {
-        return new Dimension(800, 500);
+       return new Dimension(800, 500);
     }
 
     /**
@@ -93,48 +95,54 @@ public class CarParkView extends AbstractView {
         // Create a new car park image if the size has changed.
         if (!size.equals(getSize())) {
             size = getSize();
-            carParkImage = createImage(size.width, size.height);
+            carParkImage = createImage(size.width + 1, size.height + 2);
         }
         Graphics graphics = carParkImage.getGraphics();
-        for(int floor = 0; floor < parkingGarageModel.getNumberOfFloors(); floor++) {
-            for(int row = 0; row < parkingGarageModel.getNumberOfRows(); row++) {
-                for(int places = 0; places < parkingGarageModel.getNumberOfPlaces(); places++) {
-                    Location location = new Location(floor, row, places);
-                    
-                    Place place = parkingGarageModel.getPlaces()[floor][row][places];
-                    Car car = place.getCar();
-
-                    Color color = Color.WHITE;
-                    
-                    if(place.getCarTypes() != null)
-                    	color = new Color(200, 200, 255);
-                    
-                    color = car == null ? color : car.getColor();
-                    
-                    drawPlace(graphics, location, color, place.getReserved());
-                }
-            }
-        }
+        
+        drawCarPark(graphics, Y_OFFSET, X_OFFSET, parkingGarageModel);
+        
         repaint();
     }
 
+    public static void drawCarPark(Graphics graphics, int xOffset, int yOffset, ParkingGarageModel model) {
+        for(int floor = 0; floor < model.getNumberOfFloors(); floor++) {
+            for(int row = 0; row < model.getNumberOfRows(); row++) {
+                for(int places = 0; places < model.getNumberOfPlaces(); places++) {
+                    Location location = new Location(floor, row, places);
+                    
+                    Place place = model.getPlaces()[floor][row][places];
+                    Car car = place.getCar();
+
+                    Color color = new Color(150, 150, 150);
+                    
+                    if(place.getCarType() == CarType.PASS)
+                    	color = new Color(155, 155, 210);
+                    
+                    color = car == null ? color : car.getColor();
+                    
+                    drawPlace(graphics, location, color, place.getReserved(), xOffset, yOffset);
+                }
+            }
+        }
+    }
+    
     /**
      * Paint a place on this car park view in a given color.
      */
-    private void drawPlace(Graphics graphics, Location location, Color color, boolean isReserved) {
+    private static void drawPlace(Graphics graphics, Location location, Color color, boolean isReserved, int xOffset, int yOffset) {
         graphics.setColor(color);
         graphics.fillRect(
-                ((int)Math.floor(location.getRow() * X_ROWPOS_FACTOR) * X_OFFSET_COLUMN + (location.getRow() % 2) * X_OFFSET_PLACE + X_OFFSET) * SIZE_FACTOR,
-                (location.getPlace() * Y_OFFSET_PLACE + location.getFloor() * (Y_OFFSET_FLOORS + Y_OFFSET_FLOORS_DEFAULT) + Y_OFFSET) * SIZE_FACTOR,
+                ((int)Math.floor(location.getRow() * X_ROWPOS_FACTOR) * X_OFFSET_COLUMN + (location.getRow() % 2) * X_OFFSET_PLACE + xOffset) + location.getFloor() * (Y_OFFSET_FLOORS + Y_OFFSET_FLOORS_DEFAULT) * SIZE_FACTOR,
+                (location.getPlace() * Y_OFFSET_PLACE + yOffset) * SIZE_FACTOR,
                 (X_WIDTH_PLACE - 1) * SIZE_FACTOR,
                 (Y_WIDTH_PLACE - 1) * SIZE_FACTOR); // TODO use dynamic size or constants
-        if(color == Color.white &&  isReserved) {
+        if(color.equals(new Color(150, 150, 150)) &&  isReserved) {
             graphics.setColor(Color.LIGHT_GRAY);
             graphics.fillRect(
-            		((int)Math.floor(location.getRow() * X_ROWPOS_FACTOR) * X_OFFSET_COLUMN + (location.getRow() % 2) * X_OFFSET_PLACE + X_OFFSET + 2) * SIZE_FACTOR,
-                    (location.getPlace() * Y_OFFSET_PLACE + location.getFloor() * (Y_OFFSET_FLOORS + Y_OFFSET_FLOORS_DEFAULT) + Y_OFFSET + 2) * SIZE_FACTOR,
-                    (X_WIDTH_PLACE - 5) * SIZE_FACTOR,
-                    (Y_WIDTH_PLACE - 5) * SIZE_FACTOR);
+            		 ((int)Math.floor(location.getRow() * X_ROWPOS_FACTOR) * X_OFFSET_COLUMN + (location.getRow() % 2) * X_OFFSET_PLACE + xOffset + 2) + location.getFloor() * (Y_OFFSET_FLOORS + Y_OFFSET_FLOORS_DEFAULT) * SIZE_FACTOR,
+                     (location.getPlace() * Y_OFFSET_PLACE + yOffset + 2) * SIZE_FACTOR,
+                     (X_WIDTH_PLACE - 5) * SIZE_FACTOR,
+                     (Y_WIDTH_PLACE - 5) * SIZE_FACTOR);
         }
     }
 }

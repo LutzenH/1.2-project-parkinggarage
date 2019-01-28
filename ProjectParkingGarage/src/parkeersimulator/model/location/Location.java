@@ -70,4 +70,17 @@ public class Location {
         return place;
     }
 
+	
+	/**
+	 * Converts a location [floor][row][place] to a coordinate [x][y]
+	 * @param location the location that should be converted into a coordinate
+	 * @return the calculated coordinate
+	 */
+	public static Coordinate convertToCoordinate(Location location, int numberOfRows) {	
+		int x = location.getFloor() * numberOfRows + location.getRow();
+		int y = location.getPlace();
+		
+		return new Coordinate(x, y);
+	}
+    
 }

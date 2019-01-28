@@ -8,9 +8,8 @@ import parkeersimulator.model.ParkingGarageModel;
 import parkeersimulator.model.handler.ModelHandler;
 import parkeersimulator.view.CarParkStepControlView;
 import parkeersimulator.view.CarParkView;
-import parkeersimulator.view.MainFrame;
-import parkeersimulator.view.QueueCountView;
-import parkeersimulator.view.TimeView;
+import parkeersimulator.view.frame.MainFrame;
+import parkeersimulator.view.frame.GarageDesignFrame;
 import parkeersimulator.view.graph.CarCountGraphView;
 import parkeersimulator.view.graph.QueueGraphView;
 import parkeersimulator.view.graph.FinanceGraphView;
@@ -34,9 +33,7 @@ public class Main {
 	private ParkingGarageController controller;
 	
 	///Declaration of the views this program uses.
-	private TimeView timeview;
-	private CarParkView carparkview;
-	private QueueCountView queuecountview;
+	private GarageDesignFrame carparkview;
 	private CarParkStepControlView carparkstepcontrolview;
 	private JPanel[] tabbedviews;
 
@@ -55,9 +52,7 @@ public class Main {
 		controller = new ParkingGarageController(modelHandler, parkingGarageModel);
 		
 		///Instantiation of this programs' views.
-		carparkview = new CarParkView(parkingGarageModel);
-		queuecountview = new QueueCountView(parkingGarageModel);
-		timeview = new TimeView(parkingGarageModel);
+		carparkview = new GarageDesignFrame(parkingGarageModel, controller);
 		carparkstepcontrolview = new CarParkStepControlView(parkingGarageModel, controller);
 		
 		tabbedviews = new JPanel[3];
@@ -71,19 +66,11 @@ public class Main {
 		///Layout and instantiation of the JFrame.
 		screen = new MainFrame("Parking Garage Simulator", carparkstepcontrolview, tabbedviews, carparkview);
 		
-		//screen.getContentPane().add(queuecountview);
-		//screen.getContentPane().add(timeview);
-		
-		screen.pack();
-		screen.setSize(800, 800);
-		
-		///the views will be notified before the simulation runs in order to display an empty CarParkView.
-		parkingGarageModel.notifyViews();
-		
 		///Makes this JFrame visible.
 		screen.setVisible(true);
 		
-		screen.addResizeProperty(controller);
+		///the views will be notified before the simulation runs in order to display an empty CarParkView.
+		parkingGarageModel.notifyViews();
 	}
 	
 	/**

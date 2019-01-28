@@ -3,7 +3,7 @@ package parkeersimulator.view.graph;
 import org.jfree.data.xy.XYSeries;
 
 import parkeersimulator.model.ParkingGarageModel;
-import parkeersimulator.model.ParkingGarageModel.CarType;
+import parkeersimulator.model.car.Car.CarType;
 
 public class CarCountGraphView extends GraphView {
 

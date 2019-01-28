@@ -1,7 +1,6 @@
 package parkeersimulator.view.graph;
 
 import java.awt.BorderLayout;
-import java.awt.FlowLayout;
 
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
@@ -64,6 +63,7 @@ public abstract class GraphView extends AbstractView {
         
         ///Allow the mouse wheel to scroll.
         panel.setMouseWheelEnabled(true);
+        panel.setPopupMenu(null);
         
         this.setLayout(new BorderLayout());
         add(panel, BorderLayout.CENTER);
