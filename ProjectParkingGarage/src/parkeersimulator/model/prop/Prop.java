@@ -8,20 +8,15 @@ public abstract class Prop {
 	
 	public enum PropType { PROP_ENTRANCE, PROP_EXIT, PROP_TICKETMACHINE };
 	
-	private float preferenceAmount;
 	private Coordinate position;
 	
-	public Prop(float preferenceAmount, Coordinate position) {
-		this.preferenceAmount = preferenceAmount;
+	public Prop(Coordinate position) {
 		this.position = position;
 	}
 	
 	public abstract Color getColor();
 	public abstract String getName();
 	public abstract PropType getType();
-	
-	public float getPreferenceAmount() { return preferenceAmount; }
-	public void setPreferenceAmount(float preferenceAmount) { this.preferenceAmount = preferenceAmount; }
 
 	/**
 	 * @return the location of the Prop

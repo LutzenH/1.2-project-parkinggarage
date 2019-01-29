@@ -266,12 +266,14 @@ public class ParkingGarageModel extends AbstractModel implements Runnable {
      * Puts a certain amount of cars in the queue depending on there average values / type.
      */
     private void carsArriving(){
-    	int numberOfCars=getNumberOfCars(adHocArrivals);  
-		addArrivingCars(numberOfCars, Car.CarType.AD_HOC); 
-    	numberOfCars=getNumberOfCars(passArrivals);
-        addArrivingCars(numberOfCars, Car.CarType.PASS); 
-        numberOfCars=getNumberOfCars(reservationArrivals);
-        addArrivingCars(numberOfCars, Car.CarType.RESERVERATION_CAR);
+    	if(isGarageOpen) {
+        	int numberOfCars=getNumberOfCars(adHocArrivals);  
+    		addArrivingCars(numberOfCars, CarType.AD_HOC); 
+        	numberOfCars=getNumberOfCars(passArrivals);
+            addArrivingCars(numberOfCars, CarType.PASS); 
+            numberOfCars=getNumberOfCars(reservationArrivals);
+            addArrivingCars(numberOfCars, CarType.RESERVERATION_CAR);
+    	}
     }
 
     /**
@@ -282,29 +284,25 @@ public class ParkingGarageModel extends AbstractModel implements Runnable {
     private void carsEntering(CarQueue queue){
         int i=0;
         
-        if(isGarageOpen) {
-            if(queue == entranceCarQueue )
-            {
-            	while (queue.carsInQueue()>0 && 
-            			getNumberOfOpenDefaultSpots()>0 && 
-            			i<enterSpeed) {
-                    Car car = queue.removeCar();
-                    Location freeLocation = getFirstFreeLocation(car);
-                    setCarAt(freeLocation, car);
-                    i++;
-                }
-            }
-            else if (queue == entrancePassQueue)
-            {
-            	while (queue.carsInQueue()>0 && 
-            			getNumberOfOpenPassHolderSpots()>0 && 
-            			i<enterSpeed) {
-                    Car car = queue.removeCar();
-                    Location freeLocation = getFirstFreeLocation(car);
-                    setCarAt(freeLocation, car);
-                    i++;
-                }
-            }
+        if(queue == entrancePassQueue) {
+        	while (queue.carsInQueue()>0 && 
+        			getNumberOfOpenPassHolderSpots()>0 && 
+        			i<enterSpeed) {
+                Car car = queue.removeCar();
+                Location freeLocation = getFirstFreeLocation(car.getCarType());
+                
+                setCarAt(freeLocation, car);
+                i++;
+        	}
+        }
+        else if (queue == entranceCarQueue ) {
+        	while (queue.carsInQueue()>0 && getNumberOfOpenDefaultSpots() > 0 && i<enterSpeed) {
+        		Car car = queue.removeCar();
+                Location freeLocation = getFirstFreeLocation(car.getCarType());
+                
+                setCarAt(freeLocation, car);
+                i++;
+        	}
         }
     }
     
@@ -374,28 +372,34 @@ public class ParkingGarageModel extends AbstractModel implements Runnable {
      * @param numberOfCars Amount of cars that should be added to the queue.
      * @param type Type of car that should be added to the queue.
      */
-    private void addArrivingCars(int numberOfCars, Car.CarType type){
+    private void addArrivingCars(int numberOfCars, CarType type){
     	switch(type) {
-    	case AD_HOC: 
-            for (int i = 0; i < numberOfCars; i++) {
-            	int queueLengthBeforeLeving = new Random().nextInt(6) + 15;
-            	entranceCarQueue.addCar(new AdHocCar(stayMinutes));
-            	if(getEntranceCarQueue().carsInQueue() >= queueLengthBeforeLeving) {
-            		entranceCarQueue.removeCar();
-            		amountOfLeavingCars ++;
-            	}
-            }
-            break;
-    	case PASS:
-            for (int i = 0; i < numberOfCars; i++) {
-            	entrancePassQueue.addCar(new ParkingPassCar(stayMinutes));
-            }
-            break;	     
-    	case RESERVERATION_CAR:
-            for (int i = 0; i < numberOfCars; i++) {
-            	entranceCarQueue.addCar(new ReservationCar());
-            }
-    		break;
+	    	case AD_HOC:
+	            for (int i = 0; i < numberOfCars; i++) {
+	            	int queueLengthBeforeLeving = new Random().nextInt(11) + 15;
+	            	if(getEntranceCarQueue().carsInQueue() <= queueLengthBeforeLeving) {
+	            		entranceCarQueue.addCar(new AdHocCar(stayMinutes));
+	            		amountOfLeavingCars ++;
+	            	}
+	            }
+	            break;
+	    	case PASS:
+	            for (int i = 0; i < numberOfCars; i++) {
+	            	entrancePassQueue.addCar(new ParkingPassCar(stayMinutes));
+	            }
+	            break;
+	        //If the car is a RESERVERATION_CAR check for an open spot for a AD_HOC car and set it to reserved
+	    	case RESERVERATION_CAR:
+	            for (int i = 0; i < numberOfCars; i++) {	            	
+	            	Location location = getFirstFreeLocation(CarType.AD_HOC);
+	            	
+	            	if (location != null) {
+		            	entranceCarQueue.addCar(new ReservationCar());
+		            	places [location.getFloor()][location.getRow()][location.getPlace()].setReserved(true);
+		            	numberOfOpenDefaultSpots--; 
+	            	}            	
+	            }
+	      		break;
     	}
     }
     
@@ -405,6 +409,7 @@ public class ParkingGarageModel extends AbstractModel implements Runnable {
      * @param car The car that should leave its location.
      */
     private void carLeavesSpot(Car car){
+    	places [car.getLocation().getFloor()][car.getLocation().getRow()][car.getLocation().getPlace()].setReserved(false);
     	removeCarAt(car.getLocation());
         exitCarQueue.addCar(car);
     }
@@ -605,7 +610,7 @@ public class ParkingGarageModel extends AbstractModel implements Runnable {
 							float distance = Coordinate.calculateDistance(position, prop.getPosition());
 							
 							if(distance < preferenceFactor)
-								preferenceFactor = distance * prop.getPreferenceAmount();
+								preferenceFactor = distance;
 						}
 					}
 					
@@ -701,8 +706,10 @@ public class ParkingGarageModel extends AbstractModel implements Runnable {
             car.setLocation(location);
             if(car.getCarType() == Car.CarType.PASS)
             	numberOfOpenPassHolderSpots--;
-            else
+            else if(car.getCarType() == Car.CarType.AD_HOC) {
             	numberOfOpenDefaultSpots--;
+            	}
+            
             return true;
         }
         return false;
@@ -735,24 +742,34 @@ public class ParkingGarageModel extends AbstractModel implements Runnable {
     /**
      * @return The first free location in the parking garage.
      */
-    public Location getFirstFreeLocation(Car car) {
+    public Location getFirstFreeLocation(CarType carType) {
     	for(Place place : preferredPlaces) {
-            
-        	CarType allowedType = place.getCarType();
             Location location = place.getLocation();
-
-        	if(allowedType == null) {
-        		if(car.getCarType() != CarType.PASS) {
-                    if (getCarAt(location) == null) {
-                        return location;
-                    }
-        		}
-        	}
-        	else {
-        		if(car.getCarType() == allowedType && getCarAt(location) == null) {
-        			return location;
-        		}
-        	}
+            
+            //Check if the location contains a car.
+            if(getCarAt(location) == null) {
+            	CarType allowedType = place.getCarType();
+            	
+            	//Check if the arrived car is allowed to stand at this spot.
+                if(allowedType != null) {
+            		if(carType == allowedType) {        			
+            			return location;
+            		}
+                }
+                //If any type of car is allowed at this spot: 
+                else {
+                	//If the arrived car is a reservation car check if the spot is reserved or not.
+                	if(carType == CarType.RESERVERATION_CAR) {
+                		if(place.getReserved())
+                			return location;
+                	}
+                	//If the arrived car is not a reservation car check if spot is unreserved.
+                	else {
+                		if(!place.getReserved())
+                			return location;
+                	}
+                }
+            }
     	}
         return null;
     }
@@ -806,9 +823,11 @@ public class ParkingGarageModel extends AbstractModel implements Runnable {
         int floor = location.getFloor();
         int row = location.getRow();
         int place = location.getPlace();
-        if (floor < 0 || floor >= numberOfFloors || row < 0 || row > numberOfRows || place < 0 || place > numberOfPlaces) {
+        
+        if (floor < 0 || floor > numberOfFloors || row < 0 || row > numberOfRows || place < 0 || place > numberOfPlaces) {
             return false;
         }
+        
         return true;
     }
     
@@ -1031,6 +1050,10 @@ public class ParkingGarageModel extends AbstractModel implements Runnable {
 			return null;
 	}
 
+	/**
+	 * Checks if the garage has the required props inorder to be opened.
+	 * @return true if it has the required props
+	 */
 	private boolean hasRequiredProps() {
 		boolean hasEntrance = false;
 		boolean hasExit = false;

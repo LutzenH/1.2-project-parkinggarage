@@ -52,12 +52,12 @@ public class MainFrame extends JFrame {
 		splitPane_1.setTopComponent(tabbedPane);
 		splitPane_1.setBottomComponent(simulationPanel);
 		
-		splitPane_1.getTopComponent().setMaximumSize(new Dimension(width / 1366 * 1048, height / 768 * 530));
-		splitPane_1.getTopComponent().setMinimumSize(new Dimension(width / 1366 * 866, height / 768 * 350));
-		splitPane_1.getBottomComponent().setMaximumSize(new Dimension(width / 1366 * 1048, height / 768 * 418));
-		splitPane_1.getBottomComponent().setMinimumSize(new Dimension(width / 1366 * 866, height / 768 * 238));
-		splitPane.getRightComponent().setMaximumSize(new Dimension(width / 1366 * 500, height));
-		splitPane.getRightComponent().setMinimumSize(new Dimension(width / 1366 * 320, height));
+		splitPane_1.getTopComponent().setMaximumSize(new Dimension(width / 1366 * 1116, height / 768 * 530));
+		splitPane_1.getTopComponent().setMinimumSize(new Dimension(width / 1366 * 1056, height / 768 * 350));
+		splitPane_1.getBottomComponent().setMaximumSize(new Dimension(width / 1366 * 1116, height / 768 * 418));
+		splitPane_1.getBottomComponent().setMinimumSize(new Dimension(width / 1366 * 1056, height / 768 * 238));
+		splitPane.getRightComponent().setMaximumSize(new Dimension(width / 1366 * 310, height));
+		splitPane.getRightComponent().setMinimumSize(new Dimension(width / 1366 * 250, height));
 		
 		for(JPanel panel : tabbedPanels)
 		{

@@ -63,6 +63,7 @@ public abstract class GraphView extends AbstractView {
         
         ///Allow the mouse wheel to scroll.
         panel.setMouseWheelEnabled(true);
+        panel.setPopupMenu(null);
         
         this.setLayout(new BorderLayout());
         add(panel, BorderLayout.CENTER);

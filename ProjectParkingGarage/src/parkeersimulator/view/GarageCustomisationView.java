@@ -41,7 +41,7 @@ public class GarageCustomisationView extends AbstractControllableView implements
      * Overridden. Tell the GUI manager how big we would like to be.
      */
     public Dimension getPreferredSize() {
-       return new Dimension(732, 395);
+       return new Dimension(740, 450);
     }
     
     /**
@@ -137,7 +137,6 @@ public class GarageCustomisationView extends AbstractControllableView implements
     		}
     	}
     }
-    
 
 	@Override
 	public void mousePressed(MouseEvent e) {}

@@ -7,7 +7,7 @@ import parkeersimulator.model.location.Coordinate;
 public class ExitProp extends Prop {
 
 	public ExitProp(Coordinate position) {
-		super(0.7f, position);
+		super(position);
 	}
 
 	@Override
