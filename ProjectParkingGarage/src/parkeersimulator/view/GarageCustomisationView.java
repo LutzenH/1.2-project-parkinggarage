@@ -8,7 +8,11 @@ import java.awt.Rectangle;
 import java.awt.Toolkit;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
+
+import javax.imageio.ImageIO;
 
 import parkeersimulator.controller.ParkingGarageController;
 import parkeersimulator.controller.ParkingGarageController.ActionType;
@@ -16,7 +20,7 @@ import parkeersimulator.model.ParkingGarageModel;
 import parkeersimulator.model.prop.Prop;
 
 public class GarageCustomisationView extends AbstractControllableView implements MouseListener{
-
+	
 	///get screen size
 	Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 	int width = screenSize.width;
@@ -68,50 +72,203 @@ public class GarageCustomisationView extends AbstractControllableView implements
      */
     @Override
     public void updateView() {
+    	ParkingGarageModel parkingGarageModel = (ParkingGarageModel) model;
+    	
+    	Toolkit.getDefaultToolkit().sync();
+    	
         // Create a new car park image if the size has changed.
         if (!size.equals(getSize())) {
             size = getSize();
             carParkImage = createImage(size.width + 1, size.height + 2);
         }
         Graphics graphics = carParkImage.getGraphics();
+
+        drawBackground(graphics, parkingGarageModel.getDrawCheap());
         
-        drawProps(graphics, 0, 0);
-        
-        CarParkView.drawCarPark(graphics, 0, 40, model);
+        drawCarPark(graphics, parkingGarageModel.getDrawCheap());
         
         repaint();
     }
     
-    private void drawProps(Graphics graphics, int xOffset, int yOffset) {  	   	
-    	Prop[] props = model.getProps();
+    private void drawProps(Graphics graphics, int xOffset, int yOffset, boolean drawCheap) {  	   	
+    	ParkingGarageModel parkingGarageModel = (ParkingGarageModel) model;
     	
-    	int propsPerFloor = model.getNumberOfRows()/2;
+    	Prop[] props = parkingGarageModel.getProps();
+    	
+    	int distanceBetweenFloors_X = CarParkView.Y_OFFSET_FLOORS + CarParkView.Y_OFFSET_FLOORS_DEFAULT;
+    	int rowLength_Y = 328;
+    	
+    	int propsPerFloor = parkingGarageModel.getNumberOfRows()/2;
     	
     	int count = 0;
     	
-    	for(int floor = 0; floor < model.getNumberOfFloors(); floor++) {
+    	for(int floor = 0; floor < parkingGarageModel.getNumberOfFloors(); floor++) {
         	for(int i = 0; i < propsPerFloor; i++) {
-            	int distanceBetweenRows_X = 55;
-            	int distanceBetweenFloors_X = 260;
-            	int rowLength_Y = 328;
         		
-        		Color color = new Color(220, 220, 220);
+        		Color color = Color.white;
         		
-        		color = props[count] == null ? color : props[count].getColor();
-        		graphics.setColor(color);
-        		rectangles[count] = new Rectangle(xOffset + 5 + (i * distanceBetweenRows_X) + (floor * distanceBetweenFloors_X), yOffset + 5, 29, 29);
-        		drawRectangle(graphics, rectangles[count], color);
-        		count++;
+        		if(!drawCheap)
+        			color = new Color(220, 220, 220);
         		
-        		color = new Color(220, 220, 220);
-        		
-        		color = props[count] == null ? color : props[count].getColor();
-        		rectangles[count] = new Rectangle(xOffset + 5 + (i * distanceBetweenRows_X) + (floor * distanceBetweenFloors_X), yOffset + 10 + (rowLength_Y + 7), 29, 29);
-        		drawRectangle(graphics, rectangles[count], color);
-        		count++;
+        		if(!drawCheap) {
+            		drawProp(graphics, xOffset, yOffset, props, count, floor, i, distanceBetweenFloors_X, rowLength_Y);
+            		rectangles[count] = new Rectangle(xOffset + 5 + (i * CarParkView.X_OFFSET_COLUMN) + (floor * distanceBetweenFloors_X), yOffset + 5, 29, 29);
+            		drawRectangle(graphics, rectangles[count], color);
+            		count++;
+            		
+            		drawProp(graphics, xOffset, yOffset, props, count, floor, i, distanceBetweenFloors_X, rowLength_Y);
+            		rectangles[count] = new Rectangle(xOffset + 5 + (i * CarParkView.X_OFFSET_COLUMN) + (floor * distanceBetweenFloors_X), yOffset + 10 + (rowLength_Y + 7), 29, 29);
+            		drawRectangle(graphics, rectangles[count], color);
+            		count++;
+        		}
+        		else {
+        			color = props[count] == null ? new Color(100, 100, 100) : props[count].getColor();
+        			graphics.setColor(color);
+        			rectangles[count] = new Rectangle(xOffset + 5 + (i * CarParkView.X_OFFSET_COLUMN) + (floor * distanceBetweenFloors_X), yOffset + 5, 29, 29);
+        			graphics.fillRect(rectangles[count].x, rectangles[count].y, rectangles[count].width, rectangles[count].height);
+            		count++;
+            		
+            		color = props[count] == null ? new Color(100, 100, 100) : props[count].getColor();
+        			graphics.setColor(color);
+            		rectangles[count] = new Rectangle(xOffset + 5 + (i * CarParkView.X_OFFSET_COLUMN) + (floor * distanceBetweenFloors_X), yOffset + 10 + (rowLength_Y + 7), 29, 29);
+        			graphics.fillRect(rectangles[count].x, rectangles[count].y, rectangles[count].width, rectangles[count].height);
+            		count++;
+        		}
         		
         	}
     	}
+    }
+    
+    private void drawBackground(Graphics graphics, boolean drawCheap) {
+    	graphics.setColor(Color.WHITE);
+    	
+    	graphics.clearRect(0, 0, this.getWidth(), this.getHeight());
+    	
+    	if(!drawCheap) {
+        	Image img_background = createImage("resources/img_background.png");
+        	graphics.drawImage(img_background, 0, 0, this.getWidth(), this.getHeight(), this);
+    	}
+    }
+    
+    private void drawProp(Graphics graphics, int xOffset, int yOffset, Prop[] props, int count, int floor, int i, int distanceBetweenFloors_X, int rowLength_Y) {
+		if(props[count] != null) {
+			int xPos = xOffset + 5 + (i * CarParkView.X_OFFSET_COLUMN) + (floor * distanceBetweenFloors_X);
+			int yPos = (count % 2 == 0) ? (yOffset + 5) : yOffset + 10 + (rowLength_Y + 7);
+			
+    		switch(props[count].getType()) {
+				case PROP_ENTRANCE:
+					Image entrance = createImage("resources/entrance.png");
+			    	
+					graphics.setColor(new Color(200, 200, 200));
+					
+					if(count % 2 == 0) {
+						graphics.fillRect(xPos - 4, 0, entrance.getWidth(this) + 8, yPos-20);
+						graphics.drawImage(entrance, xPos, yPos - 30, entrance.getWidth(this), entrance.getHeight(this), this);
+					}
+					else {
+			    		graphics.fillRect(xPos - 4, yPos+49, entrance.getWidth(this) + 8, this.getHeight());
+			    		graphics.drawImage(entrance, xPos, yPos + 30, entrance.getWidth(this), entrance.getHeight(this), this);
+					}
+			    	
+					break;
+				case PROP_EXIT:
+					Image exit = createImage("resources/exit.png");
+					
+					graphics.setColor(new Color(200, 200, 200));
+					
+					if(count % 2 == 0) {
+						graphics.fillRect(xPos - 4, 0, exit.getWidth(this) + 8, yPos-20);
+						graphics.drawImage(exit, xPos, yPos - 30, exit.getWidth(this), exit.getHeight(this), this);
+					}
+					else {
+			    		graphics.fillRect(xPos - 4, yPos+49, exit.getWidth(this) + 8, this.getHeight());
+			    		graphics.drawImage(exit, xPos, yPos + 30, exit.getWidth(this), exit.getHeight(this), this);
+					}
+					
+					break;
+				case PROP_TICKETMACHINE:
+					Image ticketMachine;
+					
+					if(count % 2 == 0) {
+						ticketMachine = createImage("resources/ticketmachine_top.png");
+						yPos -= 15;
+					}
+					else {
+						ticketMachine = createImage("resources/ticketmachine_bottom.png");
+						yPos += 18;
+					}
+					
+			    	graphics.drawImage(ticketMachine,
+			    			xPos,
+			    			yPos,
+			    			ticketMachine.getWidth(this),
+			    			ticketMachine.getHeight(this),
+			    			this);
+					break;
+				default:
+					break;
+    		}
+		}
+    }
+    
+    private void drawCarPark(Graphics graphics, boolean drawCheap) {
+    	ParkingGarageModel parkingGarageModel = (ParkingGarageModel) model;
+    	
+    	int width = this.getWidth();
+    	int height = this.getHeight();
+    	
+    	//TODO Calculate these based on real size
+    	int carpark_width = 724;
+    	int carpark_height = 299;
+    	
+    	int carpark_topleft_x = (width - carpark_width)/2;
+    	int carpark_topleft_y = (height - carpark_height)/2;
+    	
+    	if(!drawCheap) {
+    		int[] shadow_x = {	carpark_topleft_x - 35,
+    			carpark_topleft_x + carpark_width + 35,
+    			carpark_topleft_x + carpark_width + 35,
+    			carpark_topleft_x + carpark_width,
+    			carpark_topleft_x - 70,
+    			carpark_topleft_x - 70
+    		 };
+
+    		int[] shadow_y = {
+    			carpark_topleft_y - 55,
+    			carpark_topleft_y - 55,
+    			carpark_topleft_y + carpark_height + 55,
+    			carpark_topleft_y + carpark_height + 80,
+    			carpark_topleft_y + carpark_height + 80,
+    			carpark_topleft_y - 30
+    		 };
+
+    		graphics.setColor(new Color(5,5,5, 50));
+    		graphics.fillPolygon(shadow_x, shadow_y, 6);
+        	
+        	graphics.setColor(new Color(153,153,153));
+        	graphics.fillRect(carpark_topleft_x-35, carpark_topleft_y-55, carpark_width+70, carpark_height+110);
+        	graphics.setColor(new Color(128,128,128));
+        	graphics.fillRect(carpark_topleft_x-30, carpark_topleft_y-50, carpark_width+60, carpark_height+100);
+    	}
+    	
+        drawProps(graphics, carpark_topleft_x, carpark_topleft_y - 40, parkingGarageModel.getDrawCheap());
+    	
+        CarParkView.drawCarPark(graphics,
+				        		carpark_topleft_x,
+				        		carpark_topleft_y,
+				        		parkingGarageModel);
+    }
+    
+    private Image createImage(String path) {
+    	Image img = null;
+    	
+        try {
+        	img = ImageIO.read(new File(path));
+         } catch (IOException e) {
+            e.printStackTrace();
+         }
+
+        return img;
     }
     
     /**
@@ -122,7 +279,7 @@ public class GarageCustomisationView extends AbstractControllableView implements
      */
     private void drawRectangle(Graphics graphics, Rectangle rectangle, Color color) {    	
 		graphics.setColor(color);
-		graphics.fillRect(rectangle.x, rectangle.y, rectangle.width, rectangle.height);
+		graphics.drawRect(rectangle.x, rectangle.y, rectangle.width, rectangle.height);
     }
     
     @Override

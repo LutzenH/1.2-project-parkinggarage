@@ -6,8 +6,6 @@ import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Toolkit;
 
-import javax.swing.BorderFactory;
-
 import parkeersimulator.model.ParkingGarageModel;
 import parkeersimulator.model.car.Car;
 import parkeersimulator.model.car.Car.CarType;
@@ -92,6 +90,8 @@ public class CarParkView extends AbstractView {
      */
     @Override
     public void updateView() {
+    	ParkingGarageModel parkingGarageModel = (ParkingGarageModel) model;
+    	
         // Create a new car park image if the size has changed.
         if (!size.equals(getSize())) {
             size = getSize();
@@ -99,7 +99,7 @@ public class CarParkView extends AbstractView {
         }
         Graphics graphics = carParkImage.getGraphics();
         
-        drawCarPark(graphics, Y_OFFSET, X_OFFSET, model);
+        drawCarPark(graphics, Y_OFFSET, X_OFFSET, parkingGarageModel);
         
         repaint();
     }
@@ -113,10 +113,10 @@ public class CarParkView extends AbstractView {
                     Place place = model.getPlaces()[floor][row][places];
                     Car car = place.getCar();
 
-                    Color color = Color.WHITE;
+                    Color color = new Color(150, 150, 150);
                     
                     if(place.getCarType() == CarType.PASS)
-                    	color = new Color(200, 200, 255);
+                    	color = new Color(155, 155, 210);
                     
                     color = car == null ? color : car.getColor();
                     
@@ -136,7 +136,7 @@ public class CarParkView extends AbstractView {
                 (location.getPlace() * Y_OFFSET_PLACE + yOffset) * SIZE_FACTOR,
                 (X_WIDTH_PLACE - 1) * SIZE_FACTOR,
                 (Y_WIDTH_PLACE - 1) * SIZE_FACTOR); // TODO use dynamic size or constants
-        if(color == Color.white &&  isReserved) {
+        if(color.equals(new Color(150, 150, 150)) &&  isReserved) {
             graphics.setColor(Color.LIGHT_GRAY);
             graphics.fillRect(
             		 ((int)Math.floor(location.getRow() * X_ROWPOS_FACTOR) * X_OFFSET_COLUMN + (location.getRow() % 2) * X_OFFSET_PLACE + xOffset + 2) + location.getFloor() * (Y_OFFSET_FLOORS + Y_OFFSET_FLOORS_DEFAULT) * SIZE_FACTOR,

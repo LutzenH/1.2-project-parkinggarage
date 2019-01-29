@@ -15,13 +15,13 @@ import parkeersimulator.model.ParkingGarageModel;
  */
 public abstract class AbstractView extends JPanel {
 	///Declaration of the model this view should be retrieving information from.
-	protected ParkingGarageModel model;
+	protected AbstractModel model;
 
 	/**
 	 * The constructor of AbstractView
 	 * @param model The model this view should be retrieving information from.
 	 */
-	public AbstractView(ParkingGarageModel model) {
+	public AbstractView(AbstractModel model) {
 		this.model=model;
 		model.addView(this);
 	}

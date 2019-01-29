@@ -26,6 +26,13 @@ public class CarQueue {
     public Car removeCar() {
         return queue.poll();
     }
+    
+    /**
+     * clear all the cars from the queue.
+     */
+    public void clear() {
+        queue.clear();
+    }
 
     /**
      * @return The size of the queue.

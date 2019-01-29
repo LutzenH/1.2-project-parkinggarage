@@ -3,6 +3,7 @@ package parkeersimulator.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import parkeersimulator.model.handler.ModelHandler;
 import parkeersimulator.view.AbstractView;
 
 /**
@@ -15,9 +16,11 @@ public abstract class AbstractModel {
 	/**
 	 * Constructor of AbstractModel
 	 */
-	public AbstractModel() {
+	public AbstractModel(ModelHandler handler) {
 		///Instantiation of the list of views.
 		views=new ArrayList<AbstractView>();
+		
+		handler.addModel(this);
 	}
 	
 	/**
@@ -34,4 +37,9 @@ public abstract class AbstractModel {
 	public void notifyViews() {
 		for(AbstractView v: views) v.updateView();
 	}
+	
+	/**
+	 * Runs the simulation one iteration
+	 */
+	public abstract void tick();
 }

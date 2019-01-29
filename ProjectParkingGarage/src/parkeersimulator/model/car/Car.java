@@ -9,11 +9,13 @@ import parkeersimulator.model.location.Location;
  */
 public abstract class Car {
 
+    private Location location;
+    
 	///Id of the different types of cars.
 	public enum CarType { AD_HOC, PASS, RESERVERATION_CAR }
 
-	private Location location;
     private int minutesLeft;
+    private int minutesStayed;
     private boolean isPaying;
 
     /**
@@ -29,6 +31,8 @@ public abstract class Car {
     public int getMinutesLeft() { return minutesLeft; }
     public void setMinutesLeft(int minutesLeft) { this.minutesLeft = minutesLeft; }
     
+    public int getMinutesStayed() { return minutesStayed; }
+    
     public boolean getIsPaying() { return isPaying; }
     public void setIsPaying(boolean isPaying) { this.isPaying = isPaying; }
 
@@ -36,6 +40,7 @@ public abstract class Car {
 
     public void tick() {
         minutesLeft--;
+        minutesStayed++;
     }
     
     /**

@@ -24,10 +24,11 @@ public class QueueGraphView extends GraphView {
 
 	@Override
 	protected void updateDataset() {
-		graph_data[0].addOrUpdate(time, model.getEntranceCarQueue().carsInQueue());
-		graph_data[1].addOrUpdate(time, model.getEntrancePassQueue().carsInQueue());
-		graph_data[2].addOrUpdate(time, model.getPaymentCarQueue().carsInQueue());
-		graph_data[3].addOrUpdate(time, model.getExitCarQueue().carsInQueue());
+		ParkingGarageModel parkingGarageModel = (ParkingGarageModel) model;
+		graph_data[0].addOrUpdate(time, parkingGarageModel.getEntranceCarQueue().carsInQueue());
+		graph_data[1].addOrUpdate(time, parkingGarageModel.getEntrancePassQueue().carsInQueue());
+		graph_data[2].addOrUpdate(time, parkingGarageModel.getPaymentCarQueue().carsInQueue());
+		graph_data[3].addOrUpdate(time, parkingGarageModel.getExitCarQueue().carsInQueue());
 	}
 
 }
