@@ -3,6 +3,7 @@ import java.util.LinkedList;
 import java.util.Queue;
 
 import parkeersimulator.model.car.Car;
+import parkeersimulator.model.car.Car.CarType;
 
 /**
  * Class used for queues in the parking garage simulation.
@@ -32,6 +33,17 @@ public class CarQueue {
      */
     public void clear() {
         queue.clear();
+    }
+    
+    /**
+     * @return the CarType of the first car in the queue
+     */
+    public CarType getFrontCarType() {
+	    try {
+	    	return queue.peek().getCarType();
+		} catch (NullPointerException e) {
+			return null;
+		}
     }
 
     /**

@@ -144,6 +144,8 @@ public class ParkingGarageModel extends AbstractModel {
 	private int numberOfOpenDefaultSpots;
 	private int numberOfOpenPassHolderSpots;
 	
+	private int numberOfAllowedPassHolders;
+	
     ///Amount of spots for Pass holders
     private int passHolderPlaceAmount = 100;
     
@@ -168,6 +170,7 @@ public class ParkingGarageModel extends AbstractModel {
 
         this.numberOfOpenDefaultSpots = (numberOfFloors * numberOfRows * numberOfPlaces) - passHolderPlaceAmount;
         this.numberOfOpenPassHolderSpots = passHolderPlaceAmount;
+        this.numberOfAllowedPassHolders = numberOfOpenPassHolderSpots;
         
         this.isGarageOpen = false;
         
@@ -275,14 +278,29 @@ public class ParkingGarageModel extends AbstractModel {
         int i=0;
         
         if(queue == entrancePassQueue) {
-        	while (queue.carsInQueue()>0 && 
-        			getNumberOfOpenPassHolderSpots()>0 && 
-        			i<enterSpeed) {
-                Car car = queue.removeCar();
-                Location freeLocation = getFirstFreeLocation(car.getCarType());
-                
-                setCarAt(freeLocation, car);
-                i++;
+        	if(queue.getFrontCarType() != null) {
+            	switch(queue.getFrontCarType()) {
+    				case RESERVERATION_CAR:
+    		        	while (queue.carsInQueue()>0 && getNumberOfOpenDefaultSpots() > 0 && i<enterSpeed) {
+    		        		Car car = queue.removeCar();
+    		                Location freeLocation = getFirstFreeLocation(car.getCarType());
+    		                
+    		                setCarAt(freeLocation, car);
+    		                i++;
+    		        	}
+    					break;
+    				case PASS:
+    		        	while (queue.carsInQueue()>0 && getNumberOfOpenPassHolderSpots() > 0 && i<enterSpeed) {
+    		                Car car = queue.removeCar();
+    		                Location freeLocation = getFirstFreeLocation(car.getCarType());
+    		                
+    		                setCarAt(freeLocation, car);
+    		                i++;
+    		        	}
+    					break;
+    				default:
+    					break;
+            	}
         	}
         }
         else if (queue == entranceCarQueue ) {
@@ -332,7 +350,9 @@ public class ParkingGarageModel extends AbstractModel {
     private void carsLeaving(){
     	int i=0;
     	while (exitCarQueue.carsInQueue()>0 && i < exitSpeed){
-            exitCarQueue.removeCar();
+    		Car car = exitCarQueue.removeCar();
+    		if(car.getCarType() == CarType.PASS)
+    			numberOfAllowedPassHolders++;
             i++;
     	}	
     }
@@ -370,13 +390,16 @@ public class ParkingGarageModel extends AbstractModel {
 	            	int queueLengthBeforeLeving = new Random().nextInt(11) + 15;
 	            	if(getEntranceCarQueue().carsInQueue() <= queueLengthBeforeLeving) {
 	            		entranceCarQueue.addCar(new AdHocCar(stayMinutes));
-	            		amountOfLeavingCars ++;
+	            		amountOfLeavingCars++;
 	            	}
 	            }
 	            break;
 	    	case PASS:
 	            for (int i = 0; i < numberOfCars; i++) {
-	            	entrancePassQueue.addCar(new ParkingPassCar(stayMinutes));
+	            	if(numberOfAllowedPassHolders > 0) {
+		            	entrancePassQueue.addCar(new ParkingPassCar(stayMinutes));
+		            	numberOfAllowedPassHolders--;
+	            	}
 	            }
 	            break;
 	        //If the car is a RESERVERATION_CAR check for an open spot for a AD_HOC car and set it to reserved
@@ -385,7 +408,7 @@ public class ParkingGarageModel extends AbstractModel {
 	            	Location location = getFirstFreeLocation(CarType.AD_HOC);
 	            	
 	            	if (location != null) {
-		            	entranceCarQueue.addCar(new ReservationCar());
+		            	entrancePassQueue.addCar(new ReservationCar());
 		            	places [location.getFloor()][location.getRow()][location.getPlace()].setReserved(true);
 		            	numberOfOpenDefaultSpots--; 
 	            	}            	
@@ -404,7 +427,6 @@ public class ParkingGarageModel extends AbstractModel {
     	removeCarAt(car.getLocation());
         exitCarQueue.addCar(car);
     }
-    
     
     /**
      * @return The current adHocArrivals_week in percent.
