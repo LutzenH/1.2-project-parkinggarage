@@ -6,7 +6,7 @@ import java.awt.*;
  * The model of a car with a subscription pass. 
  */
 public class ParkingPassCar extends Car {
-	private static final Color COLOR=Color.blue;
+	public static final Color COLOR=Color.blue;
 	
 	/**
 	 * The constructor for ParkingPassCar

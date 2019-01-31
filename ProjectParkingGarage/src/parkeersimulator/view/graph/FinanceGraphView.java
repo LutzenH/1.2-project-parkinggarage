@@ -1,5 +1,7 @@
 package parkeersimulator.view.graph;
 
+import java.awt.Color;
+
 import org.jfree.data.xy.XYSeries;
 
 import parkeersimulator.model.FinanceModel;
@@ -16,6 +18,10 @@ public class FinanceGraphView extends GraphView {
 				new XYSeries[] {
 						new XYSeries("MoneyTotal"),
 						new XYSeries("MoneyMonth"),
+				},
+				new Color[] {
+						Color.GREEN,
+						Color.BLUE,
 				},
 				"time (minutes)",
 				"amount",

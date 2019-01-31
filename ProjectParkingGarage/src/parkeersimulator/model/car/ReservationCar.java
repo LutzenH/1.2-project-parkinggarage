@@ -9,7 +9,7 @@ import java.awt.*;
  */
 public class ReservationCar extends Car {
 	///The color this type of car should have.
-	private static final Color COLOR=Color.yellow;
+	public static final Color COLOR=Color.yellow;
 	
 	private int timeBeforeArrival;
 	

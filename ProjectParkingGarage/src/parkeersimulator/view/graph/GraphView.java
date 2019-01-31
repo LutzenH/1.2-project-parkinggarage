@@ -1,6 +1,7 @@
 package parkeersimulator.view.graph;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
@@ -45,7 +46,7 @@ public abstract class GraphView extends AbstractView {
 	 * Constructor of GraphView
 	 * @param model The ParkingGarageModel this view uses to display data.
 	 */
-    public GraphView(AbstractModel model, String tableName, XYSeries[] dataSeries, String xAxisName, String yAxisName, int dataCollectFrequency) {
+    public GraphView(AbstractModel model, String tableName, XYSeries[] dataSeries, Color[] colors, String xAxisName, String yAxisName, int dataCollectFrequency) {
         super(model);
         
         this.dataCollectFrequency = dataCollectFrequency;
@@ -58,7 +59,7 @@ public abstract class GraphView extends AbstractView {
             dataset.addSeries(graph_data[i]);
         }
         
-        chart = createChart(dataset, tableName, xAxisName, yAxisName);
+        chart = createChart(dataset, tableName, xAxisName, yAxisName, colors);
         panel = new ChartPanel(chart);
         
         ///Allow the mouse wheel to scroll.
@@ -80,7 +81,7 @@ public abstract class GraphView extends AbstractView {
      * @param dataset The data-set that should be displayed in this chart
      * @return A JFreeChart which can be used to display data.
      */
-    private JFreeChart createChart(XYDataset dataset, String tableName, String xAxisName, String yAxisName) {
+    private JFreeChart createChart(XYDataset dataset, String tableName, String xAxisName, String yAxisName, Color[] lineColors) {
         ///Initiates the chart.
         JFreeChart chart = ChartFactory.createXYLineChart(tableName, xAxisName, yAxisName, dataset, PlotOrientation.VERTICAL, true, true, false);
 
@@ -90,10 +91,14 @@ public abstract class GraphView extends AbstractView {
         XYLineAndShapeRenderer renderer
                 = (XYLineAndShapeRenderer) plot.getRenderer();
         
+        for(int i = 0; i < lineColors.length; i++) {
+        	renderer.setSeriesPaint(i, lineColors[i]);
+        }
+        
         ///Can be used to display shapes around each individual data-point.
         renderer.setBaseShapesVisible(false);
         renderer.setBaseShapesFilled(true);
-
+        
         NumberAxis rangeAxis = (NumberAxis) plot.getRangeAxis();
         rangeAxis.setStandardTickUnits(NumberAxis.createIntegerTickUnits());
 

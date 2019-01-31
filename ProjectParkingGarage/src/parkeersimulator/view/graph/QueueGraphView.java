@@ -1,5 +1,7 @@
 package parkeersimulator.view.graph;
 
+import java.awt.Color;
+
 import org.jfree.data.xy.XYSeries;
 
 import parkeersimulator.model.ParkingGarageModel;
@@ -15,6 +17,12 @@ public class QueueGraphView extends GraphView {
 						new XYSeries("EntrancePassQueue"),
 						new XYSeries("PaymentQueue"),
 						new XYSeries("ExitQueue")
+				},
+				new Color[] {
+						Color.GREEN,
+						Color.BLUE,
+						Color.ORANGE,
+						Color.RED
 				},
 				"time (minutes)",
 				"amount",
