@@ -30,8 +30,6 @@ import parkeersimulator.model.queue.CarQueue;
  */
 public class ParkingGarageModel extends AbstractModel {
 	
-	private boolean drawCheap;
-	
 	///Check if the garage is opened
 	private boolean isGarageOpen;
 	
@@ -172,7 +170,6 @@ public class ParkingGarageModel extends AbstractModel {
         this.numberOfOpenPassHolderSpots = passHolderPlaceAmount;
         
         this.isGarageOpen = false;
-        this.drawCheap = false;
         
         ///Instantiation of the all possible car positions.
         places = new Place[numberOfFloors][numberOfRows][numberOfPlaces];
@@ -636,20 +633,6 @@ public class ParkingGarageModel extends AbstractModel {
 			}
 			count++;
 		}
-	}
-
-	/**
-	 * @return the drawCheap
-	 */
-	public boolean getDrawCheap() {
-		return drawCheap;
-	}
-
-	/**
-	 * @param drawCheap the drawCheap to set
-	 */
-	public void setDrawCheap() {
-		this.drawCheap = this.drawCheap ? false : true;
 	}
     
 	//TODO Optimize this method.

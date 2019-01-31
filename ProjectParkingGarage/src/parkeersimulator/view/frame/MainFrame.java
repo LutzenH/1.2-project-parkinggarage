@@ -64,11 +64,6 @@ public class MainFrame extends JFrame {
 		
 	}
 
-	public void addResizeProperty(ParkingGarageController controller)
-	{
-		splitPane.addPropertyChangeListener(e -> controller.performAction(ActionType.EVENT_FRAME_RESIZE));
-	}
-	
 	private JMenuBar createMenuBar() {
 		JMenuBar menuBar = new JMenuBar();
 		

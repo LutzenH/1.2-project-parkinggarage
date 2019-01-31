@@ -2,8 +2,6 @@ package parkeersimulator.model.handler;
 
 import java.util.ArrayList;
 
-import com.sun.org.apache.bcel.internal.generic.INSTANCEOF;
-
 import parkeersimulator.model.AbstractModel;
 import parkeersimulator.model.FinanceModel;
 import parkeersimulator.model.ParkingGarageModel;
