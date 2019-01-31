@@ -152,8 +152,9 @@ public class ParkingGarageModel extends AbstractModel {
     ///Amount of spots for Pass holders
     private int passHolderPlaceAmount = 100;
     
-    ///Amount of leaving cars
+    ///Amount of cars leaving the entrance queue
     private int amountOfLeavingCars = 0;
+    
 
 	/**
 	 * Constructor of ParkingGarageModel
@@ -837,12 +838,61 @@ public class ParkingGarageModel extends AbstractModel {
             }
         }
     }
-    
-    public int leaveTheEntranceCarQueueOnAverageEveryDay() {
-    		double amount = (amountOfLeavingCars / (ticks / 60d / 24d));
-    		return (int) Math.round(amount);
-    }
 
+    /**
+     * @return a String with advice about the cars leavening the entranceCarQueue.
+     */
+    public String adviceCarsLeavingEntranceCarQueueu() {
+    	String advice = "";
+    	double amount = (amountOfLeavingCars / (ticks / 60d / 24d));
+		int averageCarsLeavingEntrenceCarQueueu = (int) Math.round(amount);
+    	if(averageCarsLeavingEntrenceCarQueueu <= 25) {
+    		advice = "Average amount of cars leaving enterence queue every day: " + averageCarsLeavingEntrenceCarQueueu +  "r/n/ Advice: There are enough entrances.";
+    	} else if(averageCarsLeavingEntrenceCarQueueu <= 75) {
+    		advice = "Average amount of cars leaving enterence queue every day: " + averageCarsLeavingEntrenceCarQueueu +  "r/n/ Advice: one extra entrance could reduce the number of passing cars";
+    	} else if(averageCarsLeavingEntrenceCarQueueu > 75) {
+    		advice = "Average amount of cars leaving enterence queue every day: " + averageCarsLeavingEntrenceCarQueueu+  "r/n/ Advice: There are not enough entries.";
+    	}
+    	return advice;
+    }
+    
+    /**
+     * @return A String with advice about the PaymentCarQueue.
+     */
+    public String advicePaymentCarQueue() {
+    	String advice = "";
+    	double averagePaymentCarQueue = 0d;
+    	averagePaymentCarQueue += (paymentCarQueue.carsInQueue() / ticks);
+    	int average = (int) Math.round(averagePaymentCarQueue);
+    	if (averagePaymentCarQueue < 25) {
+    		advice = "Average payment queue: " + average +  "r/n/ Advice: There are enough payment terminals.";
+    	} else if (averagePaymentCarQueue <= 75) {
+    		advice = "Average payment queue: " + average +  "r/n/ Advice: one extra payment terminal could reduce te mumber of cars waiting in the payment queue.";
+    	} else if (averagePaymentCarQueue > 75) {
+    		advice = "Average payment queue: " + average +  "r/n/ Advice: There are not enough payment terminals";
+    	}	
+    	return advice;
+    }
+    
+    /**
+     * @return A String with advice about the exitCarQueue.
+     */
+    public String adviceExitCarQueue() {
+    	String advice = "";
+    	double averageExitCarQueue = 0d;
+    	averageExitCarQueue += (exitCarQueue.carsInQueue() / ticks);
+    	int average = (int) Math.round(averageExitCarQueue);
+    	if (averageExitCarQueue <= 25) {
+    		advice ="Average exit queue: " + average +  "r/n/ Advice: There are enough exits.";
+    	} else if (averageExitCarQueue <= 75) {
+    		advice = "Average exit queue: " + average +  "r/n/ Advice: One extra exit could reduce te mumber of cars waiting in the exit queue.";
+    	} else if (averageExitCarQueue > 75) {
+    		advice = "Average exit queue: " + average +  "r/n/ Advice: There are not enough exits";
+    	}	
+    	return advice;
+    }
+    
+    
     /**
      * Checks if a location is valid, depending on the size of the garage.
      * @param location the location that needs to be checked.
