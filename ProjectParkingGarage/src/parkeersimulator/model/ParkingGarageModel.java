@@ -5,7 +5,6 @@ import java.util.Collections;
 import java.util.Random;
 
 import parkeersimulator.handler.ModelHandler;
-import parkeersimulator.model.AbstractModel.ModelType;
 import parkeersimulator.model.car.AdHocCar;
 import parkeersimulator.model.car.Car;
 import parkeersimulator.model.car.Car.CarType;

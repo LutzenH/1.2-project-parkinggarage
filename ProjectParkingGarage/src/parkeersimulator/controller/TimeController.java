@@ -2,7 +2,6 @@ package parkeersimulator.controller;
 
 import java.util.HashMap;
 
-import parkeersimulator.model.AbstractModel;
 import parkeersimulator.model.TimeModel;
 
 public class TimeController extends AbstractController{
@@ -29,6 +28,9 @@ public class TimeController extends AbstractController{
 			case TIME_TICKAMOUNT:
 				timeModel.tick((Integer)data.get("amount"));
 			return true;
+			
+			default:
+				break;
 		}
 		
 		return false;

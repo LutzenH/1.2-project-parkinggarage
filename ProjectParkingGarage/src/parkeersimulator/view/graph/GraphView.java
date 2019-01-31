@@ -15,7 +15,6 @@ import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
 
 import parkeersimulator.model.AbstractModel;
-import parkeersimulator.model.ParkingGarageModel;
 import parkeersimulator.view.AbstractView;
 
 /**

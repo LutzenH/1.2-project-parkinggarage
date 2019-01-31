@@ -2,9 +2,6 @@ package parkeersimulator.controller;
 
 import java.util.HashMap;
 
-import parkeersimulator.model.AbstractModel.ModelType;
-import parkeersimulator.handler.ModelHandler;
-import parkeersimulator.model.FinanceModel;
 import parkeersimulator.model.ParkingGarageModel;
 /**
  * The controller used in the simulation of the parking garage.

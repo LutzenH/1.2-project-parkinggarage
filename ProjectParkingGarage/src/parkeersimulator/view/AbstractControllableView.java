@@ -1,9 +1,7 @@
 package parkeersimulator.view;
 
 import parkeersimulator.controller.AbstractController;
-import parkeersimulator.controller.ParkingGarageController;
 import parkeersimulator.model.AbstractModel;
-import parkeersimulator.model.ParkingGarageModel;
 
 /**
  * Abstract class of a controllable view.

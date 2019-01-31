@@ -3,8 +3,6 @@ package parkeersimulator.model.handler;
 import java.util.ArrayList;
 
 import parkeersimulator.model.AbstractModel;
-import parkeersimulator.model.FinanceModel;
-import parkeersimulator.model.ParkingGarageModel;
 
 public class ModelHandler implements Runnable{
 	

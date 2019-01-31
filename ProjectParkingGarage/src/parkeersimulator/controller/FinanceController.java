@@ -2,7 +2,6 @@ package parkeersimulator.controller;
 
 import java.util.HashMap;
 
-import parkeersimulator.model.AbstractModel.ModelType;
 import parkeersimulator.model.FinanceModel;
 
 public class FinanceController extends AbstractController {
@@ -25,6 +24,9 @@ public class FinanceController extends AbstractController {
 			case FINANCE_MAINTENANCECOSTS_AMOUNT:
 				financeModel.setMaintenanceCosts((Integer)data.get("amount"));
 				return true;
+				
+			default:
+				break;
 		}
 		return false;
 	}

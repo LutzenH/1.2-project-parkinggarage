@@ -1,6 +1,5 @@
 package parkeersimulator.view;
 
-import parkeersimulator.model.ParkingGarageModel;
 import parkeersimulator.model.TimeModel;
 
 import java.awt.Color;

@@ -1,9 +1,7 @@
 package parkeersimulator.model;
 
 import parkeersimulator.handler.ModelHandler;
-import parkeersimulator.model.car.AdHocCar;
 import parkeersimulator.model.car.Car;
-import parkeersimulator.model.queue.CarQueue;
 
 public class FinanceModel extends AbstractModel {
 

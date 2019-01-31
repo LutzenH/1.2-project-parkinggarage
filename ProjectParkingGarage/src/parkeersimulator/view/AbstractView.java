@@ -1,7 +1,6 @@
 package parkeersimulator.view;
 
 import java.awt.Component;
-import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionListener;
 
@@ -17,7 +16,6 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.event.ChangeListener;
 
 import parkeersimulator.model.AbstractModel;
-import parkeersimulator.model.ParkingGarageModel;
 import parkeersimulator.view.jcomponent.JComponentSlider;
 
 /**

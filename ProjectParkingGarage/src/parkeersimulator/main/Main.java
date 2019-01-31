@@ -14,7 +14,6 @@ import parkeersimulator.view.CarParkArrivalControlView;
 import parkeersimulator.view.CarParkFinanceControlView;
 import parkeersimulator.view.CarParkLayoutControlView;
 import parkeersimulator.view.CarParkSimulationControlView;
-import parkeersimulator.view.CarParkView;
 import parkeersimulator.view.frame.MainFrame;
 import parkeersimulator.view.frame.GarageDesignFrame;
 import parkeersimulator.view.graph.CarCountGraphView;

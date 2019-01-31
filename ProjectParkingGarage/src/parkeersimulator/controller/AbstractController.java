@@ -2,9 +2,7 @@ package parkeersimulator.controller;
 
 import java.util.HashMap;
 
-import parkeersimulator.controller.AbstractController.ActionType;
 import parkeersimulator.model.AbstractModel;
-import parkeersimulator.model.ParkingGarageModel;
 
 /**
  * Abstract class of the controller.
