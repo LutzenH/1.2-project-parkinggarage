@@ -50,9 +50,6 @@ public class ParkingGarageModel extends AbstractModel {
     private int hour = 0;
     private int minute = 0;
 
-    ///total amount of ticks
-    private int ticks = 0;
-
     ///The amount of time the thread should wait before executing the next tick().
     private int tickPause = 100;
     
@@ -198,7 +195,6 @@ public class ParkingGarageModel extends AbstractModel {
     private void advanceTime(){
         // Advance the time by one minute.
         minute++;
-        ticks++;
         
         while (minute > 59) { //Reset minutes and set hours
             minute -= minute;
@@ -475,11 +471,6 @@ public class ParkingGarageModel extends AbstractModel {
      * @return The current week of a month.
      */
     public int getWeek() { return week; }
-    
-    /**
-     * @return The total amount of ticks
-     */
-    public int getTicks() { return ticks; }
     
     /**
      * @return The current day of the week.
@@ -819,11 +810,6 @@ public class ParkingGarageModel extends AbstractModel {
                 }
             }
         }
-    }
-    
-    public int leaveTheEntranceCarQueueOnAverageEveryDay() {
-    		double amount = (amountOfLeavingCars / (ticks / 60d / 24d));
-    		return (int) Math.round(amount);
     }
 
     /**
