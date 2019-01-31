@@ -30,7 +30,7 @@ public class CarParkView extends AbstractView {
     public static int X_OFFSET_PLACE = 20;
     public static int Y_OFFSET_PLACE = 10;
     
-  ///The x and y values used for sizing parking places
+    ///The x and y values used for sizing parking places
     public static int X_WIDTH_PLACE = 20;
     public static int Y_WIDTH_PLACE = 10;
     
@@ -44,7 +44,7 @@ public class CarParkView extends AbstractView {
     ///The x factor used for calculating which row each parking space goes in
     private static float X_ROWPOS_FACTOR = 0.5f;
     
-  ///The factor used sizing the entire parking garage
+    ///The factor used sizing the entire parking garage
     private static int SIZE_FACTOR = 1;
     
     private Dimension size;
@@ -104,6 +104,13 @@ public class CarParkView extends AbstractView {
         repaint();
     }
 
+    /**
+     * Draws the carpark at the disered location on the given Graphics device
+     * @param graphics the graphics the carpark should be drawn on
+     * @param xOffset the pixel x offset where the garage should be drawn
+     * @param yOffset the pixel y offset where the garage should be drawn
+     * @param model the ParkingGarageModel the drawn park should be based on
+     */
     public static void drawCarPark(Graphics graphics, int xOffset, int yOffset, ParkingGarageModel model) {
         for(int floor = 0; floor < model.getNumberOfFloors(); floor++) {
             for(int row = 0; row < model.getNumberOfRows(); row++) {

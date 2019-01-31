@@ -20,11 +20,9 @@ public class ParkingGarageController extends AbstractController {
 		EVENT_TICKPAUSEAMOUNT, EVENT_TICKAMOUNT, 
 		EVENT_ADHOCWEEK_AMOUNT, EVENT_ADHOCWEEKEND_AMOUNT, EVENT_ADHOCEVENT_AMOUNT,
 		EVENT_PASSWEEK_AMOUNT, EVENT_PASSWEEKEND_AMOUNT, EVENT_PASSEVENTWEEK_AMOUNT,
-		EVENT_TICKSTART, EVENT_TICKSTOP, 
-		EVENT_FRAME_RESIZE,
+		EVENT_TICKSTART, EVENT_TICKSTOP,
 		EVENT_CLICK_PROP,
-		EVENT_OPEN_GARAGE,
-		EVENT_SET_DRAWCHEAP
+		EVENT_OPEN_GARAGE
 		};
 	
 	/**
@@ -82,21 +80,13 @@ public class ParkingGarageController extends AbstractController {
 				modelHandler.stop();
 				return true;
 				
-			case EVENT_FRAME_RESIZE:
-				model.notifyViews();
-				return true;
-				
 			case EVENT_CLICK_PROP:
 				parkingGarageModel.setProp((Integer)data.get("index"));
 				return true;
 		
 			case EVENT_OPEN_GARAGE:
 				parkingGarageModel.openGarage();
-			break;
-			
-			case EVENT_SET_DRAWCHEAP:
-				parkingGarageModel.setDrawCheap();
-			break;
+				return true;
 			
 			default:
 				break;

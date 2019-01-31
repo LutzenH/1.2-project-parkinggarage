@@ -30,8 +30,6 @@ import parkeersimulator.model.queue.CarQueue;
  */
 public class ParkingGarageModel extends AbstractModel {
 	
-	private boolean drawCheap;
-	
 	///Check if the garage is opened
 	private boolean isGarageOpen;
 	
@@ -51,9 +49,6 @@ public class ParkingGarageModel extends AbstractModel {
     private int day = 0;
     private int hour = 0;
     private int minute = 0;
-
-    ///total amount of ticks
-    private int ticks = 0;
 
     ///The amount of time the thread should wait before executing the next tick().
     private int tickPause = 100;
@@ -155,6 +150,8 @@ public class ParkingGarageModel extends AbstractModel {
     ///Amount of cars leaving the entrance queue
     private int amountOfLeavingCars = 0;
     
+    ///total amount of ticks
+    private int ticks = 0;
 
 	/**
 	 * Constructor of ParkingGarageModel
@@ -173,7 +170,6 @@ public class ParkingGarageModel extends AbstractModel {
         this.numberOfOpenPassHolderSpots = passHolderPlaceAmount;
         
         this.isGarageOpen = false;
-        this.drawCheap = false;
         
         ///Instantiation of the all possible car positions.
         places = new Place[numberOfFloors][numberOfRows][numberOfPlaces];
@@ -202,7 +198,6 @@ public class ParkingGarageModel extends AbstractModel {
     private void advanceTime(){
         // Advance the time by one minute.
         minute++;
-        ticks++;
         
         while (minute > 59) { //Reset minutes and set hours
             minute -= minute;
@@ -368,6 +363,7 @@ public class ParkingGarageModel extends AbstractModel {
      * @param type Type of car that should be added to the queue.
      */
     private void addArrivingCars(int numberOfCars, CarType type){
+    	ticks++;
     	switch(type) {
 	    	case AD_HOC:
 	            for (int i = 0; i < numberOfCars; i++) {
@@ -479,11 +475,6 @@ public class ParkingGarageModel extends AbstractModel {
      * @return The current week of a month.
      */
     public int getWeek() { return week; }
-    
-    /**
-     * @return The total amount of ticks
-     */
-    public int getTicks() { return ticks; }
     
     /**
      * @return The current day of the week.
@@ -637,20 +628,6 @@ public class ParkingGarageModel extends AbstractModel {
 			}
 			count++;
 		}
-	}
-
-	/**
-	 * @return the drawCheap
-	 */
-	public boolean getDrawCheap() {
-		return drawCheap;
-	}
-
-	/**
-	 * @param drawCheap the drawCheap to set
-	 */
-	public void setDrawCheap() {
-		this.drawCheap = this.drawCheap ? false : true;
 	}
     
 	//TODO Optimize this method.
@@ -892,7 +869,7 @@ public class ParkingGarageModel extends AbstractModel {
     	return advice;
     }
     
-    
+
     /**
      * Checks if a location is valid, depending on the size of the garage.
      * @param location the location that needs to be checked.
