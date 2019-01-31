@@ -1,14 +1,14 @@
 package parkeersimulator.handler;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import parkeersimulator.controller.AbstractController;
 import parkeersimulator.controller.AbstractController.ControllerType;
 
 public class ControllerHandler{
-private ArrayList<AbstractController> controllerList;
+	private List<AbstractController> controllerList;
 
-	
 	public ControllerHandler() {
 		controllerList = new ArrayList<>();
 	}
