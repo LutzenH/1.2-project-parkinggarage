@@ -4,14 +4,14 @@ import java.awt.Color;
 
 import org.jfree.data.xy.XYSeries;
 
+import parkeersimulator.model.AbstractModel;
 import parkeersimulator.model.FinanceModel;
-import parkeersimulator.model.ParkingGarageModel;
 
 public class FinanceGraphView extends GraphView {
 
-	public FinanceGraphView(ParkingGarageModel parkingGarageModel, FinanceModel financeModel) {
+	public FinanceGraphView(AbstractModel model) {
 		super(
-				parkingGarageModel,
+				model,
 				"Money amount",
 				new XYSeries[] {
 						new XYSeries("MoneyTotal"),

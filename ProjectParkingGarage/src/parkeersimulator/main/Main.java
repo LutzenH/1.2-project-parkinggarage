@@ -74,7 +74,7 @@ public class Main {
 		tabbedViews_GraphView[0].setName("Cars in queue");
 		tabbedViews_GraphView[1] = new CarCountGraphView(parkingGarageModel);
 		tabbedViews_GraphView[1].setName("Car Count");
-		tabbedViews_GraphView[2] = new FinanceGraphView(parkingGarageModel, financeModel);
+		tabbedViews_GraphView[2] = new FinanceGraphView(financeModel);
 		tabbedViews_GraphView[2].setName("Finance");
 
 		tabbedViews_ControlView = new JPanel[4];
