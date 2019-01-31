@@ -1,6 +1,7 @@
 package parkeersimulator.view;
 
 import parkeersimulator.model.ParkingGarageModel;
+import parkeersimulator.model.TimeModel;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -24,7 +25,7 @@ public class TimeView extends AbstractView {
 	/**
 	 * Constructor of TimeView, Creates the panel for this view.
 	 */
-	public TimeView(ParkingGarageModel model) {
+	public TimeView(TimeModel model) {
 		super(model);
 		
 		setLayout(new GridLayout(1, 0, 0, 0));
@@ -43,9 +44,9 @@ public class TimeView extends AbstractView {
 	 */
     @Override
     public void updateView() {
-    	ParkingGarageModel parkingGarageModel = (ParkingGarageModel) model;
+    	TimeModel timeModel = (TimeModel) model;
     	
-    	timeLabel.setText("d: " + parkingGarageModel.getDay() + ", h: " + parkingGarageModel.getHour() + ", m: " + parkingGarageModel.getMinute());
+    	timeLabel.setText("d: " + timeModel.getDay() + ", h: " + timeModel.getHour() + ", m: " + timeModel.getMinute());
     	
     	repaint();
     }

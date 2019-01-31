@@ -1,15 +1,21 @@
 package parkeersimulator.view.frame;
 
+import javax.swing.BoxLayout;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
+import javax.swing.ScrollPaneConstants;
 
 import parkeersimulator.controller.ParkingGarageController;
-import parkeersimulator.controller.ParkingGarageController.ActionType;
 
+import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Toolkit;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
 
 import javax.swing.JMenuBar;
 import javax.swing.JMenu;
@@ -17,53 +23,67 @@ import javax.swing.JMenuItem;
 
 public class MainFrame extends JFrame {
 
-	JSplitPane splitPane;
-	public MainFrame(String string, JPanel controlPanel, JPanel[] tabbedPanels, JPanel simulationPanel) {
-
+	JSplitPane splitPane_horizontal;
+	private int controlPanelWidth = 350;
+	
+	public MainFrame(String string, JPanel[] tabPanels_controlPanel, JPanel[] tabPanels_graphView, JPanel simulationPanel) {
 		super(string);
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		this.setExtendedState(JFrame.MAXIMIZED_BOTH);
 		
+		//Set JFrame properties
+		this.setBounds(100, 100, 450, 300); //Set the size of the JFrame when the program launches
+		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		this.setExtendedState(JFrame.NORMAL);
+		
+		//Set JFrame contentPane properties
+		this.getContentPane().setLayout(new BorderLayout(0, 0));
+		
+		//Create the top menu bar
 		setJMenuBar(createMenuBar());
 		
-		splitPane = new JSplitPane();
-		this.getContentPane().add(splitPane);
-		
-		///get screen size
-		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-		int width = screenSize.width;
-		int height = screenSize.height;
-		
-		JSplitPane splitPane = new JSplitPane();
-		splitPane.setEnabled(true);
-		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
-		this.getContentPane().add(splitPane);
-		
-		JSplitPane splitPane_1 = new JSplitPane();
-		splitPane_1.setEnabled(true);
-		splitPane_1.setOrientation(JSplitPane.VERTICAL_SPLIT);
-		
-		splitPane.setLeftComponent(splitPane_1);	
-		splitPane.setRightComponent(controlPanel);
-		splitPane_1.setTopComponent(tabbedPane);
-		splitPane_1.setBottomComponent(simulationPanel);
-		
-		splitPane_1.getTopComponent().setMaximumSize(new Dimension(width / 1366 * 1116, height / 768 * 530));
-		splitPane_1.getTopComponent().setMinimumSize(new Dimension(width / 1366 * 1056, height / 768 * 350));
-		splitPane_1.getBottomComponent().setMaximumSize(new Dimension(width / 1366 * 1116, height / 768 * 418));
-		splitPane_1.getBottomComponent().setMinimumSize(new Dimension(width / 1366 * 1056, height / 768 * 238));
-		splitPane.getRightComponent().setMaximumSize(new Dimension(width / 1366 * 310, height));
-		splitPane.getRightComponent().setMinimumSize(new Dimension(width / 1366 * 250, height));
-		
-		for(JPanel panel : tabbedPanels)
-		{
-			tabbedPane.addTab(panel.getName(), null, panel, null);
+		//Create the graphView tabbedPane
+		JTabbedPane tabPane_graphView = new JTabbedPane(JTabbedPane.TOP);
+
+		for(JPanel panel : tabPanels_graphView) { //Add the tabs to the tabbedPanes
+			tabPane_graphView.addTab(panel.getName(), null, panel, null);
 		}
 		
-		this.pack();
+		//Create the tabPane
+		JTabbedPane tabPane_controlPanel = new JTabbedPane(JTabbedPane.TOP);
+		tabPane_controlPanel.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
 		
-	}
+		for(JPanel panel : tabPanels_controlPanel) { //Add the tabs to the tabbedPane
+			JScrollPane controlPanel_scrollPane = new JScrollPane();
+			controlPanel_scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+			controlPanel_scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+			
+			JPanel scrollPane_filler = new JPanel();
+			scrollPane_filler.setLayout(new BorderLayout(0, 0));
+			
+			tabPane_controlPanel.addTab(panel.getName(), null, controlPanel_scrollPane, null);
 
+			panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS)); //Set the layout type of the panel
+			panel.add(scrollPane_filler); //Add the filler
+			
+			controlPanel_scrollPane.setViewportView(panel); //Add the panel to the scrollPane
+		}
+		
+		this.getContentPane().add(tabPane_controlPanel, BorderLayout.EAST);
+		
+		//Create the splitPanes
+		JSplitPane splitPane_horizontal = new JSplitPane();
+		
+		splitPane_horizontal.setEnabled(true);
+		splitPane_horizontal.setOrientation(JSplitPane.VERTICAL_SPLIT);
+		splitPane_horizontal.setTopComponent(tabPane_graphView);
+		splitPane_horizontal.setBottomComponent(simulationPanel);
+
+		this.getContentPane().add(splitPane_horizontal, BorderLayout.CENTER);
+		
+		//Finish the setting up of the JFrame
+		this.pack();
+		this.setVisible(true);
+	}
+	
 	private JMenuBar createMenuBar() {
 		JMenuBar menuBar = new JMenuBar();
 		

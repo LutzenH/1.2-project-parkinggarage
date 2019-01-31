@@ -3,24 +3,30 @@ package parkeersimulator.model;
 import java.util.ArrayList;
 import java.util.List;
 
-import parkeersimulator.model.handler.ModelHandler;
+import parkeersimulator.handler.ModelHandler;
 import parkeersimulator.view.AbstractView;
 
 /**
  * Abstract class of the model.
  */
 public abstract class AbstractModel {
+	private ModelHandler modelHandler;
+	
 	///Declaration of the list of views that should be updated by the model.
 	private List<AbstractView> views;
+	
+	public enum ModelType { PARKINGGARAGE, FINANCE, TIME }
+	public abstract ModelType getModelType();
 	
 	/**
 	 * Constructor of AbstractModel
 	 */
-	public AbstractModel(ModelHandler handler) {
+	public AbstractModel(ModelHandler modelHandler) {
 		///Instantiation of the list of views.
 		views=new ArrayList<AbstractView>();
 		
-		handler.addModel(this);
+		this.modelHandler = modelHandler;
+		modelHandler.addModel(this);
 	}
 	
 	/**
@@ -42,4 +48,8 @@ public abstract class AbstractModel {
 	 * Runs the simulation one iteration
 	 */
 	public abstract void tick();
+
+	public ModelHandler getModelHandler() {
+		return modelHandler;
+	}
 }

@@ -16,8 +16,8 @@ import java.util.HashMap;
 
 import javax.imageio.ImageIO;
 
+import parkeersimulator.controller.AbstractController.ActionType;
 import parkeersimulator.controller.ParkingGarageController;
-import parkeersimulator.controller.ParkingGarageController.ActionType;
 import parkeersimulator.model.ParkingGarageModel;
 import parkeersimulator.model.prop.Prop;
 
@@ -44,7 +44,7 @@ public class GarageCustomisationView extends AbstractControllableView implements
 	public GarageCustomisationView(ParkingGarageModel model, ParkingGarageController controller) {
 		super(model, controller);
 		
-		size = new Dimension(0, 0);
+		size = getSize();
 
 		addMouseListener(this);
 		addComponentListener(this);
@@ -322,10 +322,10 @@ public class GarageCustomisationView extends AbstractControllableView implements
     		Integer index = i;
     		
     		if(rectangles[i].contains(e.getPoint())) {
-    			controller.performAction(ActionType.EVENT_CLICK_PROP, new HashMap<String, Object>() {{ put("index", index); }});
+    			controller.performAction(ActionType.PARKINGGARAGE_CLICK_PROP, new HashMap<String, Object>() {{ put("index", index); }});
     			hasDrawnBackground = false;
     			updateView();
-    		}
+			}
     	}
     }
     
