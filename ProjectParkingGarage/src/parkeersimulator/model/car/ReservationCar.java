@@ -11,6 +11,8 @@ public class ReservationCar extends Car {
 	///The color this type of car should have.
 	private static final Color COLOR=Color.yellow;
 	
+	private int timeBeforeArrival;
+	
 	/**
 	 * The constructor for ReservationCar
 	 */
@@ -18,6 +20,7 @@ public class ReservationCar extends Car {
     	Random random = new Random();
     	int stayMinutes = (int) (15 + random.nextFloat() * 3 * 60);
         this.setMinutesLeft(stayMinutes);
+        this.timeBeforeArrival = random.nextInt(30) + 5;
     }
     
     /**
@@ -35,5 +38,16 @@ public class ReservationCar extends Car {
 	@Override
 	public boolean getHasToPay() {
 		return true;
+	}
+
+	/**
+	 * @return the timeBeforeArrival
+	 */
+	public int getTimeBeforeArrival() {
+		return timeBeforeArrival;
+	}
+
+	public void tickArrivalTime() {
+		timeBeforeArrival--;
 	}
 }

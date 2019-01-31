@@ -154,6 +154,9 @@ public class ParkingGarageModel extends AbstractModel {
     
     ///total amount of ticks
     private int ticks = 0;
+    
+    //List of ReservationCars that will enter the garage +- 15min after they reserve a spot. 
+    private ArrayList<ReservationCar> reservedCars = new ArrayList<>();
 
 	/**
 	 * Constructor of ParkingGarageModel
@@ -408,11 +411,11 @@ public class ParkingGarageModel extends AbstractModel {
 	            	Location location = getFirstFreeLocation(CarType.AD_HOC);
 	            	
 	            	if (location != null) {
-		            	entrancePassQueue.addCar(new ReservationCar());
+	            		reservedCars.add(new ReservationCar());
 		            	places [location.getFloor()][location.getRow()][location.getPlace()].setReserved(true);
 		            	numberOfOpenDefaultSpots--; 
 	            	}            	
-	            }
+	            } 
 	      		break;
     	}
     }
@@ -835,6 +838,16 @@ public class ParkingGarageModel extends AbstractModel {
                     }
                 }
             }
+        }
+        
+        for(int i = 0; i < reservedCars.size(); i++) {
+        	reservedCars.get(i).tickArrivalTime();
+        	
+        	//System.out.println("n: " + i + ", timeleft: " + reservedCars.get(i).getTimeBeforeArrival());
+        	
+        	if(reservedCars.get(i).getTimeBeforeArrival() <= 0) {
+        		entrancePassQueue.addCar(reservedCars.remove(i));
+        	}
         }
     }
 
