@@ -6,8 +6,8 @@ import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 
+import parkeersimulator.controller.AbstractController.ActionType;
 import parkeersimulator.controller.ParkingGarageController;
-import parkeersimulator.controller.ParkingGarageController.ActionType;
 import parkeersimulator.model.ParkingGarageModel;
 import parkeersimulator.model.ParkingGarageModel.CustomiseErrorMessages;
 
@@ -48,7 +48,7 @@ public class OpenGarageView extends AbstractControllableView {
     }
     
     private void clickOpenButton() {
-    	controller.performAction(ActionType.EVENT_OPEN_GARAGE);
+    	controller.performAction(ActionType.PARKINGGARAGE_OPEN_GARAGE);
     	updateView();
     }
     

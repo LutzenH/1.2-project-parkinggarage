@@ -2,6 +2,7 @@ package parkeersimulator.view;
 
 import parkeersimulator.controller.AbstractController;
 import parkeersimulator.controller.ParkingGarageController;
+import parkeersimulator.model.AbstractModel;
 import parkeersimulator.model.ParkingGarageModel;
 
 /**
@@ -14,14 +15,14 @@ import parkeersimulator.model.ParkingGarageModel;
  */
 public abstract class AbstractControllableView extends AbstractView{
 	///Declaration of the ParkingGarageController this view should be sending instructions/information to.
-	ParkingGarageController controller;
+	AbstractController controller;
 	
 	/**
 	 * Constructor of the AbstractControllableView.
 	 * @param model the model of the parking garage.
 	 * @param controller the controller of the parking garage.
 	 */
-	public AbstractControllableView(ParkingGarageModel model, ParkingGarageController controller) {
+	public AbstractControllableView(AbstractModel model, AbstractController controller) {
 		super(model);
 		this.controller = controller;
 	}

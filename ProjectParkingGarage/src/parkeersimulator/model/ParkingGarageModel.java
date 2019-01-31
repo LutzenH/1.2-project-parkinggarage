@@ -4,12 +4,13 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
 
+import parkeersimulator.handler.ModelHandler;
+import parkeersimulator.model.AbstractModel.ModelType;
 import parkeersimulator.model.car.AdHocCar;
 import parkeersimulator.model.car.Car;
 import parkeersimulator.model.car.Car.CarType;
 import parkeersimulator.model.car.ParkingPassCar;
 import parkeersimulator.model.car.ReservationCar;
-import parkeersimulator.model.handler.ModelHandler;
 import parkeersimulator.model.location.Coordinate;
 import parkeersimulator.model.location.Location;
 import parkeersimulator.model.location.Place;
@@ -30,6 +31,9 @@ import parkeersimulator.model.queue.CarQueue;
  */
 public class ParkingGarageModel extends AbstractModel {
 	
+	private FinanceModel financeModel;
+	private TimeModel timeModel;
+
 	///Check if the garage is opened
 	private boolean isGarageOpen;
 	
@@ -37,51 +41,26 @@ public class ParkingGarageModel extends AbstractModel {
 	private CarQueue entranceCarQueue;
     private CarQueue entrancePassQueue;
     private CarQueue paymentCarQueue;
-    private CarQueue paymentCarQueue_entireTick; //Holds all the cars that were in the paymentCarQueue in a tick
     private CarQueue exitCarQueue;
     
-    private int eventChancePercentage = 10;
-
-    ///Declaration of the time.
-    private int year = 0;
-    private int month = 0;
-    private int week = 0;
-    private int day = 0;
-    private int hour = 0;
-    private int minute = 0;
-
-    ///The amount of time the thread should wait before executing the next tick().
-    private int tickPause = 100;
-    
-    //Tells us if it's the first day of the month
-    private boolean isFirstDayOfMonth;
-    
-    //Keeps track of the current day in the month
-    private int currentDayInMonth;
-    
-    //Declaration of the amount of days in each month
-    private int daysInFeb = 28;
-    private int[] dayAmountMonth = new int[] {31, daysInFeb, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
-
     //Arrivals and stay times
-    ///The baseline number of cars arriving in an hour.
-    int standardArrivals = 100;
-    int adHocArrivals;
-    int passArrivals;
-    int reservationArrivals;
+    private int baseLineArrivals = 100; ///The baseline number of cars arriving in an hour.
+    private int adHocArrivals;
+    private int passArrivals;
+    private int reservationArrivals;
     
     ///The multipliers of cars arriving in an hour.
-    float adHocArrivals_week = 1f;
-    float adHocArrivals_weekend = 1.7f;
-    float adHocArrivals_event = 2.1f;
+    private float adHocArrivals_week = 1f;
+    private float adHocArrivals_weekend = 1.7f;
+    private float adHocArrivals_event = 2.1f;
     
-    float passArrivals_week = 0.5f;
-    float passArrivals_weekend = 0.05f;
-    float passArrivals_event = 0.3f;
+    private float passArrivals_week = 0.5f;
+    private float passArrivals_weekend = 0.05f;
+    private float passArrivals_event = 0.3f;
     
-    float reservationArrivals_week = 0.5f;
-    float reservationArrivals_weekend = 1f;
-    float reservationArrivals_event = 0f;
+    private float reservationArrivals_week = 0.5f;
+    private float reservationArrivals_weekend = 1f;
+    private float reservationArrivals_event = 0f;
     
     //The amount of time a car can stay in the car park;
     private int stayMinutes;
@@ -161,11 +140,13 @@ public class ParkingGarageModel extends AbstractModel {
     public ParkingGarageModel(ModelHandler handler) {
     	super(handler);
     	
+    	this.financeModel = (FinanceModel) handler.getModel(ModelType.FINANCE);
+    	this.timeModel = (TimeModel) handler.getModel(ModelType.TIME);
+    	
     	///Instantiation of the queue's
         entranceCarQueue = new CarQueue();
         entrancePassQueue = new CarQueue();
         paymentCarQueue = new CarQueue();
-        paymentCarQueue_entireTick = new CarQueue();
         exitCarQueue = new CarQueue();
 
         this.numberOfOpenDefaultSpots = (numberOfFloors * numberOfRows * numberOfPlaces) - passHolderPlaceAmount;
@@ -186,55 +167,12 @@ public class ParkingGarageModel extends AbstractModel {
 	 * Responsible for what happens every iteration in the simulation.
 	 */
     public void tick() {
-    	advanceTime();
     	tickCars();
     	handleExit();
     	notifyViews();
     	setArrivalProperties();
     	eventManager();
     	handleEntrance();
-    }
-
-    /**
-     * A method that is used for incrementing the current time.
-     */
-    private void advanceTime(){
-        // Advance the time by one minute.
-        minute++;
-        
-        while (minute > 59) { //Reset minutes and set hours
-            minute -= minute;
-            hour++;
-        }
-        while (hour > 23) { //Reset hours and set days
-            hour -= hour;
-            day++;
-            isFirstDayOfMonth = false;
-        }
-        while (day > 6) { //Reset days and set weeks
-            day -= day;
-            week++;
-        }
-        
-        currentDayInMonth = (week * 7) + day;
-        while(currentDayInMonth > dayAmountMonth[month] - 1) { //Reset weeks and set months
-        	currentDayInMonth = day;
-        	week -= week;
-        	month++;
-        	isFirstDayOfMonth = true;
-        }
-        
-        while(month > 11) { //Reset months and set years
-        	month -= month;
-        	year++;
-        	
-        	if((year + 1) % 4 == 0) //leap year
-        		daysInFeb = 29;
-        	else
-        		daysInFeb = 28;
-        }
-
-        
     }
 
     /**
@@ -322,8 +260,8 @@ public class ParkingGarageModel extends AbstractModel {
         while (car!=null) {
         	if (car.getHasToPay()){
 	            car.setIsPaying(true);
+	            financeModel.collectMoney(car);
 	            paymentCarQueue.addCar(car);
-	            paymentCarQueue_entireTick.addCar(car);
         	}
         	else {
         		carLeavesSpot(car);
@@ -429,13 +367,23 @@ public class ParkingGarageModel extends AbstractModel {
     }
     
     /**
+     * @return The baseline for all the cars arriving.
+     */
+    public int getBaseLineArrivals() { return baseLineArrivals; }
+    /**
+     * Sets the baseline for all the cars arriving.
+     */
+    public void setBaseLineArrivals(int amount) { baseLineArrivals = amount; }
+    
+    
+    /**
      * @return The current adHocArrivals_week in percent.
      */
-    public Integer getAdHocArrivalsPercent_week() { return Math.round(adHocArrivals_week * 100f); }
+    public Integer getAdHocArrivalsPercent_week() { return Math.round( adHocArrivals_week * 100f); }
     /**
      * Sets the multiplier for adHoc cars arriving during standard weeks.
      */
-    public void setAdHocArrivals_week(float amount) {adHocArrivals_week = amount / 100f; }
+    public void setAdHocArrivals_week(float amount) { adHocArrivals_week = amount / 100f; }
     
     /**
      * @return The current adHocArrivals_weekend in percent.
@@ -444,7 +392,7 @@ public class ParkingGarageModel extends AbstractModel {
     /**
      * Sets the multiplier for adHoc cars arriving during weekends.
      */
-    public void setAdHocArrivals_weekend(float amount) {adHocArrivals_weekend = amount / 100f; }
+    public void setAdHocArrivals_weekend(float amount) { adHocArrivals_weekend = amount / 100f; }
     
     /**
      * @return The current adHocArrivals_event in percent.
@@ -453,17 +401,17 @@ public class ParkingGarageModel extends AbstractModel {
     /**
      * Sets the multiplier for adHoc cars arriving at events.
      */
-    public void setAdHocArrivals_event(float amount) {adHocArrivals_event = amount / 100f; }
+    public void setAdHocArrivals_event(float amount) { adHocArrivals_event = amount / 100f; }
     
     
     /**
      * @return The current passArrivals_week in percent.
      */
-    public Integer getPassArrivals_week() { return Math.round(passArrivals_week * 100f); }
+    public Integer getPassArrivals_week() { return Math.round( passArrivals_week * 100f); }
     /**
      * Sets the multiplier for pass cars arriving during standard weeks.
      */
-    public void setPassArrivals_week(float amount) {passArrivals_week = amount / 100f; }
+    public void setPassArrivals_week(float amount) { passArrivals_week = amount / 100f; }
     
     /**
      * @return The current passArrivals_weekend in percent.
@@ -472,7 +420,7 @@ public class ParkingGarageModel extends AbstractModel {
     /**
      * Sets the multiplier for pass cars arriving during weekends.
      */
-    public void setPassArrivals_weekend(float amount) {passArrivals_weekend = amount / 100f; }
+    public void setPassArrivals_weekend(float amount) { passArrivals_weekend = amount / 100f; }
     
     /**
      * @return The current passArrivals_eventWeek in percent.
@@ -481,52 +429,34 @@ public class ParkingGarageModel extends AbstractModel {
     /**
      * Sets the multiplier for pass cars arriving at events during standard weeks.
      */
-    public void setPassArrivals_eventWeek(float amount) {passArrivals_event = amount / 100f; }
+    public void setPassArrivals_eventWeek(float amount) { passArrivals_event = amount / 100f; }
 
     /**
-     * @return The current year.
+     * @return The current reservationArrivals_week in percent.
      */
-    public int getYear() { return year; }
-
+    public Integer getReservationArrivals_week() { return Math.round( reservationArrivals_week * 100f); }
     /**
-     * @return The current month of a year.
+     * Sets the multiplier for reservation cars arriving during standard weeks.
      */
-    public int getMonth() { return month; }
+    public void setReservationArrivals_week(float amount) { reservationArrivals_week = amount / 100f; }
     
     /**
-     * @return The current week of a month.
+     * @return The current reservationArrivals_weekend in percent.
      */
-    public int getWeek() { return week; }
+    public Integer getReservationArrivals_weekend() { return Math.round(reservationArrivals_weekend * 100f); }
+    /**
+     * Sets the multiplier for reservation cars arriving during weekends.
+     */
+    public void setReservationArrivals_weekend(float amount) { reservationArrivals_weekend = amount / 100f; }
     
     /**
-     * @return The current day of the week.
+     * @return The current reservationArrivals_event in percent.
      */
-    public int getDay() { return day; }
-    
+    public Integer getReservationArrivals_event() { return Math.round(reservationArrivals_event * 100f); }
     /**
-     * @return The current hour of the day.
+     * Sets the multiplier for reservation cars arriving at events.
      */
-    public int getHour() { return hour; }
-    
-    /**
-     * @return The current minute of the hour.
-     */
-    public int getMinute() { return minute; }
-    
-    /**
-     * @return The current time in the format: int[day][hour][minute].
-     */
-    public int[] getTime() { return new int[] { day, hour, minute }; }
-    
-    /**
-     * @return The amount of cars that has leaved the entranceCarqueue.
-     */
-    public int getAmountOfLeavingCars() {return amountOfLeavingCars;}
-
-    /**
-     * @return The bool that tells the program if it is the first day of the month
-     */
-    public boolean getIsFirstDayOfMonth() { return isFirstDayOfMonth; }
+    public void setReservationArrivals_event(float amount) { reservationArrivals_event = amount / 100f; }
     
     /**
      * @return The number of floors in the parking garage.
@@ -568,7 +498,7 @@ public class ParkingGarageModel extends AbstractModel {
      * Sets the prop to the next prop depending on its current state
      * @param index the index of the prop in props
      */
-    public void setProp(int index) {   	
+    public void setProp(int index) {
     	if(!isGarageOpen && isGarageEmpty()) {
     		Coordinate position = Prop.calculateCoordinate(index, getNumberOfPlaces());
     		
@@ -689,12 +619,7 @@ public class ParkingGarageModel extends AbstractModel {
      * @return The paymentCarQueue.
      */
     public CarQueue getPaymentCarQueue() { return paymentCarQueue; }
-    
-    /**
-     * @return The paymentCarQueue for the entire tick 
-     */
-    public CarQueue getPaymentCarQueue_entireTick() { return paymentCarQueue_entireTick; }
-    
+
     /**
      * @return The exitCarQueue.
      */
@@ -914,16 +839,17 @@ public class ParkingGarageModel extends AbstractModel {
      * Checks if we can spawn or despawn an event.
      */
     private void eventManager() {
+    	int[] time = timeModel.getTime(); //Minute, hour, day
     	Random random = new Random();
     	
     	//Check if an event has started or not
-    	if(!isEventStart && minute == 0) {
+    	if(!isEventStart && time[0] == 0) {
     		//Check if we can spawn the start of an event
-    		if(day == 3 && hour == eventStartingHour_ThursdayMarket)
+    		if(time[2] == 3 && time[1] == eventStartingHour_ThursdayMarket)
     			isEventStart = true;
-    		else if(day == 5 && hour == eventStartingHour_SaturdayConcert)
+    		else if(time[2] == 5 && time[1] == eventStartingHour_SaturdayConcert)
     			isEventStart = true;
-    		else if(day == 6 && hour == eventStartingHour_SundayConcert)
+    		else if(time[2] == 6 && time[1] == eventStartingHour_SundayConcert)
     			isEventStart = true;
     		
     		if(isEventStart == true) {
@@ -931,13 +857,13 @@ public class ParkingGarageModel extends AbstractModel {
     			eventDuration *= 60; //Translate hours to minutes
     		}
     	}
-    	else if(isEventStart && minute == 0){ //People have 2 hours to show up, this is the + 2
+    	else if(isEventStart && time[0] == 0){ //People have 2 hours to show up, this is the + 2
     		//Check if we can despawn the start of an event
-    		if(day == 3 && hour == eventStartingHour_ThursdayMarket + 2)
+    		if(time[2] == 3 && time[1] == eventStartingHour_ThursdayMarket + 2)
     			isEventStart = false;
-    		else if(day == 5 && hour == eventStartingHour_SaturdayConcert + 2)
+    		else if(time[2] == 5 && time[1] == eventStartingHour_SaturdayConcert + 2)
     			isEventStart = false;
-    		else if(day == 6 && hour == eventStartingHour_SundayConcert + 2)
+    		else if(time[2] == 6 && time[1] == eventStartingHour_SundayConcert + 2)
     			isEventStart = false;
     	}
     }
@@ -947,29 +873,31 @@ public class ParkingGarageModel extends AbstractModel {
      * We do this based on day, time and events.
      */
     private void setArrivalProperties() {
-    	if(day <= 4) {
+    	int[] time = timeModel.getTime(); //Minute, hour, day
+    	
+    	if(time[2] <= 4) {
     		if(!isEventStart) {
-    			adHocArrivals = (int)Math.floor(standardArrivals * adHocArrivals_week);
-            	passArrivals = (int)Math.floor(standardArrivals * passArrivals_week);
-            	reservationArrivals = (int)Math.floor(standardArrivals * reservationArrivals_week);
+    			adHocArrivals = (int)Math.floor(baseLineArrivals * adHocArrivals_week);
+            	passArrivals = (int)Math.floor(baseLineArrivals * passArrivals_week);
+            	reservationArrivals = (int)Math.floor(baseLineArrivals * reservationArrivals_week);
     		}
     		else if(isEventStart) {
-    			adHocArrivals = (int)Math.floor(standardArrivals * adHocArrivals_event);
-        		passArrivals = (int)Math.floor(standardArrivals * passArrivals_event);
-        		reservationArrivals = (int)Math.floor(standardArrivals * reservationArrivals_event);
+    			adHocArrivals = (int)Math.floor(baseLineArrivals * adHocArrivals_event);
+        		passArrivals = (int)Math.floor(baseLineArrivals * passArrivals_event);
+        		reservationArrivals = (int)Math.floor(baseLineArrivals * reservationArrivals_event);
     		}
     	}
-    	else if(day > 4) {
+    	else if(time[2] > 4) {
     		if(!isEventStart) {
-    			adHocArrivals = (int)Math.floor(standardArrivals * adHocArrivals_weekend);
-    			reservationArrivals = (int)Math.floor(standardArrivals * reservationArrivals_weekend);
+    			adHocArrivals = (int)Math.floor(baseLineArrivals * adHocArrivals_weekend);
+    			reservationArrivals = (int)Math.floor(baseLineArrivals * reservationArrivals_weekend);
     		}
     		else if(isEventStart) {
-    			adHocArrivals = (int)Math.floor(standardArrivals * adHocArrivals_event);
-    			reservationArrivals = (int)Math.floor(standardArrivals * reservationArrivals_event);
+    			adHocArrivals = (int)Math.floor(baseLineArrivals * adHocArrivals_event);
+    			reservationArrivals = (int)Math.floor(baseLineArrivals * reservationArrivals_event);
     		}
     		
-    		passArrivals = (int)Math.floor(standardArrivals * passArrivals_weekend);
+    		passArrivals = (int)Math.floor(baseLineArrivals * passArrivals_weekend);
     	}
     	
     	//Change the amount of cars coming into the car park
@@ -994,22 +922,24 @@ public class ParkingGarageModel extends AbstractModel {
     	ArrayList<Float> timeStamps = new ArrayList<>();
     	ArrayList<Float> factors = new ArrayList<>();
     	
-    	if(day <= 3) {
+    	int[] time = timeModel.getTime(); //Minute, hour, day
+    	
+    	if(time[2] <= 3) {
     		timeStamps = timeStamps_week;
     		factors = arrivalFactors_week;
     	}
-    	if(day == 4) {
+    	if(time[2] == 4) {
     		timeStamps = timeStamps_friday;
     		factors = arrivalFactors_friday;
     	}
-    	else if(day > 4) {
+    	else if(time[2] > 4) {
     		timeStamps = timeStamps_weekend;
     		factors = arrivalFactors_weekend;
     	}
     	
     	//Create a variable holding the hours and minutes
-    	float hours = hour;
-    	hours += minute / 60f;
+    	float hours = time[1];
+    	hours += time[0] / 60f;
     	
     	//Create variables to hold the timeStamps and factors to use in our cosine wave 
     	float currentStamp;
@@ -1152,4 +1082,8 @@ public class ParkingGarageModel extends AbstractModel {
 		return (hasEntrance && hasExit && hasTicketMachine);
 	}
 	
+	@Override
+	public ModelType getModelType() {
+		return ModelType.PARKINGGARAGE;
+	}
 }
