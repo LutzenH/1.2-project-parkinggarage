@@ -12,6 +12,7 @@ import parkeersimulator.model.FinanceModel;
 import parkeersimulator.model.LayoutModel;
 import parkeersimulator.model.ParkingGarageModel;
 import parkeersimulator.model.TimeModel;
+import parkeersimulator.view.AdviceView;
 import parkeersimulator.view.CarParkArrivalControlView;
 import parkeersimulator.view.CarParkFinanceControlView;
 import parkeersimulator.view.CarParkLayoutControlView;
@@ -74,14 +75,17 @@ public class Main {
 		///Instantiation of this programs' views.
 		carParkView = new GarageDesignFrame(parkingGarageModel, parkingGarageController);
 		
-		tabbedViews_GraphView = new JPanel[3];
+		tabbedViews_GraphView = new JPanel[4];
 		tabbedViews_GraphView[0] = new QueueGraphView(parkingGarageModel);
 		tabbedViews_GraphView[0].setName("Cars in queue");
 		tabbedViews_GraphView[1] = new CarCountGraphView(parkingGarageModel);
 		tabbedViews_GraphView[1].setName("Car Count");
 		tabbedViews_GraphView[2] = new FinanceGraphView(financeModel);
 		tabbedViews_GraphView[2].setName("Finance");
-
+		tabbedViews_GraphView[3] = new AdviceView(parkingGarageModel);
+		tabbedViews_GraphView[3].setName("Advice");
+		
+		
 		tabbedViews_ControlView = new JPanel[4];
 		tabbedViews_ControlView[0] = new CarParkSimulationControlView(timeModel, timeController);
 		tabbedViews_ControlView[0].setName("Simulation");

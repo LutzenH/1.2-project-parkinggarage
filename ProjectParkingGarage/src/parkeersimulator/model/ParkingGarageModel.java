@@ -127,12 +127,25 @@ public class ParkingGarageModel extends AbstractModel {
 	
     ///Amount of spots for Pass holders
     private int passHolderPlaceAmount = 100;
-    
+   
     ///Amount of cars leaving the entrance queue
     private int amountOfLeavingCars = 0;
     
+    ///holding the average of leaving cars
+    double amount = 0d;
+    
     ///total amount of ticks
     private int ticks = 0;
+    
+    ///maximum amount of cars in the queues
+    int maxEnteranceCarQueue = 0;
+    int maxPaymentCarQueue = 0;
+    int maxExitCarQueue = 0;
+    
+    ///amount of props before the a change
+    int amountOfEnterens = 0;
+    int amountOfPaymentTerminals = 0;
+    int amountOfExits = 0;
     
     //List of ReservationCars that will enter the garage +- 15min after they reserve a spot. 
     private ArrayList<ReservationCar> reservedCars = new ArrayList<>();
@@ -173,6 +186,7 @@ public class ParkingGarageModel extends AbstractModel {
 	 * Responsible for what happens every iteration in the simulation.
 	 */
     public void tick() {
+    	if(isGarageOpen) { ticks++; }
     	tickCars();
     	handleExit();
     	tickPlaces();
@@ -334,13 +348,13 @@ public class ParkingGarageModel extends AbstractModel {
      * @param type Type of car that should be added to the queue.
      */
     private void addArrivingCars(int numberOfCars, CarType type){
-    	ticks++;
     	switch(type) {
 	    	case AD_HOC:
 	            for (int i = 0; i < numberOfCars; i++) {
 	            	int queueLengthBeforeLeving = new Random().nextInt(11) + 15;
 	            	if(getEntranceCarQueue().carsInQueue() <= queueLengthBeforeLeving) {
 	            		entranceCarQueue.addCar(new AdHocCar(stayMinutes));
+	            	} else {
 	            		amountOfLeavingCars++;
 	            	}
 	            }
@@ -858,14 +872,48 @@ public class ParkingGarageModel extends AbstractModel {
      */
     public String adviceCarsLeavingEntranceCarQueueu() {
     	String advice = "";
-    	double amount = (amountOfLeavingCars / (ticks / 60d / 24d));
+    	amount = (amountOfLeavingCars / (ticks / 60d / 24d));
 		int averageCarsLeavingEntrenceCarQueueu = (int) Math.round(amount);
-    	if(averageCarsLeavingEntrenceCarQueueu <= 25) {
-    		advice = "Average amount of cars leaving enterence queue every day: " + averageCarsLeavingEntrenceCarQueueu +  "r/n/ Advice: There are enough entrances.";
-    	} else if(averageCarsLeavingEntrenceCarQueueu <= 75) {
-    		advice = "Average amount of cars leaving enterence queue every day: " + averageCarsLeavingEntrenceCarQueueu +  "r/n/ Advice: one extra entrance could reduce the number of passing cars";
-    	} else if(averageCarsLeavingEntrenceCarQueueu > 75) {
-    		advice = "Average amount of cars leaving enterence queue every day: " + averageCarsLeavingEntrenceCarQueueu+  "r/n/ Advice: There are not enough entries.";
+    	if(ticks >= 44640) {
+    		if(maxPaymentCarQueue <= 25) {
+		    	if(averageCarsLeavingEntrenceCarQueueu <= 25) {
+		    		advice = "<html>Average amount of cars leaving entrance queue every day: " + averageCarsLeavingEntrenceCarQueueu +  "<br>Advice: The number of cars leaving the entrance queue is low, you do not have to change anything for this.<br><br></html>";
+		    	} else if(averageCarsLeavingEntrenceCarQueueu <= 75) {
+		    		advice = "<html>Average amount of cars leaving entrance queue every day: " + averageCarsLeavingEntrenceCarQueueu +  "<br>Advice: The number of cars leaving the entrance queue is al litel above average, maybe you can bould one entrance more.<br><br></html>";
+		    	} else if(averageCarsLeavingEntrenceCarQueueu > 75) {
+		    		advice = "<html>Average amount of cars leaving entrance queue every day: " + averageCarsLeavingEntrenceCarQueueu+  "<br>Advice: The number of cars leaving the entrance queue is very high so build more entrances for them.<br><br></html>";
+		    	}
+    		}
+    	}
+    	//amount = 0;
+    	return advice;
+    }
+    
+    public String adviceEntranceCarQueue() {
+    	if(entranceCarQueue.carsInQueue() > maxEnteranceCarQueue) maxEnteranceCarQueue = entranceCarQueue.carsInQueue();
+    	String advice = "";
+    	if(ticks >= 44640) {
+    		if(maxPaymentCarQueue <= 25) {
+		    	if (maxEnteranceCarQueue <= 10 && amount <= 25) {
+		    		advice = "<html>maximum entrance queue: " + maxEnteranceCarQueue +  "<br>Advice: There are enough entrances for.<br><br></html>";
+		    	} else if(maxEnteranceCarQueue <= 10 && amount > 25 && amount <= 75) { 
+		    		advice = "<html>maximum entrance queue: " + maxEnteranceCarQueue +  "<br>Advice: There are enough entrances for the amount of cars, but the number of cars leaving the entrance queue is a litel above averagee, maybe you can bould one entrance more.<br><br></html>";
+		    	} else if(maxEnteranceCarQueue <= 10 && amount > 75) { 
+		    		advice = "<html>maximum entrance queue: " + maxEnteranceCarQueue +  "<br>Advice: There are enough entrances for the amount of cars, but the number of cars leaving the entrance queue is very high so build more entrances for them.<br><br></html>";
+		    	} else if (maxEnteranceCarQueue <= 25 && amount <= 25) {
+		    		advice = "<html>maximum entrance queue: " + maxEnteranceCarQueue +  "<br>Advice: The number of cars in the entrance queue is somtimes a liter high, maybe you can build one extra entrance to reduce this number.<br><br></html>";
+		    	} else if (maxEnteranceCarQueue <= 25 && amount > 25 && amount <= 75) {
+		    		advice = "<html>maximum entrance queue: " + maxEnteranceCarQueue +  "<br>Advice: The number of cars in the entrance queue and the numer of cars leaving the enterene queue is a litel high, maybe you can build one extra entrance to reduce this number.<br><br></html>";
+		    	} else if (maxEnteranceCarQueue <= 25 && amount > 75) {
+		    		advice = "<html>maximum entrance queue: " + maxEnteranceCarQueue +  "<br>Advice: The number of cars in the entrance queue is a liter high and the numer of cars leaving the enterene queue is very high, so build more entrances.<br><br></html>";
+		    	} else if (maxEnteranceCarQueue > 25 && amount <= 25) {
+		    		advice = "<html>maximum entrance queue: " + maxEnteranceCarQueue +  "<br>Advice: The number of cars in the entrance queue is very high on busy moments, so build more entrance.<br><br></html>";
+		    	} else if (maxEnteranceCarQueue > 25 && amount > 25 && amount <= 75) {
+		    		advice = "<html>maximum entrance queue: " + maxEnteranceCarQueue +  "<br>Advice: The number of cars in the entrance queue is very high on busy moments and the number of cars leaving the entrances que is a litel high, so build more entrances.<br><br></html>";
+		    	} else if (maxEnteranceCarQueue > 25 && amount > 75) {
+		    		advice = "<html>maximum entrance queue: " + maxEnteranceCarQueue +  "<br>Advice: The number of cars in the entrance queue on busy moments and the number of cars leaving the entrances queue is verry high, so build more entrances.<br><br></html>";
+		    	}
+    		}
     	}
     	return advice;
     }
@@ -874,17 +922,17 @@ public class ParkingGarageModel extends AbstractModel {
      * @return A String with advice about the PaymentCarQueue.
      */
     public String advicePaymentCarQueue() {
+    	if(paymentCarQueue.carsInQueue() > maxPaymentCarQueue) maxPaymentCarQueue = paymentCarQueue.carsInQueue();
     	String advice = "";
-    	double averagePaymentCarQueue = 0d;
-    	averagePaymentCarQueue += (paymentCarQueue.carsInQueue() / ticks);
-    	int average = (int) Math.round(averagePaymentCarQueue);
-    	if (averagePaymentCarQueue < 25) {
-    		advice = "Average payment queue: " + average +  "r/n/ Advice: There are enough payment terminals.";
-    	} else if (averagePaymentCarQueue <= 75) {
-    		advice = "Average payment queue: " + average +  "r/n/ Advice: one extra payment terminal could reduce te mumber of cars waiting in the payment queue.";
-    	} else if (averagePaymentCarQueue > 75) {
-    		advice = "Average payment queue: " + average +  "r/n/ Advice: There are not enough payment terminals";
-    	}	
+    	if(ticks >= 44640) {
+	    	if (maxPaymentCarQueue <= 15) {
+	    		advice = "<html>maximum payment queue: " + maxPaymentCarQueue +  "<br>Advice: There are enough payment terminals for the number of cars in the payment queue.<br><br></html>";
+	    	} else if(maxPaymentCarQueue <= 25) {
+	    		advice = "<html>maximum payment queue: " + maxPaymentCarQueue +  "<br>Advice: There are not so many payment terminals for the number of cars, it can keeps the queue in front of th entrance a litel bit, so mybe you can build one payment terminal more.<br><br></html>";
+	    	}else {
+	    		advice = "<html>maximum payment queue: " + maxPaymentCarQueue +  "<br>Advice: There are not enough payment terminals for the number of cars, it keeps the queue in front of the entrance.<br><br></html>";
+	    	}	
+    	}
     	return advice;
     }
     
@@ -892,18 +940,38 @@ public class ParkingGarageModel extends AbstractModel {
      * @return A String with advice about the exitCarQueue.
      */
     public String adviceExitCarQueue() {
+    	if(exitCarQueue.carsInQueue() > maxExitCarQueue) maxExitCarQueue = exitCarQueue.carsInQueue();
     	String advice = "";
-    	double averageExitCarQueue = 0d;
-    	averageExitCarQueue += (exitCarQueue.carsInQueue() / ticks);
-    	int average = (int) Math.round(averageExitCarQueue);
-    	if (averageExitCarQueue <= 25) {
-    		advice ="Average exit queue: " + average +  "r/n/ Advice: There are enough exits.";
-    	} else if (averageExitCarQueue <= 75) {
-    		advice = "Average exit queue: " + average +  "r/n/ Advice: One extra exit could reduce te mumber of cars waiting in the exit queue.";
-    	} else if (averageExitCarQueue > 75) {
-    		advice = "Average exit queue: " + average +  "r/n/ Advice: There are not enough exits";
-    	}	
+    	if(ticks >= 44640) {
+	    	if (maxExitCarQueue <= 10) {
+	    		advice = "<html>Maximum exit queue: " + maxExitCarQueue +  "<br>Advice: There are enough exits for the number of payment terminals .<br><br></html>";
+	    	} else if (maxExitCarQueue <= 25) {
+	    		advice = "<html>maximum exit queue: " + maxExitCarQueue +  "<br>Advice: One extra exit could reduce te mumber of cars waiting in the exit queue.<br><br></html>";
+	    	} else if (maxExitCarQueue > 25) {
+	    		advice = "<html>maximum exit queue: " + maxExitCarQueue +  "<br>Advice: There are not enough exits got the mumber of payment terminals.<br><br></html>";
+	    	}	
+    	}
     	return advice;
+    }
+    
+    public String adviceLocatonProps() {
+    	String advice = "";
+	    if (ticks >= 44640) {
+			advice = "<html>Always make sure that the entrances, exits and payment terminals are distributed as well as possible across the parking garage<br><br></html>";
+		}
+		return advice;
+    }
+    
+    /**
+     * chacks if the amount entrances, payment terminals, exits
+     */
+    public void setNumberToZero() {
+		ticks = 0;
+		amountOfLeavingCars = 0;
+		maxEnteranceCarQueue = 0;
+		maxExitCarQueue = 0;
+		maxPaymentCarQueue = 0;
+		amount = 0;
     }
     
 
@@ -1114,6 +1182,7 @@ public class ParkingGarageModel extends AbstractModel {
 	public void openGarage() {
 		if(getCustomisationErrorMessages() == null || getCustomisationErrorMessages() == CustomiseErrorMessages.ERROR_CUSTOMISE_NOTCLOSED)
 		{
+			if (isGarageOpen) { setNumberToZero(); } 
 			isGarageOpen = isGarageOpen ? false : true;
 		}
 	}
