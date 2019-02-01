@@ -62,6 +62,8 @@ public class ParkingGarageModel extends AbstractModel {
     private float reservationArrivals_weekend = 1f;
     private float reservationArrivals_event = 0f;
     
+    private float reservationShowUpPercentage = 0.90f;
+    
     //The amount of time a car can stay in the car park;
     private int stayMinutes;
     
@@ -842,7 +844,14 @@ public class ParkingGarageModel extends AbstractModel {
         	reservedCars.get(i).tickArrivalTime();
         	        	
         	if(reservedCars.get(i).getTimeBeforeArrival() <= 0) {
-        		entrancePassQueue.addCar(reservedCars.remove(i));
+        		Random random = new Random();
+        		
+        		//If Reserved car is within this percentage it wont go into the garage but not show up instead.
+        		if(random.nextFloat() > reservationShowUpPercentage) {
+        			reservedCars.remove(i);
+        		} else {
+            		entrancePassQueue.addCar(reservedCars.remove(i));
+        		}
         	}
         }
     }
