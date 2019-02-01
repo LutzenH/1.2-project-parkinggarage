@@ -15,7 +15,7 @@ public abstract class AbstractModel {
 	///Declaration of the list of views that should be updated by the model.
 	private List<AbstractView> views;
 	
-	public enum ModelType { PARKINGGARAGE, FINANCE, TIME }
+	public enum ModelType { PARKINGGARAGE, FINANCE, TIME, LAYOUT }
 	public abstract ModelType getModelType();
 	
 	/**

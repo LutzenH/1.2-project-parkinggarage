@@ -5,7 +5,7 @@ import parkeersimulator.handler.ModelHandler;
 public class TimeModel extends AbstractModel{
 
 	///Declaration of the time.
-    private int year = 0;
+    private int year = 2019;
     private int month = 0;
     private int week = 0;
     private int day = 0;
@@ -35,6 +35,47 @@ public class TimeModel extends AbstractModel{
 	public void tick() {
 		advanceTime();
 	}
+	
+	/**
+     * A method that is used for incrementing the current time.
+     */
+    private void advanceTime(){
+        // Advance the time by one minute.
+        minute++;
+        
+        if (minute > 59) { //Reset minutes and set hours
+            minute -= minute;
+            hour++;
+        }
+        if (hour > 23) { //Reset hours and set days
+            hour -= hour;
+            day++;
+            isFirstDayOfMonth = false;
+        }
+        if (day > 6) { //Reset days and set weeks
+            day -= day;
+            week++;
+        }
+        
+        currentDayInMonth = (week * 7) + day; //Get the current day in the month for comparison
+        if (currentDayInMonth > dayAmountMonth[month] - 1) { //Reset weeks and set months
+        	currentDayInMonth = day;
+        	isFirstDayOfMonth = true;
+        	week -= week;
+        	month++;
+        }
+        
+        if (month > 11) { //Reset months and set years
+        	month -= month;
+        	year++;
+        	
+        	//Check for leap year
+        	if ((year + 1) % 4 == 0) //leap year
+        		daysInFeb = 29;
+        	else
+        		daysInFeb = 28;
+        }
+    }
 	
 	/**
      * Starts the simulation
@@ -67,47 +108,6 @@ public class TimeModel extends AbstractModel{
 	public void tick(int amount) {
 		getModelHandler().tick(amount);
 	}
-	
-	/**
-     * A method that is used for incrementing the current time.
-     */
-    private void advanceTime(){
-        // Advance the time by one minute.
-        minute++;
-        
-        while (minute > 59) { //Reset minutes and set hours
-            minute -= minute;
-            hour++;
-        }
-        while (hour > 23) { //Reset hours and set days
-            hour -= hour;
-            day++;
-            isFirstDayOfMonth = false;
-        }
-        while (day > 6) { //Reset days and set weeks
-            day -= day;
-            week++;
-        }
-        
-        currentDayInMonth = (week * 7) + day;
-        while(currentDayInMonth > dayAmountMonth[month] - 1) { //Reset weeks and set months
-        	currentDayInMonth = day;
-        	week -= week;
-        	month++;
-        	isFirstDayOfMonth = true;
-        }
-        
-        while(month > 11) { //Reset months and set years
-        	month -= month;
-        	year++;
-        	
-        	if((year + 1) % 4 == 0) //leap year
-        		daysInFeb = 29;
-        	else
-        		daysInFeb = 28;
-        }
-    }
-    
     
     /**
      * @return The current year.

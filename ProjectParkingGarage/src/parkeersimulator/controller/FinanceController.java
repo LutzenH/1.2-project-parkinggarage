@@ -18,9 +18,37 @@ public class FinanceController extends AbstractController {
 			case FINANCE_PAYMENTTIMEFRAME_AMOUNT:
 				financeModel.setPaymentTimeframe((Integer)data.get("amount"));
 				return true;
-			case FINANCE_COSTPERTIMEFRAME_AMOUNT:
-				financeModel.setCostPerTimeFrame((Float)data.get("amount"));
+				
+			case FINANCE_ADHOC_COSTPERTIMEFRAME_AMOUNT:
+				financeModel.setCostPerTimeFrame_adHocCar((Float)data.get("amount"));
 				return true;
+			case FINANCE_RESERVATION_COSTPERTIMEFRAME_AMOUNT:
+				financeModel.setCostPerTimeFrame_reservationCar((Float)data.get("amount"));
+				return true;
+			case FINANCE_PASSHOLDER_COSTPERMONTH_AMOUNT:
+				financeModel.setCostPerMonth_passHolderCar((Float)data.get("amount"));
+				return true;
+				
+			case FINANCE_ENTRANCECOST_AMOUNT:
+				financeModel.setEntranceCosts((Integer)data.get("amount"));
+				return true;
+			case FINANCE_TICKETMACHINECOST_AMOUNT:
+				financeModel.setTicketMachineCosts((Integer)data.get("amount"));
+				return true;
+			case FINANCE_EXITCOST_AMOUNT:
+				financeModel.setExitCosts((Integer)data.get("amount"));
+				return true;
+				
+			case FINANCE_PLACECOST_AMOUNT:
+				financeModel.setPlaceCosts((Float)data.get("amount"));
+				return true;
+			case FINANCE_ROWCOST_AMOUNT:
+				financeModel.setRowCosts((Integer)data.get("amount"));
+				return true;
+			case FINANCE_FLOORCOST_AMOUNT:
+				financeModel.setFloorCosts((Integer)data.get("amount"));
+				return true;
+				
 			case FINANCE_MAINTENANCECOSTS_AMOUNT:
 				financeModel.setMaintenanceCosts((Integer)data.get("amount"));
 				return true;

@@ -16,6 +16,7 @@ public class FinanceGraphView extends GraphView {
 				new XYSeries[] {
 						new XYSeries("MoneyTotal"),
 						new XYSeries("MoneyMonth"),
+						new XYSeries("MoneyDay"),
 				},
 				new Color[] {
 						Color.GREEN,
@@ -32,6 +33,7 @@ public class FinanceGraphView extends GraphView {
 		FinanceModel financeModel = (FinanceModel) model;
 		graph_data[0].addOrUpdate(time, financeModel.getMoneyTotal());
 		graph_data[1].addOrUpdate(time, financeModel.getMoneyMonth());
+		graph_data[2].addOrUpdate(time, financeModel.getMoneyDay());
 	}
 	
 }

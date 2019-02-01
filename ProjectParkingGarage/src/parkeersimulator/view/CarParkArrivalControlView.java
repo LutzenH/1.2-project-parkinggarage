@@ -64,6 +64,10 @@ public class CarParkArrivalControlView extends AbstractControllableView{
 		actionListener = e -> controller.performAction(ActionType.PARKINGGARAGE_PASSEVENTWEEK_AMOUNT, new HashMap<String, Object>() {{ put("amount", passEventWeekArrivalsAmountSpinner.getValue()); }});
 		JPanel passEventWeekArrivalsAmountController = buildController_spinner("Pass week event arrivals", "Set", passEventWeekArrivalsAmountSpinner, "in %", actionListener);
 		
+		JSpinner maxPassAmountSpinner = buildComponent_spinner(model.getNumberOfPassHolderSpots(), 0, 300, 10);
+		actionListener = e -> controller.performAction(ActionType.PARKINGGARAGE_MAXPASS_AMOUNT, new HashMap<String, Object>() {{ put("amount", maxPassAmountSpinner.getValue()); }});
+		JPanel maxPassAmountController = buildController_spinner("Max pass places", "Set", maxPassAmountSpinner, actionListener);
+		
 		//ReservationArrival amounts
 		JSpinner reservationWeekArrivalsAmountSpinner = buildComponent_spinner(model.getReservationArrivals_week(), 0, 300, 1);
 		actionListener = e -> controller.performAction(ActionType.PARKINGGARAGE_RESERVATIONWEEK_AMOUNT, new HashMap<String, Object>() {{ put("amount", reservationWeekArrivalsAmountSpinner.getValue()); }});
@@ -91,6 +95,7 @@ public class CarParkArrivalControlView extends AbstractControllableView{
 		add(passWeekArrivalsAmountController);
 		add(passWeekendArrivalsAmountController);
 		add(passEventWeekArrivalsAmountController);
+		add(maxPassAmountController);
 		
 		add(reservationWeekArrivalsAmountController);
 		add(reservationWeekendArrivalsAmountController);

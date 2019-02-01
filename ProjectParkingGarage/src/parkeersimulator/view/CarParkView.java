@@ -26,20 +26,24 @@ public class CarParkView extends AbstractView {
     private static int X_OFFSET = 10; 
     private static int Y_OFFSET = 10;
     
-    ///The x and y offset used for spacing between parking places
-    public static int X_OFFSET_PLACE = 20;
-    public static int Y_OFFSET_PLACE = 10;
-    
     ///The x and y values used for sizing parking places
+    public static int XY_LINEBETWEEN_PLACE = 1;
     public static int X_WIDTH_PLACE = 20;
-    public static int Y_WIDTH_PLACE = 10;
+    public static int Y_HEIGHT_PLACE = 10;
     
-    ///The t offset used for spacing between each level of the parking garage
-    public static int Y_OFFSET_FLOORS = 240;
-    public static int Y_OFFSET_FLOORS_DEFAULT = 20;
+    ///The x and y offset used for spacing between parking places
+    public static int X_OFFSET_PLACE = 0;
+    public static int X_OFFSET_PLACE_FINAL = X_WIDTH_PLACE + X_OFFSET_PLACE;
+    public static int Y_OFFSET_PLACE = 0;
+    public static int Y_OFFSET_PLACE_FINAL = Y_HEIGHT_PLACE + Y_OFFSET_PLACE;
+    
+    ///The offset used for spacing between each level of the parking garage
+    public static int X_OFFSET_FLOORS = 205;
+    public static int X_OFFSET_FLOORS_DEFAULT = 55;
     
     ///The x offset used for spacing between each column of parking placed
-    public static int X_OFFSET_COLUMN = 55;
+    public static int X_OFFSET_COLUMN = 15;
+    public static int X_OFFSET_COLUMN_FINAL = X_OFFSET_COLUMN + X_WIDTH_PLACE * 2;
     
     ///The x factor used for calculating which row each parking space goes in
     private static float X_ROWPOS_FACTOR = 0.5f;
@@ -139,17 +143,43 @@ public class CarParkView extends AbstractView {
     private static void drawPlace(Graphics graphics, Location location, Color color, boolean isReserved, int xOffset, int yOffset) {
         graphics.setColor(color);
         graphics.fillRect(
-                ((int)Math.floor(location.getRow() * X_ROWPOS_FACTOR) * X_OFFSET_COLUMN + (location.getRow() % 2) * X_OFFSET_PLACE + xOffset) + location.getFloor() * (Y_OFFSET_FLOORS + Y_OFFSET_FLOORS_DEFAULT) * SIZE_FACTOR,
-                (location.getPlace() * Y_OFFSET_PLACE + yOffset) * SIZE_FACTOR,
-                (X_WIDTH_PLACE - 1) * SIZE_FACTOR,
-                (Y_WIDTH_PLACE - 1) * SIZE_FACTOR); // TODO use dynamic size or constants
+                ((int)Math.floor(location.getRow() * X_ROWPOS_FACTOR) * X_OFFSET_COLUMN_FINAL + (location.getRow() % 2) * X_OFFSET_PLACE_FINAL + xOffset) + location.getFloor() * (X_OFFSET_FLOORS + X_OFFSET_FLOORS_DEFAULT) * SIZE_FACTOR,
+                (location.getPlace() * Y_OFFSET_PLACE_FINAL + yOffset) * SIZE_FACTOR,
+                (X_WIDTH_PLACE - XY_LINEBETWEEN_PLACE) * SIZE_FACTOR,
+                (Y_HEIGHT_PLACE - XY_LINEBETWEEN_PLACE) * SIZE_FACTOR); // TODO use dynamic size or constants
+        
         if(color.equals(new Color(150, 150, 150)) &&  isReserved) {
             graphics.setColor(Color.LIGHT_GRAY);
             graphics.fillRect(
-            		 ((int)Math.floor(location.getRow() * X_ROWPOS_FACTOR) * X_OFFSET_COLUMN + (location.getRow() % 2) * X_OFFSET_PLACE + xOffset + 2) + location.getFloor() * (Y_OFFSET_FLOORS + Y_OFFSET_FLOORS_DEFAULT) * SIZE_FACTOR,
-                     (location.getPlace() * Y_OFFSET_PLACE + yOffset + 2) * SIZE_FACTOR,
-                     (X_WIDTH_PLACE - 5) * SIZE_FACTOR,
-                     (Y_WIDTH_PLACE - 5) * SIZE_FACTOR);
+            		 ((int)Math.floor(location.getRow() * X_ROWPOS_FACTOR) * X_OFFSET_COLUMN_FINAL + (location.getRow() % 2) * X_OFFSET_PLACE_FINAL + xOffset + 2) + location.getFloor() * (X_OFFSET_FLOORS + X_OFFSET_FLOORS_DEFAULT) * SIZE_FACTOR,
+                     (location.getPlace() * Y_OFFSET_PLACE_FINAL + yOffset + 2) * SIZE_FACTOR,
+                     (X_WIDTH_PLACE - XY_LINEBETWEEN_PLACE * 5) * SIZE_FACTOR,
+                     (Y_HEIGHT_PLACE - XY_LINEBETWEEN_PLACE * 5) * SIZE_FACTOR);
         }
+    }
+    
+    public static int[] getGarageSize(ParkingGarageModel model) {
+    	//X axis
+    	int totalSpaceBetweenPlaces_x = (model.getNumberOfRows() / 2) * X_OFFSET_PLACE;
+    	int totalSpaceBetweenColumns = (model.getNumberOfRows() / 2 - 1) * X_OFFSET_COLUMN;
+    	int totalSizePlaces_x = model.getNumberOfRows() * X_WIDTH_PLACE;
+    	int totalSizeFloor = totalSpaceBetweenPlaces_x + totalSpaceBetweenColumns + totalSizePlaces_x;
+    	int totalSizeFloors = totalSizeFloor * model.getNumberOfFloors();
+    	
+    	int totalSpaceBetweenFloors = (model.getNumberOfFloors() - 1) * X_OFFSET_FLOORS_DEFAULT;
+
+    	int totalSizeGarage_x = totalSpaceBetweenFloors + totalSizeFloors;
+
+    	//Y axis
+    	int totalSpaceBetweenPlaces_y = model.getNumberOfPlaces() * Y_OFFSET_PLACE;
+    	int totalSizePlaces_y = model.getNumberOfPlaces() * Y_HEIGHT_PLACE;
+    	
+    	int totalSizeGarage_y = totalSpaceBetweenPlaces_y + totalSizePlaces_y;
+    	
+    	//Update the space between floors
+    	X_OFFSET_FLOORS = totalSizeFloor;
+
+    	//Return our sizes in an array
+    	return new int[] {totalSizeGarage_x, totalSizeGarage_y};
     }
 }

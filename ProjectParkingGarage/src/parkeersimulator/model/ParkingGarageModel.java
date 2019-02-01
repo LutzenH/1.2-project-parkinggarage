@@ -164,6 +164,9 @@ public class ParkingGarageModel extends AbstractModel {
         populatePlaces();
         
         props = new Prop[numberOfRows * numberOfFloors];
+        
+        financeModel.setNumberOff_RowFloorPlaces(new int[] {numberOfPlaces, numberOfRows, numberOfFloors});
+        financeModel.setPassHolderPlaceAmount(passHolderPlaceAmount);
     }
 
 	/**
@@ -473,16 +476,50 @@ public class ParkingGarageModel extends AbstractModel {
      * @return The number of floors in the parking garage.
      */
 	public int getNumberOfFloors() { return numberOfFloors; }
+	/**
+     * Set the number of floors in the parking garage.
+     */
+	public void setNumberOfFloors(int amount) {  
+		numberOfFloors = amount;
+		updateGarage();
+	}
 	
 	/**
 	 * @return The number of rows in the parking garage per floor.
 	 */
     public int getNumberOfRows() { return numberOfRows; }
+    /**
+	 * Sets the number of rows in the parking garage per floor.
+	 */
+    public void setNumberOfRows(int amount) { 
+    	numberOfRows = amount;
+    	updateGarage();
+	}
     
 	/**
 	 * @return The number of places in the parking garage per row.
 	 */
     public int getNumberOfPlaces() { return numberOfPlaces; }
+    
+    /**
+	 * Sets the number of places in the parking garage per row.
+	 */
+    public void setNumberOfPlaces(int amount) { 
+    	numberOfPlaces = amount;
+    	updateGarage();
+	}
+    
+    private void updateGarage() {
+		numberOfOpenDefaultSpots = (numberOfFloors * numberOfRows * numberOfPlaces) - passHolderPlaceAmount;
+        numberOfOpenPassHolderSpots = passHolderPlaceAmount;
+        numberOfAllowedPassHolders = numberOfOpenPassHolderSpots;
+        
+		places = new Place[numberOfFloors][numberOfRows][numberOfPlaces];
+		populatePlaces(); 
+		props = new Prop[numberOfRows * numberOfFloors];
+		
+		financeModel.setNumberOff_RowFloorPlaces(new int[] {numberOfPlaces, numberOfRows, numberOfFloors});
+    }
     
     /**
      * @return The total amount of default open spots in the parking garage.
@@ -493,6 +530,15 @@ public class ParkingGarageModel extends AbstractModel {
      * @return The total amount of open passholder spots in the parking garage.
      */
     public int getNumberOfOpenPassHolderSpots() { return numberOfOpenPassHolderSpots; }
+    
+    /**
+     * @return The total amount of passholder spots in the parking garage.
+     */
+    public int getNumberOfPassHolderSpots() { return passHolderPlaceAmount; }
+    /**
+     * Sets the total amount of passholder spots in the parking garage.
+     */
+    public void setNumberOfPassHolderSpots(int amount) { passHolderPlaceAmount = amount; financeModel.setPassHolderPlaceAmount(amount); }
     
     /**
      * @return A multi-dimensional array of all cars in the parking garage, format: car[floor][row][place]
@@ -550,18 +596,24 @@ public class ParkingGarageModel extends AbstractModel {
 					paymentSpeed = 0;
 					exitSpeed = 0;
 					enterSpeed = 0;
+					financeModel.setNumberOfEntrances(0);
+					financeModel.setNumberOfTicketMachines(0);
+					financeModel.setNumberOfExits(0);
 					
 					for(Prop prop : props) {
 						if(prop != null) {
 							switch(prop.getType()) {
 								case PROP_ENTRANCE:
 									enterSpeed += baseEnterSpeed;
+									financeModel.setNumberOfEntrances(financeModel.getNumberOfEntrances() + 1);
 									break;
 								case PROP_EXIT:
 									exitSpeed += baseExitSpeed;
+									financeModel.setNumberOfExits(financeModel.getNumberOfExits() + 1);
 									break;
 								case PROP_TICKETMACHINE:
 									paymentSpeed += basePaymentSpeed;
+									financeModel.setNumberOfTicketMachines(financeModel.getNumberOfTicketMachines() + 1);
 									break;
 								default:
 									break;
@@ -1030,6 +1082,8 @@ public class ParkingGarageModel extends AbstractModel {
      */
     private void populatePlaces() {
     	int count = 0;
+		
+		preferredPlaces.clear();
     	
     	for(int floor = 0; floor < numberOfFloors; floor++) {
     		for(int rows = 0; rows < numberOfRows; rows++) {
@@ -1038,7 +1092,7 @@ public class ParkingGarageModel extends AbstractModel {
     					places[floor][rows][place] = new Place(Car.CarType.PASS, new Location(floor, rows, place));
     				else
     					places[floor][rows][place] = new Place(new Location(floor, rows, place));
-    				
+
     				preferredPlaces.add(places[floor][rows][place]);
     				
     				count++;

@@ -3,11 +3,13 @@ package parkeersimulator.main;
 import javax.swing.JPanel;
 
 import parkeersimulator.controller.FinanceController;
+import parkeersimulator.controller.LayoutController;
 import parkeersimulator.controller.ParkingGarageController;
 import parkeersimulator.controller.TimeController;
 import parkeersimulator.handler.ControllerHandler;
 import parkeersimulator.handler.ModelHandler;
 import parkeersimulator.model.FinanceModel;
+import parkeersimulator.model.LayoutModel;
 import parkeersimulator.model.ParkingGarageModel;
 import parkeersimulator.model.TimeModel;
 import parkeersimulator.view.CarParkArrivalControlView;
@@ -35,12 +37,14 @@ public class Main {
 	private TimeModel timeModel;
 	private ParkingGarageModel parkingGarageModel;
 	private FinanceModel financeModel;
+	private LayoutModel layoutModel;
 	
 	///Declaration of the controllers this program uses.
 	private ControllerHandler controllerHandler;
 	private ParkingGarageController parkingGarageController;
 	private FinanceController financeController;
 	private TimeController timeController;
+	private LayoutController layoutController;
 	
 	///Declaration of the views this program uses.
 	private GarageDesignFrame carParkView;
@@ -58,12 +62,14 @@ public class Main {
 		timeModel = new TimeModel(modelHandler);
 		financeModel = new FinanceModel(modelHandler);
 		parkingGarageModel = new ParkingGarageModel(modelHandler);
+		layoutModel = new LayoutModel(modelHandler);
 		
 		///Instantiation of this programs' controllers.
 		controllerHandler = new ControllerHandler();
 		timeController = new TimeController(timeModel);
 		financeController = new FinanceController(financeModel);
 		parkingGarageController = new ParkingGarageController(parkingGarageModel);
+		layoutController = new LayoutController(layoutModel);
 		
 		///Instantiation of this programs' views.
 		carParkView = new GarageDesignFrame(parkingGarageModel, parkingGarageController);
@@ -83,7 +89,7 @@ public class Main {
 		tabbedViews_ControlView[1].setName("Arrival");
 		tabbedViews_ControlView[2] = new CarParkFinanceControlView(financeModel, financeController);
 		tabbedViews_ControlView[2].setName("Finance");
-		tabbedViews_ControlView[3] = new CarParkLayoutControlView(parkingGarageModel, parkingGarageController);
+		tabbedViews_ControlView[3] = new CarParkLayoutControlView(layoutModel, layoutController);
 		tabbedViews_ControlView[3].setName("Layout");
 		
 		///Layout and instantiation of the JFrame.

@@ -50,6 +50,9 @@ public class ParkingGarageController extends AbstractController {
 			case PARKINGGARAGE_PASSEVENTWEEK_AMOUNT:
 				parkingGarageModel.setPassArrivals_eventWeek((Integer)data.get("amount"));
 				return true;
+			case PARKINGGARAGE_MAXPASS_AMOUNT:
+				parkingGarageModel.setNumberOfPassHolderSpots((Integer)data.get("amount"));
+				return true;
 				
 			case PARKINGGARAGE_RESERVATIONWEEK_AMOUNT:
 				parkingGarageModel.setReservationArrivals_week((Integer)data.get("amount"));

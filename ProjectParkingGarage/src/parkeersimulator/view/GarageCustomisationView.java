@@ -107,17 +107,19 @@ public class GarageCustomisationView extends AbstractControllableView implements
       * @param xOffset the x offset where the props should be drawn.
       * @param yOffset the y offset where the props should be drawn.
       */
-    private void drawProps(Graphics graphics, int xOffset, int yOffset) {  	   	
+    private void drawProps(Graphics graphics, int xOffset, int yOffset, int carParkWidth, int carParkHeight) {  	   	
     	ParkingGarageModel parkingGarageModel = (ParkingGarageModel) model;
     	
     	Prop[] props = parkingGarageModel.getProps();
     	
-    	int distanceBetweenFloors_X = CarParkView.Y_OFFSET_FLOORS + CarParkView.Y_OFFSET_FLOORS_DEFAULT;
-    	int rowLength_Y = 328;
+    	int distanceBetweenFloors_X = CarParkView.X_OFFSET_FLOORS + CarParkView.X_OFFSET_FLOORS_DEFAULT;
+    	int rowLength_Y = carParkHeight + 27;
     	
     	int propsPerFloor = parkingGarageModel.getNumberOfRows()/2;
     	
     	int count = 0;
+    	
+    	rectangles = new Rectangle[parkingGarageModel.getNumberOfFloors() * parkingGarageModel.getNumberOfRows()];
     	
     	for(int floor = 0; floor < parkingGarageModel.getNumberOfFloors(); floor++) {
         	for(int i = 0; i < propsPerFloor; i++) {
@@ -126,14 +128,14 @@ public class GarageCustomisationView extends AbstractControllableView implements
     			color = new Color(220, 220, 220);
         		
         		drawProp(graphics, xOffset, yOffset, props, count, floor, i, distanceBetweenFloors_X, rowLength_Y);
-        		rectangles[count] = new Rectangle(xOffset + 5 + (i * CarParkView.X_OFFSET_COLUMN) + (floor * distanceBetweenFloors_X), yOffset + 5, 29, 29);
+        		rectangles[count] = new Rectangle(xOffset + 5 + (i * CarParkView.X_OFFSET_COLUMN_FINAL) + (floor * distanceBetweenFloors_X), yOffset + 5, 29, 29);
         		if(!parkingGarageModel.isGarageOpen()) {
         			drawRectangle(graphics, rectangles[count], color);
         		}
         		count++;
         		
         		drawProp(graphics, xOffset, yOffset, props, count, floor, i, distanceBetweenFloors_X, rowLength_Y);
-        		rectangles[count] = new Rectangle(xOffset + 5 + (i * CarParkView.X_OFFSET_COLUMN) + (floor * distanceBetweenFloors_X), yOffset + 10 + (rowLength_Y + 7), 29, 29);
+        		rectangles[count] = new Rectangle(xOffset + 5 + (i * CarParkView.X_OFFSET_COLUMN_FINAL) + (floor * distanceBetweenFloors_X), yOffset + 10 + (rowLength_Y + 7), 29, 29);
         		if(!parkingGarageModel.isGarageOpen()) {
         			drawRectangle(graphics, rectangles[count], color);
         		}
@@ -183,7 +185,7 @@ public class GarageCustomisationView extends AbstractControllableView implements
         	graphics.setColor(new Color(128,128,128));
         	graphics.fillRect(carpark_topleft_x-30, carpark_topleft_y-50, carpark_width+60, carpark_height+100);
     	
-        	drawProps(graphics, carpark_topleft_x, carpark_topleft_y - 40);
+        	drawProps(graphics, carpark_topleft_x, carpark_topleft_y - 40, carpark_width, carpark_height);
         	
         	hasDrawnBackground = true;
     	}
@@ -203,7 +205,7 @@ public class GarageCustomisationView extends AbstractControllableView implements
      */
     private void drawProp(Graphics graphics, int xOffset, int yOffset, Prop[] props, int count, int floor, int i, int distanceBetweenFloors_X, int rowLength_Y) {
 		if(props[count] != null) {
-			int xPos = xOffset + 5 + (i * CarParkView.X_OFFSET_COLUMN) + (floor * distanceBetweenFloors_X);
+			int xPos = xOffset + 5 + (i * CarParkView.X_OFFSET_COLUMN_FINAL) + (floor * distanceBetweenFloors_X);
 			int yPos = (count % 2 == 0) ? (yOffset + 5) : yOffset + 10 + (rowLength_Y + 7);
 			
     		switch(props[count].getType()) {
@@ -272,9 +274,9 @@ public class GarageCustomisationView extends AbstractControllableView implements
     	int width = this.getWidth();
     	int height = this.getHeight();
     	
-    	//TODO Calculate these based on real size
-    	int carpark_width = 724;
-    	int carpark_height = 299;
+    	int carpark_width = CarParkView.getGarageSize(parkingGarageModel)[0];
+    	int carpark_height = CarParkView.getGarageSize(parkingGarageModel)[1];
+    	
     	
     	int carpark_topleft_x = (width - carpark_width)/2;
     	int carpark_topleft_y = (height - carpark_height)/2;
