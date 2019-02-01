@@ -8,7 +8,7 @@ public class Place implements Comparable<Place> {
 	private CarType carType;
 	private Location location;
 	
-	private boolean isReserved;
+	private int timeReserved;
 	
 	private float preferenceFactor;
 
@@ -16,11 +16,7 @@ public class Place implements Comparable<Place> {
 	 * Default Constructor for Place
 	 */
 	public Place(Location location) {
-		this.car = null;
-		this.carType = null;
-		this.isReserved = false;
-		this.setPreferenceFactor(0f);
-		this.location = location;
+		this(null, null, location);
 	}
 	
 	/**
@@ -31,8 +27,8 @@ public class Place implements Comparable<Place> {
 	public Place(Car car, CarType carType, Location location) {
 		this.car = car;
 		this.carType = carType;
-		this.isReserved = false;
 		this.location = location;
+		this.timeReserved = 0;
 	}
 	
 	/**
@@ -41,10 +37,15 @@ public class Place implements Comparable<Place> {
 	 * @param carType The type of car allowed at this Place.
 	 */
 	public Place(CarType carType, Location location) {
-		this.car = null;
-		this.carType = carType;
-		this.isReserved = false;
-		this.location = location;
+		this(null, carType, location);
+	}
+	
+	/**
+	 * Will lower  timeReserved if it is greater than 0
+	 */
+	public void tick() {
+		if(timeReserved > 0)
+			timeReserved--;
 	}
 	
 	/**
@@ -62,12 +63,12 @@ public class Place implements Comparable<Place> {
 	/**
 	 * @return check if the Place has been reserved.
 	 */
-	public boolean getReserved() { return isReserved; }
+	public boolean getReserved() { return timeReserved > 0 ? true : false; }
 
 	/**
-	 * @param set the place to be reserved or not.
+	 * @param set the place time to be reserved.
 	 */
-	public void setReserved(boolean isReserved) { this.isReserved = isReserved; }
+	public void setTimeReserved(int minutes) { this.timeReserved = minutes; }
 
 	/**
 	 * @return the allowed carType

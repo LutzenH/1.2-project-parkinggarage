@@ -2,6 +2,8 @@ package parkeersimulator.model.car;
 
 import java.util.Random;
 
+import parkeersimulator.model.location.Location;
+
 import java.awt.*;
 
 /**
@@ -12,15 +14,19 @@ public class ReservationCar extends Car {
 	public static final Color COLOR=Color.yellow;
 	
 	private int timeBeforeArrival;
+	private int stayMinutes;
+	
+	private Location reservedLocation;
 	
 	/**
 	 * The constructor for ReservationCar
 	 */
-    public ReservationCar() {
+    public ReservationCar(Location reservedLocation) {
     	Random random = new Random();
-    	int stayMinutes = (int) (15 + random.nextFloat() * 3 * 60);
+    	stayMinutes = (int) (60 + random.nextFloat() * 3 * 60);
         this.setMinutesLeft(stayMinutes);
-        this.timeBeforeArrival = random.nextInt(30) + 5;
+        this.timeBeforeArrival = random.nextInt(30) + 10;
+        this.reservedLocation = reservedLocation;
     }
     
     /**
@@ -40,6 +46,10 @@ public class ReservationCar extends Car {
 		return true;
 	}
 
+	public Location getReservedLocation() {
+		return reservedLocation;
+	}
+	
 	/**
 	 * @return the timeBeforeArrival
 	 */
@@ -47,6 +57,10 @@ public class ReservationCar extends Car {
 		return timeBeforeArrival;
 	}
 
+	public int getStayMinutes() {
+		return stayMinutes;
+	}
+	
 	public void tickArrivalTime() {
 		timeBeforeArrival--;
 	}

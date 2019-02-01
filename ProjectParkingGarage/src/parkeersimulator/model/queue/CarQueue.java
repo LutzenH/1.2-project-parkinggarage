@@ -45,6 +45,14 @@ public class CarQueue {
 			return null;
 		}
     }
+    
+    public Car getFrontCar() {
+    	try {
+	    	return queue.peek();
+		} catch (NullPointerException e) {
+			return null;
+		}
+    }
 
     /**
      * @return The size of the queue.

@@ -2,6 +2,7 @@ package parkeersimulator.model;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.Random;
 
 import parkeersimulator.handler.ModelHandler;
@@ -171,19 +172,20 @@ public class ParkingGarageModel extends AbstractModel {
     public void tick() {
     	tickCars();
     	handleExit();
+    	tickPlaces();
     	notifyViews();
     	setArrivalProperties();
     	eventManager();
     	handleEntrance();
     }
 
-    /**
+	/**
      * Handles all methods related to entrance of the cars.
      */
     private void handleEntrance(){
     	carsArriving();
     	carsEntering(entrancePassQueue);
-    	carsEntering(entranceCarQueue);  	
+    	carsEntering(entranceCarQueue);
     }
     
     /**
@@ -219,36 +221,42 @@ public class ParkingGarageModel extends AbstractModel {
         
         if(queue == entrancePassQueue) {
         	if(queue.getFrontCarType() != null) {
-            	switch(queue.getFrontCarType()) {
-    				case RESERVERATION_CAR:
-    		        	while (queue.carsInQueue()>0 && getNumberOfOpenDefaultSpots() > 0 && i<enterSpeed) {
-    		        		Car car = queue.removeCar();
-    		                Location freeLocation = getFirstFreeLocation(car.getCarType());
-    		                
-    		                setCarAt(freeLocation, car);
-    		                i++;
-    		        	}
-    					break;
-    				case PASS:
-    		        	while (queue.carsInQueue()>0 && getNumberOfOpenPassHolderSpots() > 0 && i<enterSpeed) {
-    		                Car car = queue.removeCar();
-    		                Location freeLocation = getFirstFreeLocation(car.getCarType());
-    		                
-    		                setCarAt(freeLocation, car);
-    		                i++;
-    		        	}
-    					break;
-    				default:
-    					break;
-            	}
+        		while(queue.carsInQueue() > 0 && i < enterSpeed) {
+            		switch(queue.getFrontCarType()) {
+    					case PASS:
+    						if(getNumberOfOpenPassHolderSpots() > 0) {
+    							Car car = queue.removeCar();
+    		                    Location freeLocation = getFirstFreeLocation(car.getCarType());
+    		                    
+    		                    setCarAt(freeLocation, car);
+    		                    i++;
+    						}
+    						break;
+    						
+    					case RESERVERATION_CAR:
+							ReservationCar car = (ReservationCar) queue.removeCar();
+		                    Location freeLocation =  car.getReservedLocation(); //getFirstFreeLocation(car.getCarType());
+		                    
+		                    setCarAt(freeLocation, car);
+		                    i++;
+    						break;
+    						
+    					default:
+    						break;
+            		}
+        		}
         	}
         }
         else if (queue == entranceCarQueue ) {
-        	while (queue.carsInQueue()>0 && getNumberOfOpenDefaultSpots() > 0 && i<enterSpeed) {
-        		Car car = queue.removeCar();
+        	while (queue.carsInQueue()>0 && getNumberOfOpenDefaultSpots() > 0 && i < enterSpeed) {
+        		//Car car = queue.removeCar();
+        		Car car = queue.getFrontCar();
                 Location freeLocation = getFirstFreeLocation(car.getCarType());
                 
-                setCarAt(freeLocation, car);
+                if(freeLocation != null) {
+                	car = queue.removeCar();
+                    setCarAt(freeLocation, car);
+                }
                 i++;
         	}
         }
@@ -348,8 +356,9 @@ public class ParkingGarageModel extends AbstractModel {
 	            	Location location = getFirstFreeLocation(CarType.AD_HOC);
 	            	
 	            	if (location != null) {
-	            		reservedCars.add(new ReservationCar());
-		            	places [location.getFloor()][location.getRow()][location.getPlace()].setReserved(true);
+	            		ReservationCar car = new ReservationCar(location);	            		
+		            	places [location.getFloor()][location.getRow()][location.getPlace()].setTimeReserved(car.getTimeBeforeArrival() + car.getStayMinutes() + 30);
+	            		reservedCars.add(car);
 		            	numberOfOpenDefaultSpots--; 
 	            	}            	
 	            } 
@@ -363,7 +372,7 @@ public class ParkingGarageModel extends AbstractModel {
      * @param car The car that should leave its location.
      */
     private void carLeavesSpot(Car car){
-    	places [car.getLocation().getFloor()][car.getLocation().getRow()][car.getLocation().getPlace()].setReserved(false);
+    	//places [car.getLocation().getFloor()][car.getLocation().getRow()][car.getLocation().getPlace()].setReserved(false);
     	removeCarAt(car.getLocation());
         exitCarQueue.addCar(car);
     }
@@ -687,9 +696,9 @@ public class ParkingGarageModel extends AbstractModel {
         }
         places[location.getFloor()][location.getRow()][location.getPlace()].setCar(null);
         car.setLocation(null);
-        if(car.getCarType() == Car.CarType.PASS)
+        if(car.getCarType() == CarType.PASS)
         	numberOfOpenPassHolderSpots++;
-        else
+        else if (car.getCarType() == CarType.AD_HOC)
             numberOfOpenDefaultSpots++;
 
         return car;
@@ -763,17 +772,34 @@ public class ParkingGarageModel extends AbstractModel {
                 }
             }
         }
-        
         for(int i = 0; i < reservedCars.size(); i++) {
         	reservedCars.get(i).tickArrivalTime();
-        	
-        	//System.out.println("n: " + i + ", timeleft: " + reservedCars.get(i).getTimeBeforeArrival());
-        	
+        	        	
         	if(reservedCars.get(i).getTimeBeforeArrival() <= 0) {
         		entrancePassQueue.addCar(reservedCars.remove(i));
         	}
         }
     }
+    
+    /*
+     * Ticks all places
+     */
+    private void tickPlaces() {
+    	for(Place[][] floor : places) {
+    		for(Place[] row : floor) {
+        		for(Place place : row) {
+        			boolean isReserved = place.getReserved();
+        			
+        			place.tick();
+        			
+        			if(!place.getReserved() && isReserved) {
+        				//System.out.println("Place is no longer reserved");
+        				numberOfOpenDefaultSpots++;
+        			}
+            	}
+        	}
+    	}
+	}
 
     /**
      * @return a String with advice about the cars leavening the entranceCarQueue.
