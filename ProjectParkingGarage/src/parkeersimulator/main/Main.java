@@ -76,15 +76,14 @@ public class Main {
 		carParkView = new GarageDesignFrame(parkingGarageModel, parkingGarageController);
 		
 		tabbedViews_GraphView = new JPanel[4];
-		tabbedViews_GraphView[0] = new QueueGraphView(parkingGarageModel, timeModel);
-		tabbedViews_GraphView[0].setName("Cars in queue");
-		tabbedViews_GraphView[1] = new CarCountGraphView(parkingGarageModel, timeModel);
-		tabbedViews_GraphView[1].setName("Car Count");
+		tabbedViews_GraphView[0] = new CarCountGraphView(parkingGarageModel, timeModel);
+		tabbedViews_GraphView[0].setName("Car Count");
+		tabbedViews_GraphView[1] = new QueueGraphView(parkingGarageModel, timeModel);
+		tabbedViews_GraphView[1].setName("Cars in queue");
 		tabbedViews_GraphView[2] = new FinanceGraphView(financeModel, timeModel);
 		tabbedViews_GraphView[2].setName("Finance");
 		tabbedViews_GraphView[3] = new AdviceView(parkingGarageModel);
 		tabbedViews_GraphView[3].setName("Advice");
-		
 		
 		tabbedViews_ControlView = new JPanel[4];
 		tabbedViews_ControlView[0] = new CarParkSimulationControlView(timeModel, timeController);
