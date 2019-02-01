@@ -321,13 +321,15 @@ public class GarageCustomisationView extends AbstractControllableView implements
     	hasDrawnBackground = false;
 		updateView();
     	for(int i = 0; i < rectangles.length; i++) {
-    		Integer index = i;
-    		
-    		if(rectangles[i].contains(e.getPoint())) {
-    			controller.performAction(ActionType.PARKINGGARAGE_CLICK_PROP, new HashMap<String, Object>() {{ put("index", index); }});
-    			hasDrawnBackground = false;
-    			updateView();
-			}
+    		if(rectangles[i] != null) {
+        		Integer index = i;
+        		
+        		if(rectangles[i].contains(e.getPoint())) {
+        			controller.performAction(ActionType.PARKINGGARAGE_CLICK_PROP, new HashMap<String, Object>() {{ put("index", index); }});
+        			hasDrawnBackground = false;
+        			updateView();
+    			}
+    		}
     	}
     }
     

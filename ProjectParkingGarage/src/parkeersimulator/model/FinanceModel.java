@@ -61,7 +61,7 @@ public class FinanceModel extends AbstractModel {
 
 	public void tick() {
 		manageMoney();
-		System.out.println(passHolderPlaceAmount);
+		notifyViews();
 	}
 
 	public void collectMoney(Car car) {

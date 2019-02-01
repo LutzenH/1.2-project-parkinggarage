@@ -1,29 +1,17 @@
 package parkeersimulator.model;
 
+import java.time.LocalDateTime;
+
 import parkeersimulator.handler.ModelHandler;
 
 public class TimeModel extends AbstractModel{
 
-	///Declaration of the time.
-    private int year = 2019;
-    private int month = 0;
-    private int week = 0;
-    private int day = 0;
-    private int hour = 0;
-    private int minute = 0;
-    
-    //Tells us if it's the first day of the month
-    private boolean isFirstDayOfMonth;
-    
-    //Keeps track of the current day in the month
-    private int currentDayInMonth;
-    
-    //Declaration of the amount of days in each month
-    private int daysInFeb = 28;
-    private int[] dayAmountMonth = new int[] {31, daysInFeb, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+	LocalDateTime time;
     
 	public TimeModel(ModelHandler handler) {
 		super(handler);
+		
+		this.time = LocalDateTime.now();
 	}
 
 	@Override
@@ -40,41 +28,7 @@ public class TimeModel extends AbstractModel{
      * A method that is used for incrementing the current time.
      */
     private void advanceTime(){
-        // Advance the time by one minute.
-        minute++;
-        
-        if (minute > 59) { //Reset minutes and set hours
-            minute -= minute;
-            hour++;
-        }
-        if (hour > 23) { //Reset hours and set days
-            hour -= hour;
-            day++;
-            isFirstDayOfMonth = false;
-        }
-        if (day > 6) { //Reset days and set weeks
-            day -= day;
-            week++;
-        }
-        
-        currentDayInMonth = (week * 7) + day; //Get the current day in the month for comparison
-        if (currentDayInMonth > dayAmountMonth[month] - 1) { //Reset weeks and set months
-        	currentDayInMonth = day;
-        	isFirstDayOfMonth = true;
-        	week -= week;
-        	month++;
-        }
-        
-        if (month > 11) { //Reset months and set years
-        	month -= month;
-        	year++;
-        	
-        	//Check for leap year
-        	if ((year + 1) % 4 == 0) //leap year
-        		daysInFeb = 29;
-        	else
-        		daysInFeb = 28;
-        }
+    	time = time.plusMinutes(1);
     }
 	
 	/**
@@ -112,41 +66,38 @@ public class TimeModel extends AbstractModel{
     /**
      * @return The current year.
      */
-    public int getYear() { return year; }
+    public int getYear() { return time.getYear(); }
     
     /**
      * @return The current month of a year.
      */
-    public int getMonth() { return month; }
+    public int getMonth() { return time.getMonthValue(); }
     
-    /**
-     * @return The current week of a month.
-     */
-    public int getWeek() { return week; }
+    public int getDayOfTheMonth() { return time.getDayOfMonth(); }
     
     /**
      * @return The current day of the week.
      */
-    public int getDay() { return day; }
+    public int getDay() { return time.getDayOfWeek().getValue(); }
     
     /**
      * @return The current hour of the day.
      */
-    public int getHour() { return hour; }
+    public int getHour() { return time.getHour(); }
     
     /**
      * @return The current minute of the hour.
      */
-    public int getMinute() { return minute; }
+    public int getMinute() { return time.getMinute(); }
     
     /**
      * @return The current time in the format: int[day][hour][minute].
      */
-    public int[] getTime() { return new int[] { minute, hour, day }; }
+    public LocalDateTime getTime() { return time; }
     
     /**
      * @return The bool that tells the program if it is the first day of the month
      */
-    public boolean getIsFirstDayOfMonth() { return isFirstDayOfMonth; }
+    public boolean getIsFirstDayOfMonth() { return time.getDayOfMonth() == 1 ? true : false; }
     
 }

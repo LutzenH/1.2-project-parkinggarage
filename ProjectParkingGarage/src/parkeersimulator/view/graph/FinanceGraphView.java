@@ -2,28 +2,30 @@ package parkeersimulator.view.graph;
 
 import java.awt.Color;
 
-import org.jfree.data.xy.XYSeries;
+import org.jfree.data.time.TimeSeries;
 
-import parkeersimulator.model.AbstractModel;
 import parkeersimulator.model.FinanceModel;
+import parkeersimulator.model.TimeModel;
 
 public class FinanceGraphView extends GraphView {
 
-	public FinanceGraphView(AbstractModel model) {
+	public FinanceGraphView(FinanceModel model, TimeModel timeModel) {
 		super(
 				model,
+				timeModel,
 				"Money amount",
-				new XYSeries[] {
-						new XYSeries("MoneyTotal"),
-						new XYSeries("MoneyMonth"),
-						new XYSeries("MoneyDay"),
+				new TimeSeries[] {
+						new TimeSeries("Total Money"),
+						new TimeSeries("Money this month"),
+						new TimeSeries("Money Day")
 				},
 				new Color[] {
 						Color.GREEN,
 						Color.BLUE,
+						Color.RED
 				},
 				"time (minutes)",
-				"amount",
+				"amount (€)",
 				15
 		);
 	}
@@ -31,9 +33,10 @@ public class FinanceGraphView extends GraphView {
 	@Override
 	protected void updateDataset() {
 		FinanceModel financeModel = (FinanceModel) model;
-		graph_data[0].addOrUpdate(time, financeModel.getMoneyTotal());
-		graph_data[1].addOrUpdate(time, financeModel.getMoneyMonth());
-		graph_data[2].addOrUpdate(time, financeModel.getMoneyDay());
+		
+		graph_data[0].addOrUpdate(minute, financeModel.getMoneyTotal());
+		graph_data[1].addOrUpdate(minute, financeModel.getMoneyMonth());
+		graph_data[2].addOrUpdate(minute, financeModel.getMoneyDay());
 	}
 	
 }

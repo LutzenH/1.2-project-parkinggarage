@@ -2,19 +2,21 @@ package parkeersimulator.view.graph;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.time.ZoneOffset;
 
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.axis.NumberAxis;
-import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.chart.plot.XYPlot;
 import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
+import org.jfree.data.time.Minute;
+import org.jfree.data.time.TimeSeries;
+import org.jfree.data.time.TimeSeriesCollection;
 import org.jfree.data.xy.XYDataset;
-import org.jfree.data.xy.XYSeries;
-import org.jfree.data.xy.XYSeriesCollection;
 
 import parkeersimulator.model.AbstractModel;
+import parkeersimulator.model.TimeModel;
 import parkeersimulator.view.AbstractView;
 
 /**
@@ -28,29 +30,33 @@ public abstract class GraphView extends AbstractView {
 	///Time between ticks for collecting data.
 	protected int dataCollectFrequency;
 	
-	//TODO Temporary placeholder until time has been properly implemented.
-	protected int time = 0;
-	
 	///Declaration of dataset collection of the data that needs to be displayed.
-	protected XYSeriesCollection dataset;
+	protected TimeSeriesCollection dataset;
 	
 	///Declaration of an Array of each individual line represented in the graph.
-	protected XYSeries[] graph_data;
+	protected TimeSeries[] graph_data;
 	
 	///Declaration of JFreeChart Swing panels.
 	protected JFreeChart chart;
 	protected ChartPanel panel;
 	
+	protected TimeModel timeModel;
+	protected Minute minute;
+	
 	/**
 	 * Constructor of GraphView
 	 * @param model The ParkingGarageModel this view uses to display data.
 	 */
-    public GraphView(AbstractModel model, String tableName, XYSeries[] dataSeries, Color[] colors, String xAxisName, String yAxisName, int dataCollectFrequency) {
+    public GraphView(AbstractModel model, TimeModel timeModel, String tableName, TimeSeries[] dataSeries, Color[] colors, String xAxisName, String yAxisName, int dataCollectFrequency) {
         super(model);
+        
+        this.timeModel = timeModel;
+        
+        this.minute = new Minute(timeModel.getMinute(), timeModel.getHour(), timeModel.getDayOfTheMonth(), timeModel.getMonth(), timeModel.getYear());
         
         this.dataCollectFrequency = dataCollectFrequency;
         
-        dataset = new XYSeriesCollection();
+        dataset = new TimeSeriesCollection();
         
         this.graph_data = dataSeries;
         
@@ -82,7 +88,7 @@ public abstract class GraphView extends AbstractView {
      */
     private JFreeChart createChart(XYDataset dataset, String tableName, String xAxisName, String yAxisName, Color[] lineColors) {
         ///Initiates the chart.
-        JFreeChart chart = ChartFactory.createXYLineChart(tableName, xAxisName, yAxisName, dataset, PlotOrientation.VERTICAL, true, true, false);
+        JFreeChart chart = ChartFactory.createTimeSeriesChart(tableName, xAxisName, yAxisName, dataset, true, true, false);
 
         XYPlot plot = (XYPlot) chart.getPlot();
         plot.setDomainPannable(true);
@@ -109,14 +115,16 @@ public abstract class GraphView extends AbstractView {
      */
     @Override
     public void updateView() {
-    	if(time % dataCollectFrequency == 0)
+    	if(timeModel.getMinute() % dataCollectFrequency == 0)
     	{
+    		minute = new Minute(timeModel.getMinute(), timeModel.getHour(), timeModel.getDayOfTheMonth(), timeModel.getMonth(), timeModel.getYear());
     		updateDataset();
     		panel.updateUI();
     	}
     	
-    	chart.getXYPlot().getDomainAxis().setRange(time-10000, time+10000);
+    	long time = timeModel.getTime().toEpochSecond(ZoneOffset.UTC) * 1000;
+    	
+    	chart.getXYPlot().getDomainAxis().setRange(time-259200000, time+259200000);
     		
-    	time++;
     }
 }

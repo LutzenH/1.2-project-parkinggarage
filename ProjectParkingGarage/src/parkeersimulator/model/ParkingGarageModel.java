@@ -997,7 +997,7 @@ public class ParkingGarageModel extends AbstractModel {
      * Checks if we can spawn or despawn an event.
      */
     private void eventManager() {
-    	int[] time = timeModel.getTime(); //Minute, hour, day
+    	int[] time = { timeModel.getMinute(), timeModel.getHour(), timeModel.getDay() };
     	Random random = new Random();
     	
     	//Check if an event has started or not
@@ -1031,7 +1031,7 @@ public class ParkingGarageModel extends AbstractModel {
      * We do this based on day, time and events.
      */
     private void setArrivalProperties() {
-    	int[] time = timeModel.getTime(); //Minute, hour, day
+    	int[] time = { timeModel.getMinute(), timeModel.getHour(), timeModel.getDay() };
     	
     	if(time[2] <= 4) {
     		if(!isEventStart) {
@@ -1080,7 +1080,7 @@ public class ParkingGarageModel extends AbstractModel {
     	ArrayList<Float> timeStamps = new ArrayList<>();
     	ArrayList<Float> factors = new ArrayList<>();
     	
-    	int[] time = timeModel.getTime(); //Minute, hour, day
+    	int[] time = { timeModel.getMinute(), timeModel.getHour(), timeModel.getDay() };
     	
     	if(time[2] <= 3) {
     		timeStamps = timeStamps_week;
