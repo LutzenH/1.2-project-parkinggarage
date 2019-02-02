@@ -52,15 +52,15 @@ public class ParkingGarageModel extends AbstractModel {
     ///The multipliers of cars arriving in an hour.
     private float adHocArrivals_week = 1f;
     private float adHocArrivals_weekend = 1.7f;
-    private float adHocArrivals_event = 2.1f;
+    private float adHocArrivals_event = 0.7f;
     
     private float passArrivals_week = 0.5f;
     private float passArrivals_weekend = 0.05f;
     private float passArrivals_event = 0.3f;
     
-    private float reservationArrivals_week = 0.5f;
+    private float reservationArrivals_week = 0.3f;
     private float reservationArrivals_weekend = 1f;
-    private float reservationArrivals_event = 0f;
+    private float reservationArrivals_event = 2f;
     
     private float reservationShowUpPercentage = 0.90f;
     
