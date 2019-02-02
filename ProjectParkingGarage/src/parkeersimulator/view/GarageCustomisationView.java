@@ -129,16 +129,12 @@ public class GarageCustomisationView extends AbstractControllableView implements
         		
         		drawProp(graphics, xOffset, yOffset, props, count, floor, i, distanceBetweenFloors_X, rowLength_Y);
         		rectangles[count] = new Rectangle(xOffset + 5 + (i * CarParkView.X_OFFSET_COLUMN_FINAL) + (floor * distanceBetweenFloors_X), yOffset + 5, 29, 29);
-        		if(!parkingGarageModel.isGarageOpen()) {
-        			drawRectangle(graphics, rectangles[count], color);
-        		}
+        		drawRectangle(graphics, rectangles[count], color);
         		count++;
         		
         		drawProp(graphics, xOffset, yOffset, props, count, floor, i, distanceBetweenFloors_X, rowLength_Y);
         		rectangles[count] = new Rectangle(xOffset + 5 + (i * CarParkView.X_OFFSET_COLUMN_FINAL) + (floor * distanceBetweenFloors_X), yOffset + 10 + (rowLength_Y + 7), 29, 29);
-        		if(!parkingGarageModel.isGarageOpen()) {
-        			drawRectangle(graphics, rectangles[count], color);
-        		}
+        		drawRectangle(graphics, rectangles[count], color);
         		count++;
         	}
     	}
