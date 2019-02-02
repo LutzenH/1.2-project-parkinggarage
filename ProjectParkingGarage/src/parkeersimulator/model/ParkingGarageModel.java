@@ -2,7 +2,6 @@ package parkeersimulator.model;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.LinkedList;
 import java.util.Random;
 
 import parkeersimulator.handler.ModelHandler;
@@ -31,6 +30,7 @@ import parkeersimulator.model.queue.CarQueue;
  */
 public class ParkingGarageModel extends AbstractModel {
 	
+	///Other models required for this model to work.
 	private FinanceModel financeModel;
 	private TimeModel timeModel;
 
@@ -53,15 +53,14 @@ public class ParkingGarageModel extends AbstractModel {
     private float adHocArrivals_week = 1f;
     private float adHocArrivals_weekend = 1.7f;
     private float adHocArrivals_event = 0.7f;
-    
     private float passArrivals_week = 0.5f;
     private float passArrivals_weekend = 0.05f;
     private float passArrivals_event = 0.3f;
-    
     private float reservationArrivals_week = 0.3f;
     private float reservationArrivals_weekend = 1f;
     private float reservationArrivals_event = 2f;
     
+    ///The change percentage a reservationCar will show up.
     private float reservationShowUpPercentage = 0.90f;
     
     //The amount of time a car can stay in the car park;
@@ -79,6 +78,7 @@ public class ParkingGarageModel extends AbstractModel {
 	int eventStartingHour_SaturdayConcert = 19;
 	int eventStartingHour_SundayConcert = 15;
     
+	//An enum for error messages displayed by the CarageCustomisationView
 	public enum CustomiseErrorMessages { ERROR_CUSTOMISE_NOTEMPTY, ERROR_CUSTOMISE_NOTCLOSED, ERROR_CUSTOMISE_NOTREADY }
 	
 	//Time arrival
@@ -134,7 +134,7 @@ public class ParkingGarageModel extends AbstractModel {
     private int amountOfLeavingCars = 0;
     
     ///holding the average of leaving cars
-    double amount = 0d;
+    double averageLeavingCars = 0d;
     
     ///total amount of ticks
     private int ticks = 0;
@@ -154,6 +154,7 @@ public class ParkingGarageModel extends AbstractModel {
 
 	/**
 	 * Constructor of ParkingGarageModel
+	 * @param the ModelHandler this model should be added to.
 	 */
     public ParkingGarageModel(ModelHandler handler) {
     	super(handler);
@@ -525,6 +526,9 @@ public class ParkingGarageModel extends AbstractModel {
     	updateGarage();
 	}
     
+    /**
+     * resets and updates the garage to its new size.
+     */
     private void updateGarage() {
 		numberOfOpenDefaultSpots = (numberOfFloors * numberOfRows * numberOfPlaces) - passHolderPlaceAmount;
         numberOfOpenPassHolderSpots = passHolderPlaceAmount;
@@ -599,6 +603,10 @@ public class ParkingGarageModel extends AbstractModel {
     	}
     }
     
+    /**
+     * Updates the preference list based on the likeability of a place in the garage.
+     * the likeability is based on the position the place is from an Entrance, Exit or TicketMachine
+     */
     private void updatePlacePreferences() {
 		for (int floor = 0; floor < getNumberOfFloors(); floor++) {
 			for (int row = 0; row < getNumberOfRows(); row++) {
@@ -881,8 +889,8 @@ public class ParkingGarageModel extends AbstractModel {
      */
     public String adviceCarsLeavingEntranceCarQueueu() {
     	String advice = "";
-    	amount = (amountOfLeavingCars / (ticks / 60d / 24d));
-		int averageCarsLeavingEntrenceCarQueueu = (int) Math.round(amount);
+    	averageLeavingCars = (amountOfLeavingCars / (ticks / 60d / 24d));
+		int averageCarsLeavingEntrenceCarQueueu = (int) Math.round(averageLeavingCars);
     	if(ticks >= 44640) {
     		if(maxPaymentCarQueue <= 25) {
 		    	if(averageCarsLeavingEntrenceCarQueueu <= 25) {
@@ -898,28 +906,31 @@ public class ParkingGarageModel extends AbstractModel {
     	return advice;
     }
     
+    /**
+     * @return a string of advice for the Entrance Queue
+     */
     public String adviceEntranceCarQueue() {
     	if(entranceCarQueue.carsInQueue() > maxEnteranceCarQueue) maxEnteranceCarQueue = entranceCarQueue.carsInQueue();
     	String advice = "";
     	if(ticks >= 44640) {
     		if(maxPaymentCarQueue <= 25) {
-		    	if (maxEnteranceCarQueue <= 10 && amount <= 25) {
+		    	if (maxEnteranceCarQueue <= 10 && averageLeavingCars <= 25) {
 		    		advice = "<html>maximum entrance queue: " + maxEnteranceCarQueue +  "<br>Advice: There are enough entrances for.<br><br></html>";
-		    	} else if(maxEnteranceCarQueue <= 10 && amount > 25 && amount <= 75) { 
+		    	} else if(maxEnteranceCarQueue <= 10 && averageLeavingCars > 25 && averageLeavingCars <= 75) { 
 		    		advice = "<html>maximum entrance queue: " + maxEnteranceCarQueue +  "<br>Advice: There are enough entrances for the amount of cars, but the number of cars leaving the entrance queue is a litel above averagee, maybe you can bould one entrance more.<br><br></html>";
-		    	} else if(maxEnteranceCarQueue <= 10 && amount > 75) { 
+		    	} else if(maxEnteranceCarQueue <= 10 && averageLeavingCars > 75) { 
 		    		advice = "<html>maximum entrance queue: " + maxEnteranceCarQueue +  "<br>Advice: There are enough entrances for the amount of cars, but the number of cars leaving the entrance queue is very high so build more entrances for them.<br><br></html>";
-		    	} else if (maxEnteranceCarQueue <= 25 && amount <= 25) {
+		    	} else if (maxEnteranceCarQueue <= 25 && averageLeavingCars <= 25) {
 		    		advice = "<html>maximum entrance queue: " + maxEnteranceCarQueue +  "<br>Advice: The number of cars in the entrance queue is somtimes a liter high, maybe you can build one extra entrance to reduce this number.<br><br></html>";
-		    	} else if (maxEnteranceCarQueue <= 25 && amount > 25 && amount <= 75) {
+		    	} else if (maxEnteranceCarQueue <= 25 && averageLeavingCars > 25 && averageLeavingCars <= 75) {
 		    		advice = "<html>maximum entrance queue: " + maxEnteranceCarQueue +  "<br>Advice: The number of cars in the entrance queue and the numer of cars leaving the enterene queue is a litel high, maybe you can build one extra entrance to reduce this number.<br><br></html>";
-		    	} else if (maxEnteranceCarQueue <= 25 && amount > 75) {
+		    	} else if (maxEnteranceCarQueue <= 25 && averageLeavingCars > 75) {
 		    		advice = "<html>maximum entrance queue: " + maxEnteranceCarQueue +  "<br>Advice: The number of cars in the entrance queue is a liter high and the numer of cars leaving the enterene queue is very high, so build more entrances.<br><br></html>";
-		    	} else if (maxEnteranceCarQueue > 25 && amount <= 25) {
+		    	} else if (maxEnteranceCarQueue > 25 && averageLeavingCars <= 25) {
 		    		advice = "<html>maximum entrance queue: " + maxEnteranceCarQueue +  "<br>Advice: The number of cars in the entrance queue is very high on busy moments, so build more entrance.<br><br></html>";
-		    	} else if (maxEnteranceCarQueue > 25 && amount > 25 && amount <= 75) {
+		    	} else if (maxEnteranceCarQueue > 25 && averageLeavingCars > 25 && averageLeavingCars <= 75) {
 		    		advice = "<html>maximum entrance queue: " + maxEnteranceCarQueue +  "<br>Advice: The number of cars in the entrance queue is very high on busy moments and the number of cars leaving the entrances que is a litel high, so build more entrances.<br><br></html>";
-		    	} else if (maxEnteranceCarQueue > 25 && amount > 75) {
+		    	} else if (maxEnteranceCarQueue > 25 && averageLeavingCars > 75) {
 		    		advice = "<html>maximum entrance queue: " + maxEnteranceCarQueue +  "<br>Advice: The number of cars in the entrance queue on busy moments and the number of cars leaving the entrances queue is verry high, so build more entrances.<br><br></html>";
 		    	}
     		}
@@ -963,7 +974,10 @@ public class ParkingGarageModel extends AbstractModel {
     	return advice;
     }
     
-    public String adviceLocatonProps() {
+    /**
+     * @return a String of general advice about creating a garage.
+     */
+    public String adviceLocationProps() {
     	String advice = "";
 	    if (ticks >= 44640) {
 			advice = "<html>Always make sure that the entrances, exits and payment terminals are distributed as well as possible across the parking garage<br><br></html>";
@@ -972,17 +986,16 @@ public class ParkingGarageModel extends AbstractModel {
     }
     
     /**
-     * chacks if the amount entrances, payment terminals, exits
+     * checks if the amount entrances, payment terminals, exits
      */
-    public void setNumberToZero() {
+    public void resetAdviceCalculations() {
 		ticks = 0;
 		amountOfLeavingCars = 0;
 		maxEnteranceCarQueue = 0;
 		maxExitCarQueue = 0;
 		maxPaymentCarQueue = 0;
-		amount = 0;
+		averageLeavingCars = 0;
     }
-    
 
     /**
      * Checks if a location is valid, depending on the size of the garage.
@@ -1000,7 +1013,6 @@ public class ParkingGarageModel extends AbstractModel {
         
         return true;
     }
-    
     
     /**
      * Checks if we can spawn or despawn an event.
@@ -1078,8 +1090,6 @@ public class ParkingGarageModel extends AbstractModel {
     	//Change the time cars should stay in the car park
     	updateCarStayMinutes();
     }
-    
-    
     
     /**
      * Changes the amount of cars entering the car park
@@ -1191,11 +1201,14 @@ public class ParkingGarageModel extends AbstractModel {
 	public void openGarage() {
 		if(getCustomisationErrorMessages() == null || getCustomisationErrorMessages() == CustomiseErrorMessages.ERROR_CUSTOMISE_NOTCLOSED)
 		{
-			if (isGarageOpen) { setNumberToZero(); } 
+			if (isGarageOpen) { resetAdviceCalculations(); } 
 			isGarageOpen = isGarageOpen ? false : true;
 		}
 	}
     
+	/**
+	 * @return true if the garage is empty
+	 */
 	public boolean isGarageEmpty() {
     	for(int floor = 0; floor < numberOfFloors; floor++) {
     		for(int rows = 0; rows < numberOfRows; rows++) {

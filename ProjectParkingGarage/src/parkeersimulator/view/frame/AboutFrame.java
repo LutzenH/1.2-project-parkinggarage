@@ -1,15 +1,17 @@
 package parkeersimulator.view.frame;
 
 import java.awt.BorderLayout;
-import java.awt.EventQueue;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
-import javax.swing.JLabel;
 import javax.swing.JTextPane;
 import java.awt.Font;
 
+/**
+ * The frame that is displayed when help > about is clicked
+ * @author LutzenH
+ */
 public class AboutFrame extends JFrame {
 
 	private JPanel contentPane;

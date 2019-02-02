@@ -6,7 +6,6 @@ import java.util.HashMap;
 
 import javax.swing.JPanel;
 import javax.swing.JSpinner;
-import javax.swing.event.ChangeListener;
 
 import parkeersimulator.controller.AbstractController.ActionType;
 import parkeersimulator.controller.FinanceController;
@@ -29,7 +28,6 @@ public class CarParkFinanceControlView extends AbstractControllableView{
 	public CarParkFinanceControlView(FinanceModel financeModel, FinanceController financeController) {
 		super(financeModel, financeController);
 		
-		ChangeListener changeListener;
 		ActionListener actionListener;
 
 		//Payment timeframe amount

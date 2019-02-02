@@ -17,7 +17,6 @@ import javax.swing.JMenuItem;
 public class MainFrame extends JFrame {
 
 	JSplitPane splitPane_horizontal;
-	private int controlPanelWidth = 350;
 	
 	public MainFrame(String string, JPanel[] tabPanels_controlPanel, JPanel[] tabPanels_graphView, JPanel simulationPanel) {
 		super(string);
@@ -77,6 +76,9 @@ public class MainFrame extends JFrame {
 		this.setVisible(true);
 	}
 	
+	/**
+	 * @return A menubar with default entries.
+	 */
 	private JMenuBar createMenuBar() {
 		JMenuBar menuBar = new JMenuBar();
 		
@@ -97,6 +99,9 @@ public class MainFrame extends JFrame {
 		return menuBar;
 	}
 	
+	/**
+	 * Creates a about window JFrame
+	 */
 	private void createAboutFrame() {
 		AboutFrame frame = new AboutFrame();
 		frame.setResizable(false);

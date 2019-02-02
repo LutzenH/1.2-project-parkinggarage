@@ -4,10 +4,20 @@ import java.time.LocalDateTime;
 
 import parkeersimulator.handler.ModelHandler;
 
+/**
+ * A model for time used in the simulation
+ * @author ThowV
+ *
+ */
 public class TimeModel extends AbstractModel{
-
+	
+	//Declaration of the time value that is used for the simulation
 	LocalDateTime time;
     
+	/**
+	 * Constructor for TimeModel
+	 * @param handler the handler this model should be added to.
+	 */
 	public TimeModel(ModelHandler handler) {
 		super(handler);
 		
@@ -32,14 +42,14 @@ public class TimeModel extends AbstractModel{
     }
 	
 	/**
-     * Starts the simulation
+     * Starts the time simulation
      */
 	public void start() {
 		getModelHandler().start();
 	}
 	
 	/**
-	 * Stops the currently running simulation
+	 * Stops the currently running time simulation
 	 */
 	public void stop() {
 		getModelHandler().stop();

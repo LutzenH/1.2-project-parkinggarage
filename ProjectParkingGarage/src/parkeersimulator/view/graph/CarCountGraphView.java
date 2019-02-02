@@ -11,8 +11,17 @@ import parkeersimulator.model.car.Car.CarType;
 import parkeersimulator.model.car.ParkingPassCar;
 import parkeersimulator.model.car.ReservationCar;
 
+/**
+ * A graph that displays the amount of cars currently in the garage.
+ * @author LutzenH
+ */
 public class CarCountGraphView extends GraphView {
 
+	/**
+	 * Constructor for CarCountGraphView
+	 * @param model the parkingGarageModel data should be retrieved from.
+	 * @param timeModel the timeModel the current time is retrieved from.
+	 */
 	public CarCountGraphView(ParkingGarageModel model, TimeModel timeModel) {
 		super(
 				model,

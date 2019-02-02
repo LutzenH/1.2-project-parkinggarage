@@ -5,8 +5,8 @@ import parkeersimulator.model.car.Car;
 
 public class FinanceModel extends AbstractModel {
 
+	///Other Models required for this model to work
 	private TimeModel timeModel;
-	private ParkingGarageModel parkingGarageModel;
 	
 	//Total revenue of the garage
 	private float moneyTotal = 0f;

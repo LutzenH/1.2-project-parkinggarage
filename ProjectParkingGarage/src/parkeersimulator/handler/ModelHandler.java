@@ -5,6 +5,12 @@ import java.util.ArrayList;
 import parkeersimulator.model.AbstractModel;
 import parkeersimulator.model.AbstractModel.ModelType;
 
+/**
+ * The handler where all Models get retrieved and called.
+ * @author ThowV
+ * @author LutzenH
+ *
+ */
 public class ModelHandler implements Runnable{
 	
 	///boolean that is used for when threads need to stop running.
@@ -13,13 +19,15 @@ public class ModelHandler implements Runnable{
 	///The amount of time the thread should wait before executing the next tick().
     private int tickPause = 5;
 	
+    ///The full list of models.
 	private ArrayList<AbstractModel> modelList;
 
-	
+	/**
+	 * Constructor for ModelHandler
+	 */
 	public ModelHandler() {
 		modelList = new ArrayList<>();
 	}
-	
 	
 	/**
      * Starts the simulation on a different thread.
@@ -69,20 +77,28 @@ public class ModelHandler implements Runnable{
     	}
     }
 
+    /**
+     * Adds a model to this handler
+     * @param model the model to add.
+     */
 	public void addModel(AbstractModel model) {
 		modelList.add(model);
 	}
-	
 
     /**
      * @return The current pause between ticks.
      */
     public int getTickPause() { return tickPause; }
+    
     /**
      * Sets the pause between ticks.
      */
     public void setTickPause(int amount) { tickPause = amount; }
     
+    /**
+     * @param type the type of model that you want
+     * @return the required type of model, if it is in this handler.
+     */
     public AbstractModel getModel(ModelType type) {
     	for(AbstractModel model : modelList) {
     		if(model.getModelType() == type)

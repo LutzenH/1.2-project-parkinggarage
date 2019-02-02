@@ -3,6 +3,10 @@ package parkeersimulator.model.location;
 import parkeersimulator.model.car.Car;
 import parkeersimulator.model.car.Car.CarType;
 
+/**
+ * The place a car will stay when inside the garage.
+ * @author LutzenH
+ */
 public class Place implements Comparable<Place> {
 	private Car car;
 	private CarType carType;
@@ -10,6 +14,7 @@ public class Place implements Comparable<Place> {
 	
 	private int timeReserved;
 	
+	///Declaration of the preferenceFactor that is used to sort all the places based on preference in the garage
 	private float preferenceFactor;
 
 	/**

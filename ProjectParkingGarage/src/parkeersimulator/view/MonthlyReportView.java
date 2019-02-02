@@ -4,7 +4,6 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.ScrollPaneConstants;
 import java.awt.BorderLayout;
-import javax.swing.JTextPane;
 import javax.swing.Box;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
@@ -17,6 +16,11 @@ import parkeersimulator.model.TimeModel;
 import javax.swing.BoxLayout;
 import javax.swing.JEditorPane;
 
+/**
+ * A view that generates a monthly financial report
+ * @author LutzenH
+ *
+ */
 public class MonthlyReportView extends AbstractView {
 
 	private Box ReportBox;
@@ -24,7 +28,9 @@ public class MonthlyReportView extends AbstractView {
 	TimeModel timeModel;
 	
 	/**
-	 * Create the panel.
+	 * Creates the panel.
+	 * @param model the financial model required for this view.
+	 * @param timeModel the timeModel that is required for this view.
 	 */
 	public MonthlyReportView(FinanceModel model, TimeModel timeModel) {
 		super(model);
@@ -42,6 +48,9 @@ public class MonthlyReportView extends AbstractView {
 		scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 	}
 
+	/**
+	 * Updates this view when it's the first day of the month.
+	 */
 	public void updateView() {
 		FinanceModel modelFinance = (FinanceModel) model;
 		
@@ -52,6 +61,9 @@ public class MonthlyReportView extends AbstractView {
 		repaint();
 	}
 	
+	/**
+	 * The Monthly report that is generated.
+	 */
 	private class MonthlyReport extends JPanel {
 		public MonthlyReport(String Title, String TextFieldString) {
 			this.setLayout(new BorderLayout(0, 0));
@@ -66,6 +78,10 @@ public class MonthlyReportView extends AbstractView {
 		}
 	}
 	
+	/**
+	 * Generated the report based on the given values
+	 * @param values the given values for generating this report. format: incomeregular, incomepassholder, incomereservation, maintenancecost, taxes
+	 */
 	public void GenerateReport(float[] values) {
 		String title = "";
 		String textField = "";
@@ -100,6 +116,10 @@ public class MonthlyReportView extends AbstractView {
 		
 		}
 
+	/**
+	 * @param month the Month enum a string should be generated for
+	 * @return the month as a String.
+	 */
 	private static String getMonthString(Month month) {
 		switch(month) {
 			case APRIL:

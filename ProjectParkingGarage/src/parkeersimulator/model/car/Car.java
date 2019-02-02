@@ -21,9 +21,7 @@ public abstract class Car {
     /**
      * Constructor for objects of class Car
      */
-    public Car() {
-
-    }
+    public Car() { }
 
     public Location getLocation() { return location; }
     public void setLocation(Location location) { this.location = location; }
@@ -38,6 +36,9 @@ public abstract class Car {
 
     public abstract boolean getHasToPay();
 
+    /**
+     * every tick this car  does changes its to leave.
+     */
     public void tick() {
         minutesLeft--;
         minutesStayed++;
@@ -48,5 +49,8 @@ public abstract class Car {
      */
     public abstract Color getColor();
     
+    /**
+     * @return the type of car this is.
+     */
     public abstract CarType getCarType();
 }

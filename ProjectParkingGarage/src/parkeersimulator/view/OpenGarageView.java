@@ -10,6 +10,11 @@ import parkeersimulator.controller.ParkingGarageController;
 import parkeersimulator.model.ParkingGarageModel;
 import parkeersimulator.model.ParkingGarageModel.CustomiseErrorMessages;
 
+/**
+ * The view that is used for opening and closing the garage
+ * @author LutzenH
+ *
+ */
 public class OpenGarageView extends AbstractControllableView {
 	
 	private JButton openGarageButton;
@@ -17,6 +22,11 @@ public class OpenGarageView extends AbstractControllableView {
 	
 	private CustomiseErrorMessages errorMessage = CustomiseErrorMessages.ERROR_CUSTOMISE_NOTREADY;
 	
+	/**
+	 * Constructor for this view
+	 * @param model the ParkingGarageModel this view gets data from.
+	 * @param controller the controller this view sends instructions.
+	 */
 	public OpenGarageView(ParkingGarageModel model, ParkingGarageController controller) {
 		super(model, controller);
 		
@@ -46,11 +56,18 @@ public class OpenGarageView extends AbstractControllableView {
     	repaint();
     }
     
+    /**
+     * Will perform these actions when the button is pressed.
+     */
     private void clickOpenButton() {
     	controller.performAction(ActionType.PARKINGGARAGE_OPEN_GARAGE);
     	updateView();
     }
     
+    /**
+     * Sets the hint message for this view.
+     * @param errorMessage the Enum message that should set the hint message.
+     */
     private void setHintMessage(CustomiseErrorMessages errorMessage) {
     	if(errorMessage != null) {
         	switch(errorMessage) {

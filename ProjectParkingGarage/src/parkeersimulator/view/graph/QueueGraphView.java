@@ -1,18 +1,22 @@
 package parkeersimulator.view.graph;
 
 import java.awt.Color;
-import java.time.ZoneOffset;
-import java.util.Date;
 
-import org.jfree.data.time.Minute;
 import org.jfree.data.time.TimeSeries;
-import org.jfree.data.xy.XYSeries;
 
 import parkeersimulator.model.ParkingGarageModel;
 import parkeersimulator.model.TimeModel;
-
+/**
+ * A graph that displays the amount of cars currently in a queue.
+ * @author LutzenH
+ */
 public class QueueGraphView extends GraphView {
 
+	/**
+	 * Constructor for QueueGraphView
+	 * @param model the parkingGarageModel data should be retrieved from.
+	 * @param timeModel the timeModel the current time is retrieved from.
+	 */
 	public QueueGraphView(ParkingGarageModel model, TimeModel timeModel) {
 		super(
 				model,

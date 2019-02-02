@@ -6,9 +6,17 @@ import org.jfree.data.time.TimeSeries;
 
 import parkeersimulator.model.FinanceModel;
 import parkeersimulator.model.TimeModel;
-
+/**
+ * A graph that displays the amount income and total money
+ * @author ThowV
+ */
 public class FinanceGraphView extends GraphView {
 
+	/**
+	 * Constructor for FinanceGraphView
+	 * @param model the financemodel data should be retrieved from.
+	 * @param timeModel the timeModel the current time is retrieved from.
+	 */
 	public FinanceGraphView(FinanceModel model, TimeModel timeModel) {
 		super(
 				model,

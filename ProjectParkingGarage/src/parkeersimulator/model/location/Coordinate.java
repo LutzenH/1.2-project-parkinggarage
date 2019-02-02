@@ -1,5 +1,10 @@
 package parkeersimulator.model.location;
 
+/**
+ * Coordinate system that is used for generating place preferences
+ * @author LutzenH
+ *
+ */
 public class Coordinate {
 	private int x;
 	private int y;

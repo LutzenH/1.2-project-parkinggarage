@@ -14,6 +14,10 @@ import parkeersimulator.model.location.Place;
 
 /**
  * class of the view of the simulation.
+ * 
+ * @author ThowV
+ * @author b-kuiper
+ * @author LutzenH
  */
 public class CarParkView extends AbstractView {
 	

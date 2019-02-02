@@ -2,7 +2,6 @@ package parkeersimulator.controller;
 
 import java.util.HashMap;
 
-import parkeersimulator.model.AbstractModel;
 import parkeersimulator.model.LayoutModel;
 
 public class LayoutController extends AbstractController {

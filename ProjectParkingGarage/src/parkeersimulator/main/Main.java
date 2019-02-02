@@ -6,7 +6,6 @@ import parkeersimulator.controller.FinanceController;
 import parkeersimulator.controller.LayoutController;
 import parkeersimulator.controller.ParkingGarageController;
 import parkeersimulator.controller.TimeController;
-import parkeersimulator.handler.ControllerHandler;
 import parkeersimulator.handler.ModelHandler;
 import parkeersimulator.model.FinanceModel;
 import parkeersimulator.model.LayoutModel;
@@ -42,7 +41,6 @@ public class Main {
 	private LayoutModel layoutModel;
 	
 	///Declaration of the controllers this program uses.
-	private ControllerHandler controllerHandler;
 	private ParkingGarageController parkingGarageController;
 	private FinanceController financeController;
 	private TimeController timeController;
@@ -67,7 +65,6 @@ public class Main {
 		layoutModel = new LayoutModel(modelHandler);
 		
 		///Instantiation of this programs' controllers.
-		controllerHandler = new ControllerHandler();
 		timeController = new TimeController(timeModel);
 		financeController = new FinanceController(financeModel);
 		parkingGarageController = new ParkingGarageController(parkingGarageModel);

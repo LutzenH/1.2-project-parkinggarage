@@ -52,8 +52,7 @@ public abstract class AbstractView extends JPanel {
 	public void updateView() {
 		repaint();
 	}
-	
-	
+
 	public static JSlider buildComponent_slider(int value, int min, int max, int[] stepValues) {
 		JSlider slider;
 		
@@ -69,12 +68,15 @@ public abstract class AbstractView extends JPanel {
 		
 		return slider;
 	}
+	
 	public static JSlider buildComponent_slider(int value, int min, int max) {
 		return buildComponent_slider(value, min, max, null);
 	}
+	
 	public static JSlider buildComponent_slider(int value, int[] stepValues) {
 		return buildComponent_slider(value, 0, stepValues.length - 1, stepValues);
 	}
+	
 	public static JPanel buildController_slider(String controllerName, JSlider slider, ChangeListener listener) {
 		JPanel panel = buildController_header(controllerName);
 		
@@ -98,6 +100,7 @@ public abstract class AbstractView extends JPanel {
 		
 		return spinner;
 	}
+	
 	public static JPanel buildController_spinner(String controllerName, String buttonName, JSpinner spinner, Boolean createLabel, String labelText, ActionListener listener) {
 		JPanel panel = buildController_header(controllerName);
 		
@@ -118,9 +121,11 @@ public abstract class AbstractView extends JPanel {
 		
 		return panel;
 	}
+	
 	public static JPanel buildController_spinner(String controllerName, String buttonName, JSpinner spinner, ActionListener listener) {
 		return buildController_spinner(controllerName, buttonName, spinner, false, "", listener);
 	}
+	
 	public static JPanel buildController_spinner(String controllerName, String buttonName, JSpinner spinner, String labelText, ActionListener listener) {
 		return buildController_spinner(controllerName, buttonName, spinner, true, labelText, listener);
 	}
@@ -153,9 +158,11 @@ public abstract class AbstractView extends JPanel {
 
 		return panel;
 	}
+	
 	public static JPanel buildController_header(String controllerName) {
 		return buildController_header(true, controllerName);
 	}
+	
 	public static JPanel buildController_header() {
 		return buildController_header(false, "");
 	}

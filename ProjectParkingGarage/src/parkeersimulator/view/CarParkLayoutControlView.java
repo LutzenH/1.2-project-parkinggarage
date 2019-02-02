@@ -6,7 +6,6 @@ import java.util.HashMap;
 
 import javax.swing.JPanel;
 import javax.swing.JSpinner;
-import javax.swing.event.ChangeListener;
 
 import parkeersimulator.controller.LayoutController;
 import parkeersimulator.controller.AbstractController.ActionType;
@@ -29,7 +28,6 @@ public class CarParkLayoutControlView extends AbstractControllableView{
 	public CarParkLayoutControlView(LayoutModel layoutModel, LayoutController layoutController) {
 		super(layoutModel, layoutController);
 		
-		ChangeListener changeListener;
 		ActionListener actionListener;
 
 		//Floor amount

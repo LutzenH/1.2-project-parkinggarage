@@ -4,6 +4,12 @@ import java.util.HashMap;
 
 import parkeersimulator.model.TimeModel;
 
+/**
+ * The Controller for the TimeModel
+ * @author ThowV
+ * @author LutzenH
+ *
+ */
 public class TimeController extends AbstractController{
 	private TimeModel timeModel;
 	

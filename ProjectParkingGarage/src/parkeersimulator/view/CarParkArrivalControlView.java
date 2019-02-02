@@ -6,7 +6,6 @@ import java.util.HashMap;
 
 import javax.swing.JPanel;
 import javax.swing.JSpinner;
-import javax.swing.event.ChangeListener;
 
 import parkeersimulator.controller.AbstractController.ActionType;
 import parkeersimulator.controller.ParkingGarageController;
@@ -29,7 +28,6 @@ public class CarParkArrivalControlView extends AbstractControllableView{
 	public CarParkArrivalControlView(ParkingGarageModel model, ParkingGarageController controller) {
 		super(model, controller);
 
-		ChangeListener changeListener;
 		ActionListener actionListener;
 		
 		//BaseArrival amounts

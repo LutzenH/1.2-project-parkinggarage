@@ -10,6 +10,7 @@ import parkeersimulator.view.AbstractView;
  * Abstract class of the model.
  */
 public abstract class AbstractModel {
+	//The modelhandler this model is in.
 	private ModelHandler modelHandler;
 	
 	///Declaration of the list of views that should be updated by the model.
@@ -26,6 +27,8 @@ public abstract class AbstractModel {
 		views=new ArrayList<AbstractView>();
 		
 		this.modelHandler = modelHandler;
+		
+		//Adds this model to the modelHandler
 		modelHandler.addModel(this);
 	}
 	
@@ -49,6 +52,9 @@ public abstract class AbstractModel {
 	 */
 	public abstract void tick();
 
+	/**
+	 * @return the ModelHandler of this model.
+	 */
 	public ModelHandler getModelHandler() {
 		return modelHandler;
 	}

@@ -4,9 +4,18 @@ import java.util.HashMap;
 
 import parkeersimulator.model.FinanceModel;
 
+/**
+ * The Controller for the FinanceModel
+ * 
+ * @author ThowV
+ */
 public class FinanceController extends AbstractController {
 	private FinanceModel financeModel;
 	
+	/**
+	 * Constructor for FinanceController
+	 * @param financeModel the model this controller should perform actions on.
+	 */
 	public FinanceController(FinanceModel financeModel) {
 		super(financeModel);
 		this.financeModel = financeModel;
@@ -59,6 +68,9 @@ public class FinanceController extends AbstractController {
 		return false;
 	}
 	
+	/**
+	 * @return the type of controller
+	 */
 	@Override
 	public ControllerType getControllerType() {
 		return ControllerType.FINANCE;

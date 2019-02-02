@@ -10,6 +10,11 @@ import parkeersimulator.model.ParkingGarageModel;
 import parkeersimulator.view.GarageCustomisationView;
 import parkeersimulator.view.OpenGarageView;
 
+/**
+ * The JPanel for the customisation panel.
+ * @author LutzenH
+ *
+ */
 public class GarageDesignFrame extends JPanel {
 
 	/**

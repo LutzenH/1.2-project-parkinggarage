@@ -69,7 +69,6 @@ public class Location {
     public int getPlace() {
         return place;
     }
-
 	
 	/**
 	 * Converts a location [floor][row][place] to a coordinate [x][y]

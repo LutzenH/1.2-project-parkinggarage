@@ -21,6 +21,11 @@ import parkeersimulator.controller.ParkingGarageController;
 import parkeersimulator.model.ParkingGarageModel;
 import parkeersimulator.model.prop.Prop;
 
+/**
+ * A view that is used for adding and removing props to the garage
+ * @author LutzenH
+ *
+ */
 public class GarageCustomisationView extends AbstractControllableView implements MouseListener, ComponentListener {
 	
 	///get screen size
@@ -352,7 +357,7 @@ public class GarageCustomisationView extends AbstractControllableView implements
 		this.hasDrawnBackground = hasDrawnBackground;
 	}
 	
-    //Unused Listeners
+    //Unused Listener methods
 	public void mousePressed(MouseEvent e) {}
 	public void mouseReleased(MouseEvent e) {}
 	public void mouseEntered(MouseEvent e) {}
