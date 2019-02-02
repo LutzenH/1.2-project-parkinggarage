@@ -83,24 +83,25 @@ public class MainFrame extends JFrame {
 		JMenu mnFile = new JMenu("File");
 		menuBar.add(mnFile);
 		
-		JMenuItem mntmExport = new JMenuItem("Export");
-		mnFile.add(mntmExport);
-		
 		JMenuItem mntmQuit = new JMenuItem("Quit");
 		mnFile.add(mntmQuit);
-		
-		JMenu mnSettings = new JMenu("Settings");
-		menuBar.add(mnSettings);
-		
-		JMenuItem mntmReset = new JMenuItem("Reset");
-		mnSettings.add(mntmReset);
+		mntmQuit.addActionListener(e -> System.exit(0));
 		
 		JMenu mnHelp = new JMenu("Help");
 		menuBar.add(mnHelp);
 		
 		JMenuItem mntmAbout = new JMenuItem("About");
 		mnHelp.add(mntmAbout);
+		mntmAbout.addActionListener(e -> createAboutFrame());
 		
 		return menuBar;
+	}
+	
+	private void createAboutFrame() {
+		AboutFrame frame = new AboutFrame();
+		frame.setResizable(false);
+		frame.setTitle("About");
+		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		frame.setVisible(true);
 	}
 }
