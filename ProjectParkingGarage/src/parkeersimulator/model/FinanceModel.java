@@ -48,6 +48,13 @@ public class FinanceModel extends AbstractModel {
 	//The cost for salary and upkeep
 	private int maintenanceCosts = 60000;
 	
+	//Values that reset each month and are used for the financial report
+	private float monthlyIncomeAdHocCars = 0;
+	private float monthlyIncomeParkingPassCar = 0;
+	private float monthlyIncomeReservationCar = 0;
+	private float monthlyMaintenance = 0;
+	private float monthlyTaxes = 0;
+	
 	public FinanceModel(ModelHandler modelHandler) {
 		super(modelHandler);
 		
@@ -65,18 +72,17 @@ public class FinanceModel extends AbstractModel {
 	}
 
 	public void collectMoney(Car car) {
-        int minutesStayed = car.getMinutesStayed();
         int totalFramesStayed = (int) Math.ceil(car.getMinutesStayed() / paymentTimeframe);
         
 		switch(car.getCarType()) {
 			case AD_HOC:
 				moneyDay += totalFramesStayed * costPerTimeFrame_adHocCar;
+				monthlyIncomeAdHocCars += totalFramesStayed * costPerTimeFrame_adHocCar;
 				break;
 			case RESERVERATION_CAR:
 				moneyDay += totalFramesStayed * costPerTimeFrame_ReservationCar;
+				monthlyIncomeReservationCar += totalFramesStayed * costPerTimeFrame_ReservationCar;
 				break;
-			case PASS:
-				break; //Passholders pay at the end of the month
 				
 			default:
 				break;
@@ -90,7 +96,7 @@ public class FinanceModel extends AbstractModel {
 		}
 		
 		if(timeModel.getIsFirstDayOfMonth() && timeModel.getHour() == 8 && timeModel.getMinute() == 30) {
-			getMoney();
+			addPassHolderMoney();
 			payMoney();
 			
 			moneyTotal += moneyMonth;
@@ -98,9 +104,10 @@ public class FinanceModel extends AbstractModel {
 		}
 	}
 	
-	private void getMoney() {
+	private void addPassHolderMoney() {
 		//Let pass holders pay
 		moneyMonth += passHolderPlaceAmount * cost_passHolderCar;
+		monthlyIncomeParkingPassCar += passHolderPlaceAmount * cost_passHolderCar;
 	}
 	
 	private void payMoney() {
@@ -118,6 +125,7 @@ public class FinanceModel extends AbstractModel {
 		if(amount > 68507)
 			amount *= (1f - 0.5175f);
 		
+		monthlyTaxes -= amount;
 		return amount;
 	}
 	private float payMoney_maintenance(float amount) {
@@ -132,9 +140,22 @@ public class FinanceModel extends AbstractModel {
 		
 		amount -= maintenanceCosts;
 		
+		monthlyMaintenance -= amount;
+		
 		return amount;
 	}
 	
+	public float[] getMonthlyReport() {
+		float[] report = new float[] { monthlyIncomeAdHocCars, monthlyIncomeParkingPassCar, monthlyIncomeReservationCar, monthlyMaintenance, monthlyTaxes };
+		
+		monthlyIncomeAdHocCars = 0;
+		monthlyIncomeParkingPassCar = 0;
+		monthlyIncomeReservationCar = 0;
+		monthlyMaintenance = 0;
+		monthlyTaxes = 0;
+		
+		return report;
+	}
 	
 	/**
 	 * Gets the money the garage has in total
