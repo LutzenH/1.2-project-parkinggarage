@@ -91,9 +91,9 @@ public class TimeModel extends AbstractModel{
     public int getDayOfTheMonth() { return time.getDayOfMonth(); }
     
     /**
-     * @return The current day of the week. (0-6)
+     * @return The current day of the week. (1-7)
      */
-    public int getDay() { return time.getDayOfWeek().getValue(); }
+    public int getDay() { return time.getDayOfWeek().getValue() -1; }
     
     /**
      * @return The current hour of the day.
