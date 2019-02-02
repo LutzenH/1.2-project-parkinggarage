@@ -86,29 +86,30 @@ public class MonthlyReportView extends AbstractView {
 		String title = "";
 		String textField = "";
 		
+		
 		title += getMonthString(timeModel.getTime().getMonth().minus(1));
 		title += " " + timeModel.getYear() + " - Financial Report";
 		
 		textField += "<div></div>";
 		textField += "<center><div><b>Income</b></div>";
-		textField += "<div>Income Regular Cars: " + values[0] + "  </div>";
-		textField += "<div>Income Reservation Cars: " + values[2] + " </div>";
-		textField += "<div>Income PassHolders: " + values[1] + "  </div>";
+		textField += "<div>Income Regular Cars: " + String.format("%.02f", values[0]) + "  </div>";
+		textField += "<div>Income Reservation Cars: " + String.format("%.02f", values[2]) + " </div>";
+		textField += "<div>Income PassHolders: " + String.format("%.02f", values[1]) + "  </div>";
 		textField += "<div></div>";
 		textField += "<hr>";
 		textField += "<div><b>Cost</b></div>";
-		textField += "<div>Maintenance: " + values[3] + " </div>";
-		textField += "<div>Taxes: " + values[4] + " </div>";
+		textField += "<div>Maintenance: " + String.format("%.02f", values[3]) + " </div>";
+		textField += "<div>Taxes: " + String.format("%.02f", values[4]) + " </div>";
 		textField += "<div></div>";
 		textField += "<hr>";
 		
 		float totalIncome = values[0] + values[1] + values[2];
 		float totalCosts = values[3] + values[4];
 		
-		textField += "<div>Total Income: <b>+" + totalIncome + "</b> </div>";
-		textField += "<div>Total Costs: <b>" + totalCosts + "</b> </div>";
+		textField += "<div>Total Income: <b>+" + String.format("%.02f", totalIncome) + "</b> </div>";
+		textField += "<div>Total Costs: <b>" + String.format("%.02f", totalCosts) + "</b> </div>";
 		textField += "<div></div>";
-		textField += "<div>Revenue: <b>" + (totalIncome + totalCosts) + "</b> \n";
+		textField += "<div>Revenue: <b>" + String.format("%.02f", totalIncome + totalCosts) + "</b> \n";
 		textField += "<hr>";
 		textField += "<div></div></center>";
 		

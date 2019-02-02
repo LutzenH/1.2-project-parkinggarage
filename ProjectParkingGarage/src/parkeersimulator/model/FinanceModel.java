@@ -170,7 +170,6 @@ public class FinanceModel extends AbstractModel {
 		monthlyTaxes = costs - amount;
 		
 		amount = costs;
-		System.out.println("taxes: " + amount);
 		return amount;
 	}
 	/**
@@ -195,7 +194,6 @@ public class FinanceModel extends AbstractModel {
 		monthlyMaintenance = costs;
 		
 		amount += costs;
-		System.out.println("maintenance: " + amount);
 		return amount;
 	}
 	
