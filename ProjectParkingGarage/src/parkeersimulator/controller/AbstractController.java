@@ -42,7 +42,7 @@ public abstract class AbstractController {
 	/**
 	 * The event that should be performed when a certain button or field has been triggered.
 	 * 
-	 * @param actionType The type of event that should be performed when a certain button or field has been triggered. 
+	 * @param action The type of event that should be performed when a certain button or field has been triggered. 
 	 * @param data A HashMap of data that could be needed by a certain type of event.
 	 * @return returns false if the right action could not be found.
 	 */

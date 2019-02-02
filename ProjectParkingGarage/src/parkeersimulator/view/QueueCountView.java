@@ -24,6 +24,7 @@ public class QueueCountView extends AbstractView {
 	
 	/**
 	 * Constructor of QueueCountView.
+	 * @param model the ParkingGarageModel this view should get data from.
 	 */
 	public QueueCountView(ParkingGarageModel model) {
 		super(model);

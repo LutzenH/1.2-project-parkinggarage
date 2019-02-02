@@ -1,0 +1,12 @@
+parkeersimulator.controller
+parkeersimulator.handler
+parkeersimulator.main
+parkeersimulator.model
+parkeersimulator.model.car
+parkeersimulator.model.location
+parkeersimulator.model.prop
+parkeersimulator.model.queue
+parkeersimulator.view
+parkeersimulator.view.frame
+parkeersimulator.view.graph
+parkeersimulator.view.jcomponent

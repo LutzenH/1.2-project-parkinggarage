@@ -22,8 +22,8 @@ import parkeersimulator.model.FinanceModel;
 public class CarParkFinanceControlView extends AbstractControllableView{
 	/**
 	 * Constructor of CarParkFinanceControlView
-	 * @param model The model this view should be getting information from.
-	 * @param controller The controller this view should send instruction to.
+	 * @param financeModel The model this view should be getting information from.
+	 * @param financeController The controller this view should send instruction to.
 	 */ 
 	public CarParkFinanceControlView(FinanceModel financeModel, FinanceController financeController) {
 		super(financeModel, financeController);

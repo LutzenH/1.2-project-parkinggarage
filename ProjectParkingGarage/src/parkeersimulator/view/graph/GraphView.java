@@ -21,10 +21,11 @@ import parkeersimulator.view.AbstractView;
 
 /**
  * GraphView is a View used for displaying GUI Graphs using the JFreeChart API.
- * @author LutzenH
- * 
+ *  
  * JFreeChart is released under the LGPL-license,
  * site: http://www.jfree.org/jfreechart/
+ * 
+ * @author LutzenH
  */
 public abstract class GraphView extends AbstractView {
 	///Time between ticks for collecting data.
@@ -45,7 +46,14 @@ public abstract class GraphView extends AbstractView {
 	
 	/**
 	 * Constructor of GraphView
-	 * @param model The ParkingGarageModel this view uses to display data.
+	 * @param model The model this view uses to display data.
+	 * @param timeModel the timeModel this View uses to display data.
+	 * @param tableName the name of this Graph
+	 * @param dataSeries A TimeSeries array filled with Titles
+	 * @param colors an array of colors which should represent each line in the graph
+	 * @param xAxisName the name of the x-axis
+	 * @param yAxisName the name of the y-axis
+	 * @param dataCollectFrequency the amount of time between each time it should collect data from the models.
 	 */
     public GraphView(AbstractModel model, TimeModel timeModel, String tableName, TimeSeries[] dataSeries, Color[] colors, String xAxisName, String yAxisName, int dataCollectFrequency) {
         super(model);

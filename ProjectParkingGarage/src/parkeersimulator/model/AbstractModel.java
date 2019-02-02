@@ -21,6 +21,7 @@ public abstract class AbstractModel {
 	
 	/**
 	 * Constructor of AbstractModel
+	 * @param modelHandler the ModelHandler this model should be added to.
 	 */
 	public AbstractModel(ModelHandler modelHandler) {
 		///Instantiation of the list of views.

@@ -57,17 +57,19 @@ public class TimeModel extends AbstractModel{
 	
 	/**
 	 * Sets the pause amount between ticks
+	 * @param amount the pause amount between ticks
 	 */
 	public void setTickPause(int amount) {
 		getModelHandler().setTickPause(amount);
 	}
 	/**
-	 * Gets the pause amount between ticks
+	 * @return the pause amount between ticks
 	 */
 	public int getTickPause() { return getModelHandler().getTickPause(); }
 	
 	/**
 	 * Sets the pause amount between ticks
+	 * @param amount the pause amount between ticks
 	 */
 	public void tick(int amount) {
 		getModelHandler().tick(amount);
@@ -83,10 +85,13 @@ public class TimeModel extends AbstractModel{
      */
     public int getMonth() { return time.getMonthValue(); }
     
+    /**
+     * @return The current day of the month (1-31)
+     */
     public int getDayOfTheMonth() { return time.getDayOfMonth(); }
     
     /**
-     * @return The current day of the week.
+     * @return The current day of the week. (0-6)
      */
     public int getDay() { return time.getDayOfWeek().getValue(); }
     

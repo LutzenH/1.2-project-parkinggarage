@@ -11,6 +11,9 @@ public class Location {
 
     /**
      * Constructor for objects of class Location
+     * @param floor the floor this location is on
+     * @param row the row this location is in
+     * @param place the place this location is at
      */
     public Location(int floor, int row, int place) {
         this.floor = floor;
@@ -73,6 +76,7 @@ public class Location {
 	/**
 	 * Converts a location [floor][row][place] to a coordinate [x][y]
 	 * @param location the location that should be converted into a coordinate
+	 * @param numberOfRows the total number of rows in the garage.
 	 * @return the calculated coordinate
 	 */
 	public static Coordinate convertToCoordinate(Location location, int numberOfRows) {	

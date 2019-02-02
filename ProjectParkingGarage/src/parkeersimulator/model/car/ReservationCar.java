@@ -27,6 +27,7 @@ public class ReservationCar extends Car {
 	
 	/**
 	 * The constructor for ReservationCar
+	 * @param reservedLocation the location this car reserved when entering the garage
 	 */
     public ReservationCar(Location reservedLocation) {
     	Random random = new Random();

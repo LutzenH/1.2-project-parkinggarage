@@ -19,6 +19,7 @@ public class AdviceView extends AbstractView {
 	
 	/**
 	 * Constructor of QueueCountView.
+	 * @param model The ParkingGarageModel this view should be based on.
 	 */
 	public AdviceView(ParkingGarageModel model) {
 		super(model);

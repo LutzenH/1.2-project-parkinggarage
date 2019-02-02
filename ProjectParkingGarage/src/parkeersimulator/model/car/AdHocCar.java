@@ -10,6 +10,7 @@ public class AdHocCar extends Car {
 	public static final Color COLOR=Color.red;
 	/**
 	 * The constructor for AdHocCar
+	 * @param stayMinutes the amount of minutes this car should stay in the garage
 	 */
     public AdHocCar(int stayMinutes) {    	
         this.setMinutesLeft(stayMinutes);

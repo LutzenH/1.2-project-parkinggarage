@@ -79,7 +79,7 @@ public class FinanceModel extends AbstractModel {
 
 	/**
 	 * Adds money to the total monthly budget for every car leaving and paying
-	 * @param car
+	 * @param car the car where the money should be collected from
 	 */
 	public void collectMoney(Car car) {
         int totalFramesStayed = (int) Math.ceil(car.getMinutesStayed() / paymentTimeframe);
@@ -215,24 +215,26 @@ public class FinanceModel extends AbstractModel {
 	}
 	
 	/**
-	 * Gets the money the garage has in total
+	 * @return Gets the money the garage has in total
 	 */
 	public float getMoneyTotal() { return moneyTotal; }
 	/**
-	 * Gets the money the garage has earned this month
+	 * @return Gets the money the garage has earned this month
 	 */
 	public float getMoneyMonth() { return moneyMonth; }
 	/**
-	 * Gets the money the garage has earned this day
+	 * @return Gets the money the garage has earned this day
 	 */
 	public float getMoneyDay() { return moneyDay; }
 	
 	/**
-	 * Adds money to the toal budget
+	 * Adds money to the total budget
+	 * @param amount the amount of money that should be added to the budget
 	 */
 	public void addMoney(float amount) { moneyTotal += amount; }
 	/**
 	 * Removes money to the total budget
+	 * @param amount the amount of money that should be removed from the budget.
 	 */
 	public void retractMoney(float amount) { moneyTotal -= amount; }
 	
@@ -242,6 +244,7 @@ public class FinanceModel extends AbstractModel {
 	public int getPaymentTimeframe() { return paymentTimeframe; }
 	/**
 	 * Sets the time when a car has to pay more money for their stay
+	 * @param amount the amount of money that should be asked for a certain timeframe
 	 */
 	public void setPaymentTimeframe(int amount) { paymentTimeframe = amount; }
 	
@@ -251,6 +254,7 @@ public class FinanceModel extends AbstractModel {
 	public float getCostPerTimeFrame_adHocCar() { return costPerTimeFrame_adHocCar; }
 	/**
 	 * Sets the amount an adHoc car has to pay for staying in the garage every timeFrame
+	 * @param amount the amount of money an adHocCar has to pay for staying in the garage every timeFrame
 	 */
 	public void setCostPerTimeFrame_adHocCar(float amount) { costPerTimeFrame_adHocCar = amount; }
 	
@@ -260,6 +264,7 @@ public class FinanceModel extends AbstractModel {
 	public float getCostPerTimeFrame_reservationCar() { return costPerTimeFrame_ReservationCar; }
 	/**
 	 * Sets the amount a reservation car has to pay for staying in the garage every timeFrame
+	 * @param amount the amount a ReservationCar has to pay for staying in the garage every timeFrame.
 	 */
 	public void setCostPerTimeFrame_reservationCar(float amount) { costPerTimeFrame_ReservationCar = amount; }
 
@@ -269,6 +274,7 @@ public class FinanceModel extends AbstractModel {
 	public float getCostPerMonth_passHolderCar() { return cost_passHolderCar; }
 	/**
 	 * Sets the amount a pass holder car has to pay every month
+	 * @param amount the amount a pass holder car has to pay every month.
 	 */
 	public void setCostPerMonth_passHolderCar(float amount) { cost_passHolderCar = amount; }
 	
@@ -278,6 +284,7 @@ public class FinanceModel extends AbstractModel {
 	public int getMaintenanceCosts() { return maintenanceCosts; }
 	/**
 	 * Sets the amount the garage has to pay for maintenance
+	 * @param amount the amount of default maintenance cost.
 	 */
 	public void setMaintenanceCosts(int amount) { maintenanceCosts = amount; }
 	
@@ -286,16 +293,18 @@ public class FinanceModel extends AbstractModel {
 	 */
 	public int getNumberOfEntrances() { return numberOfEntrances; }
 	/**
-	 * Sets the number of entrances to the carpark
+	 * Sets the number of entrances to the carpark (this number is not dependent on the actual amount of entrances)
+	 * @param amount sets the number of entrances in this model
 	 */
 	public void setNumberOfEntrances(int amount) { numberOfEntrances = amount; }
 
 	/**
-	 * @return Gets the number of ticket machines in the carpark
+	 * @return Gets the number of ticket machines in the carpark 
 	 */
 	public int getNumberOfTicketMachines() { return numberOfTicketMachines; }
 	/**
-	 * Sets the number of ticket machines in the carpark
+	 * Sets the number of ticket machines in the carpark  (this number is not dependent on the actual amount of ticketmachines)
+	 * @param amount Sets the number of ticket machines in the carpark
 	 */
 	public void setNumberOfTicketMachines(int amount) { numberOfTicketMachines = amount; }
 
@@ -304,7 +313,8 @@ public class FinanceModel extends AbstractModel {
 	 */
 	public int getNumberOfExits() { return numberOfExits; }
 	/**
-	 * Sets the number of exits from the carpark
+	 * Sets the number of exits from the carpark (this number is not dependent on the actual amount of exits)
+	 * @param amount the number of exits in the carpark
 	 */
 	public void setNumberOfExits(int amount) { numberOfExits = amount; }
 
@@ -314,6 +324,7 @@ public class FinanceModel extends AbstractModel {
 	public int getEntranceCosts() { return entranceCosts; }
 	/**
 	 * Sets the amount of costs for an entrance in the carpark
+	 * @param amount the amount of costs for an entrance in the carpark
 	 */
 	public void setEntranceCosts(int amount) { entranceCosts = amount; }
 
@@ -323,6 +334,7 @@ public class FinanceModel extends AbstractModel {
 	public int getTicketMachineCosts() { return ticketMachineCosts; }
 	/**
 	 * Sets the amount of costs for a ticket machine in the carpark
+	 * @param amount the amount of costs for a ticket machine in the carpark
 	 */
 	public void setTicketMachineCosts(int amount) { ticketMachineCosts = amount; }
 
@@ -332,6 +344,7 @@ public class FinanceModel extends AbstractModel {
 	public int getExitCosts() { return exitCosts; }
 	/**
 	 * Sets the amount of costs for an exit machine in the carpark
+	 * @param amount the amount of costs for an exit machine in the carpark
 	 */
 	public void setExitCosts(int amount) { exitCosts = amount; }
 	
@@ -340,7 +353,8 @@ public class FinanceModel extends AbstractModel {
 	 */
 	public int getNumberOfPlaces() { return numberOfPlaces; }
 	/**
-	 * Sets the amount places in the carpark
+	 * Sets the amount places in the carpark (this number is not dependent on the actual amount of places in the ParkingGarageModel)
+	 * @param amount the amount places in the carpark 
 	 */
 	public void setNumberOfPlaces(int amount) { numberOfPlaces = amount; }
 	
@@ -349,7 +363,8 @@ public class FinanceModel extends AbstractModel {
 	 */
 	public int getNumberOfRows() { return numberOfRows; }
 	/**
-	 * Sets the amount rows in the carpark
+	 * Sets the amount rows in the carpark (this number is not dependent on the actual amount of rows in the ParkingGarageModel)
+	 * @param amount the amount rows in the carpark 
 	 */
 	public void setNumberOfRows(int amount) { numberOfRows = amount; }
 
@@ -358,12 +373,14 @@ public class FinanceModel extends AbstractModel {
 	 */
 	public int getNumberOfFloors() { return numberOfFloors; }
 	/**
-	 * Sets the amount floors in the carpark
+	 * Sets the amount floors in the carpark (this number is not dependent on the actual amount of rows in the ParkingGarageModel)
+	 * @param amount the amount floors in the carpark
 	 */
 	public void setNumberOfFloors(int amount) { numberOfFloors = amount; }
 	
 	/**
 	 * Sets the amount places, rows and floors all at once in the carpark
+	 * @param num the amount places [0], rows [1] and floors [2] all at once in the carpark
 	 */
 	public void setNumberOff_RowFloorPlaces(int[] num) {
 		numberOfPlaces = num[0] * num[1] * num[2];
@@ -377,6 +394,7 @@ public class FinanceModel extends AbstractModel {
 	public float getPlaceCosts() { return placeCosts; }
 	/**
 	 * Sets the amount a place costs for maintenance
+	 * @param amount the amount a place costs for maintenance
 	 */
 	public void setPlaceCosts(float amount) { placeCosts = amount; }
 
@@ -386,6 +404,7 @@ public class FinanceModel extends AbstractModel {
 	public int getRowCosts() { return rowCosts; }
 	/**
 	 * Sets the amount a row costs for maintenance
+	 * @param amount the amount a row costs for maintenance
 	 */
 	public void setRowCosts(int amount) { rowCosts = amount; }
 	
@@ -395,6 +414,7 @@ public class FinanceModel extends AbstractModel {
 	public int getFloorCosts() { return floorCosts; }
 	/**
 	 * Sets the amount a floor costs for maintenance
+	 * @param amount the amount a floor costs for maintenance
 	 */
 	public void setFloorCosts(int amount) { floorCosts = amount; }
 	
@@ -404,6 +424,7 @@ public class FinanceModel extends AbstractModel {
 	public int getPassHolderPlaceAmount() { return passHolderPlaceAmount; }
 	/**
 	 * Sets the amount of passHolder spots the parking garage has
+	 * @param amount the amount of passHolder spots the parking garage has
 	 */
 	public void setPassHolderPlaceAmount(int amount) { passHolderPlaceAmount = amount; }
 	
@@ -413,10 +434,12 @@ public class FinanceModel extends AbstractModel {
 	public int getCarsLeftQueue() { return carsLeftQueue; }
 	/**
 	 * Sets the amount of cars the parking garage misses out on on a monthly basis
+	 * @param amount the amount of cars the parking garage misses out on on a monthly basis
 	 */
 	public void setCarsLeftQueue(int amount) { carsLeftQueue = amount; }
 	/**
 	 * Adds to the amount of cars the parking garage misses out on on a monthly basis
+	 * @param amount the amount of cars the parking garage misses out on on a monthly basis
 	 */
 	public void addCarsLeftQueue(int amount) { carsLeftQueue += amount; }
 	

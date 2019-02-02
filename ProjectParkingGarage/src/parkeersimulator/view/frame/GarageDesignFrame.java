@@ -19,6 +19,8 @@ public class GarageDesignFrame extends JPanel {
 
 	/**
 	 * Create the frame.
+	 * @param model The ParkingGarageModel this view uses to display the garage
+	 * @param controller the ParkingGarageController this view uses to send instructions to.
 	 */
 	public GarageDesignFrame(ParkingGarageModel model, ParkingGarageController controller) {
 		setBounds(100, 100, 450, 300);

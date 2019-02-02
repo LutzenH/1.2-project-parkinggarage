@@ -19,6 +19,7 @@ public class Place implements Comparable<Place> {
 
 	/**
 	 * Default Constructor for Place
+	 * @param location the location this Place is at.
 	 */
 	public Place(Location location) {
 		this(null, null, location);
@@ -27,7 +28,8 @@ public class Place implements Comparable<Place> {
 	/**
 	 * Constructor for place.
 	 * @param car The car located at this Place.
-	 * @param cartypes The type of cars allowed at this Place.
+	 * @param carType The type of car allowed at this Place.
+	 * @param location the location this Place is at in the garage.
 	 */
 	public Place(Car car, CarType carType, Location location) {
 		this.car = car;
@@ -38,15 +40,15 @@ public class Place implements Comparable<Place> {
 	
 	/**
 	 * Constructor for place with CarType input variable.
-
 	 * @param carType The type of car allowed at this Place.
+	 * @param location the location this place is at.
 	 */
 	public Place(CarType carType, Location location) {
 		this(null, carType, location);
 	}
 	
 	/**
-	 * Will lower  timeReserved if it is greater than 0
+	 * Lowers timeReserved if it is greater than 0
 	 */
 	public void tick() {
 		if(timeReserved > 0)
@@ -61,7 +63,7 @@ public class Place implements Comparable<Place> {
 	}
 
 	/**
-	 * @param car the car to set
+	 * @param car the car to set at this Place
 	 */
 	public void setCar(Car car) { this.car = car; }
 
@@ -71,7 +73,7 @@ public class Place implements Comparable<Place> {
 	public boolean getReserved() { return timeReserved > 0 ? true : false; }
 
 	/**
-	 * @param set the place time to be reserved.
+	 * @param minutes the place time to be reserved in minutes
 	 */
 	public void setTimeReserved(int minutes) { this.timeReserved = minutes; }
 
@@ -81,7 +83,7 @@ public class Place implements Comparable<Place> {
 	public CarType getCarType() { return carType; }
 
 	/**
-	 * @param carTypes set the allowed carType
+	 * @param carType set the allowed carType
 	 */
 	public void setCarType(CarType carType) { this.carType = carType; }
 	

@@ -9,7 +9,7 @@ import javax.swing.JTextPane;
 import java.awt.Font;
 
 /**
- * The frame that is displayed when help > about is clicked
+ * The frame that is displayed when help, about is clicked
  * @author LutzenH
  */
 public class AboutFrame extends JFrame {

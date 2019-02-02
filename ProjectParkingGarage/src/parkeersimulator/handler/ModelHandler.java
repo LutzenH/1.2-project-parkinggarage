@@ -92,6 +92,7 @@ public class ModelHandler implements Runnable{
     
     /**
      * Sets the pause between ticks.
+     * @param amount the pause between ticks
      */
     public void setTickPause(int amount) { tickPause = amount; }
     

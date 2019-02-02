@@ -154,7 +154,7 @@ public class ParkingGarageModel extends AbstractModel {
 
 	/**
 	 * Constructor of ParkingGarageModel
-	 * @param the ModelHandler this model should be added to.
+	 * @param handler the ModelHandler this model should be added to.
 	 */
     public ParkingGarageModel(ModelHandler handler) {
     	super(handler);
@@ -404,6 +404,7 @@ public class ParkingGarageModel extends AbstractModel {
     public int getBaseLineArrivals() { return baseLineArrivals; }
     /**
      * Sets the baseline for all the cars arriving.
+     * @param amount the baseline for all the cars arriving.
      */
     public void setBaseLineArrivals(int amount) { baseLineArrivals = amount; }
     
@@ -414,6 +415,7 @@ public class ParkingGarageModel extends AbstractModel {
     public Integer getAdHocArrivalsPercent_week() { return Math.round( adHocArrivals_week * 100f); }
     /**
      * Sets the multiplier for adHoc cars arriving during standard weeks.
+     * @param amount the multiplier for adHoc cars arriving during standard weeks.
      */
     public void setAdHocArrivals_week(float amount) { adHocArrivals_week = amount / 100f; }
     
@@ -423,6 +425,7 @@ public class ParkingGarageModel extends AbstractModel {
     public Integer getAdHocArrivals_weekend() { return Math.round(adHocArrivals_weekend * 100f); }
     /**
      * Sets the multiplier for adHoc cars arriving during weekends.
+     * @param amount the multiplier for adHoc cars arriving during weekends.
      */
     public void setAdHocArrivals_weekend(float amount) { adHocArrivals_weekend = amount / 100f; }
     
@@ -432,6 +435,7 @@ public class ParkingGarageModel extends AbstractModel {
     public Integer getAdHocArrivals_event() { return Math.round(adHocArrivals_event * 100f); }
     /**
      * Sets the multiplier for adHoc cars arriving at events.
+     * @param amount the multiplier for adHoc cars arriving at events.
      */
     public void setAdHocArrivals_event(float amount) { adHocArrivals_event = amount / 100f; }
     
@@ -442,6 +446,7 @@ public class ParkingGarageModel extends AbstractModel {
     public Integer getPassArrivals_week() { return Math.round( passArrivals_week * 100f); }
     /**
      * Sets the multiplier for pass cars arriving during standard weeks.
+     * @param amount the multiplier for pass cars arriving during standard weeks.
      */
     public void setPassArrivals_week(float amount) { passArrivals_week = amount / 100f; }
     
@@ -451,6 +456,7 @@ public class ParkingGarageModel extends AbstractModel {
     public Integer getPassArrivals_weekend() { return Math.round(passArrivals_weekend * 100f); }
     /**
      * Sets the multiplier for pass cars arriving during weekends.
+     * @param amount the multiplier for pass cars arriving during weekends.
      */
     public void setPassArrivals_weekend(float amount) { passArrivals_weekend = amount / 100f; }
     
@@ -460,6 +466,7 @@ public class ParkingGarageModel extends AbstractModel {
     public Integer getPassArrivals_eventWeek() { return Math.round(passArrivals_event * 100f); }
     /**
      * Sets the multiplier for pass cars arriving at events during standard weeks.
+     * @param amount the multiplier for pass cars arriving at events during standard weeks.
      */
     public void setPassArrivals_eventWeek(float amount) { passArrivals_event = amount / 100f; }
 
@@ -469,6 +476,7 @@ public class ParkingGarageModel extends AbstractModel {
     public Integer getReservationArrivals_week() { return Math.round( reservationArrivals_week * 100f); }
     /**
      * Sets the multiplier for reservation cars arriving during standard weeks.
+     * @param amount the multiplier for reservation cars arriving during standard weeks.
      */
     public void setReservationArrivals_week(float amount) { reservationArrivals_week = amount / 100f; }
     
@@ -478,6 +486,7 @@ public class ParkingGarageModel extends AbstractModel {
     public Integer getReservationArrivals_weekend() { return Math.round(reservationArrivals_weekend * 100f); }
     /**
      * Sets the multiplier for reservation cars arriving during weekends.
+     * @param amount the multiplier for reservation cars arriving during weekends.
      */
     public void setReservationArrivals_weekend(float amount) { reservationArrivals_weekend = amount / 100f; }
     
@@ -487,6 +496,7 @@ public class ParkingGarageModel extends AbstractModel {
     public Integer getReservationArrivals_event() { return Math.round(reservationArrivals_event * 100f); }
     /**
      * Sets the multiplier for reservation cars arriving at events.
+     * @param amount the multiplier for reservation cars arriving at events.
      */
     public void setReservationArrivals_event(float amount) { reservationArrivals_event = amount / 100f; }
     
@@ -496,6 +506,7 @@ public class ParkingGarageModel extends AbstractModel {
 	public int getNumberOfFloors() { return numberOfFloors; }
 	/**
      * Set the number of floors in the parking garage.
+     * @param amount the number of floors in the parking garage.
      */
 	public void setNumberOfFloors(int amount) {  
 		numberOfFloors = amount;
@@ -508,6 +519,7 @@ public class ParkingGarageModel extends AbstractModel {
     public int getNumberOfRows() { return numberOfRows; }
     /**
 	 * Sets the number of rows in the parking garage per floor.
+	 * @param amount the number of rows in the parking garage per floor.
 	 */
     public void setNumberOfRows(int amount) { 
     	numberOfRows = amount;
@@ -521,6 +533,7 @@ public class ParkingGarageModel extends AbstractModel {
     
     /**
 	 * Sets the number of places in the parking garage per row.
+	 * @param amount the number of places in the parking garage per row.
 	 */
     public void setNumberOfPlaces(int amount) { 
     	numberOfPlaces = amount;
@@ -558,6 +571,7 @@ public class ParkingGarageModel extends AbstractModel {
     public int getNumberOfPassHolderSpots() { return passHolderPlaceAmount; }
     /**
      * Sets the total amount of passholder spots in the parking garage.
+     * @param amount the total amount of passholder spots in the parking garage.
      */
     public void setNumberOfPassHolderSpots(int amount) { passHolderPlaceAmount = amount; financeModel.setPassHolderPlaceAmount(amount); }
     
@@ -714,7 +728,7 @@ public class ParkingGarageModel extends AbstractModel {
     public CarQueue getExitCarQueue() { return exitCarQueue; }
     
     /**
-     * 
+     * @return the speed of payment in a paymentQueue
      */
     public int getPaymentSpeed() { return paymentSpeed; }
     
@@ -782,6 +796,7 @@ public class ParkingGarageModel extends AbstractModel {
     }
 
     /**
+     * @param carType the type of car the first location should be found for.
      * @return The first free location in the parking garage.
      */
     public Location getFirstFreeLocation(CarType carType) {

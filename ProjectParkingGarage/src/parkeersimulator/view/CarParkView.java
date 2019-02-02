@@ -60,6 +60,7 @@ public class CarParkView extends AbstractView {
     
     /**
      * Constructor for objects of class CarPark
+     * @param model the ParkingGarageModel this view should get data from
      */
     public CarParkView(ParkingGarageModel model) {
     	super(model);

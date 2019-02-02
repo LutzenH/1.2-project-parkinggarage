@@ -23,6 +23,7 @@ public class TimeView extends AbstractView {
 
 	/**
 	 * Constructor of TimeView, Creates the panel for this view.
+	 * @param model the TimeModel this view should get data from.
 	 */
 	public TimeView(TimeModel model) {
 		super(model);

@@ -25,8 +25,8 @@ import parkeersimulator.model.TimeModel;
 public class CarParkSimulationControlView extends AbstractControllableView{
 	/**
 	 * Constructor of CarParkSimulationControlView
-	 * @param model The model this view should be getting information from.
-	 * @param controller The controller this view should send instruction to.
+	 * @param timeModel The model this view should be getting information from.
+	 * @param timeController The controller this view should send instruction to.
 	 */ 
 	public CarParkSimulationControlView(TimeModel timeModel, TimeController timeController) {
 		super(timeModel, timeController);

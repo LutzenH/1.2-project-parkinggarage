@@ -16,7 +16,7 @@ public class ParkingGarageController extends AbstractController {
 	/**
 	 * The constructor of ParkingGarageController
 	 * 
-	 * @param model The model this controller should be controlling.
+	 * @param parkingGarageModel The model this controller should be controlling.
 	 */
 	public ParkingGarageController(ParkingGarageModel parkingGarageModel) {
 		super(parkingGarageModel);

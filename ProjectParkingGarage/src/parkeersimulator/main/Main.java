@@ -104,6 +104,7 @@ public class Main {
 	
 	/**
 	 * The Entry-point for this program to start running.
+	 * @param args arguments have not been implemented
 	 */
 	public static void main(String[] args) {
 		Main main = new Main();

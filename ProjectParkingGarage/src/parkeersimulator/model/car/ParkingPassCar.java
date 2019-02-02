@@ -10,6 +10,7 @@ public class ParkingPassCar extends Car {
 	
 	/**
 	 * The constructor for ParkingPassCar
+	 * @param stayMinutes the amount of minutes this car should stay in the garage.
 	 */
     public ParkingPassCar(int stayMinutes) {    	
         this.setMinutesLeft(stayMinutes);
