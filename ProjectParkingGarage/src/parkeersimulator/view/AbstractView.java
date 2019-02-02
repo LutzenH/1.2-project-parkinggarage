@@ -53,6 +53,14 @@ public abstract class AbstractView extends JPanel {
 		repaint();
 	}
 
+	/**
+	 * Builds the slider for the slider controller
+	 * @param value The amount the slider is currently set to
+	 * @param min The minimum amount the slider can slide to
+	 * @param max The maximum amount the slider can slide to
+	 * @param stepValues The values of each step in the slider
+	 * @return Returns a slider with the specified properties
+	 */
 	public static JSlider buildComponent_slider(int value, int min, int max, int[] stepValues) {
 		JSlider slider;
 		
@@ -76,7 +84,14 @@ public abstract class AbstractView extends JPanel {
 	public static JSlider buildComponent_slider(int value, int[] stepValues) {
 		return buildComponent_slider(value, 0, stepValues.length - 1, stepValues);
 	}
-	
+
+	/**
+	 * Builds the slider component for use in the views
+	 * @param controllerName Label text above the slider
+	 * @param slider The slider component for use in this controller
+	 * @param listener The listener that listens to a change of values
+	 * @return Returns a slider controller
+	 */
 	public static JPanel buildController_slider(String controllerName, JSlider slider, ChangeListener listener) {
 		JPanel panel = buildController_header(controllerName);
 		
@@ -94,6 +109,14 @@ public abstract class AbstractView extends JPanel {
 		return panel;
 	}
 
+	/**
+	 * Builds the spinner for the spinner controller
+	 * @param value The amount the slider is currently set to
+	 * @param min The minimum amount the slider can slide to
+	 * @param max The maximum amount the slider can slide to
+	 * @param stepSize The amount the spinner skips every step
+	 * @return Returns a spinner with the specified properties
+	 */
 	public static JSpinner buildComponent_spinner(Number value, Comparable min, Comparable max, Number stepSize) {
 		JSpinner spinner = new JSpinner();
 		spinner.setModel(new SpinnerNumberModel(value, min, max, stepSize));
@@ -101,6 +124,16 @@ public abstract class AbstractView extends JPanel {
 		return spinner;
 	}
 	
+	/**
+	 * Builds the spinner component for use in the views
+	 * @param controllerName Label text above the slider
+	 * @param buttonName The text inside the button next to the spinner
+	 * @param spinner The spinner component for use in this controller
+	 * @param createLabel Bool that tells the function if this spinner should have a label next to it
+	 * @param labelText The text that sits inside the label next to the spinner if specified
+	 * @param listener The listener that listens to a change of values
+	 * @return Returns a spinner controller
+	 */
 	public static JPanel buildController_spinner(String controllerName, String buttonName, JSpinner spinner, Boolean createLabel, String labelText, ActionListener listener) {
 		JPanel panel = buildController_header(controllerName);
 		
@@ -130,6 +163,11 @@ public abstract class AbstractView extends JPanel {
 		return buildController_spinner(controllerName, buttonName, spinner, true, labelText, listener);
 	}
 	
+	/**
+	 * Builds the grouped buttons component for use in the views
+	 * @param buttons The buttons inside the button group
+	 * @return Returns a grouped buttons controller
+	 */
 	public static JPanel buildController_groupedButtons(JButton[] buttons) {
 		JPanel panel = buildController_header();
 		
@@ -143,6 +181,12 @@ public abstract class AbstractView extends JPanel {
 		return panel;
 	}
 
+	/**
+	 * Builds the wrapper/header for use in each controller to sit above the set of controls
+	 * @param createHeaderLabel Bool that tells the function if it should build a header label above the set of controls
+	 * @param controllerName The text that sits inside the string above the set of controls
+	 * @return Returns a header
+	 */
 	public static JPanel buildController_header(boolean createHeaderLabel, String controllerName) {
 		JPanel panel = new JPanel();
 		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));

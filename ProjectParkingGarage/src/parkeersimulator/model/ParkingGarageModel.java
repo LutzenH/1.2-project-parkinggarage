@@ -358,6 +358,7 @@ public class ParkingGarageModel extends AbstractModel {
 	            	if(getEntranceCarQueue().carsInQueue() <= queueLengthBeforeLeving) {
 	            		entranceCarQueue.addCar(new AdHocCar(stayMinutes));
 	            	} else {
+	            		financeModel.addMoneyMissedOutOn(stayMinutes);
 	            		amountOfLeavingCars++;
 	            	}
 	            }

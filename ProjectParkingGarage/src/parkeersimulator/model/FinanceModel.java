@@ -2,6 +2,7 @@ package parkeersimulator.model;
 
 import parkeersimulator.handler.ModelHandler;
 import parkeersimulator.model.car.Car;
+import parkeersimulator.model.car.Car.CarType;
 
 public class FinanceModel extends AbstractModel {
 
@@ -12,8 +13,13 @@ public class FinanceModel extends AbstractModel {
 	private float moneyTotal = 0f;
 	//Total revenue of the past month
 	private float moneyMonth = 0f;
+	private float moneyLastMonth = 0f;
 	//Total revenue of the past day
 	private float moneyDay = 0f;
+	//Total revenue the parking garage missed out on
+	private float moneyMissedOutOn = 0;
+	
+	private int carsLeftQueue = 0;
 	
 	//The amount of time an adHocCar car stays before having to pay another costPerTimeFrame
 	private int paymentTimeframe = 20;
@@ -71,6 +77,10 @@ public class FinanceModel extends AbstractModel {
 		notifyViews();
 	}
 
+	/**
+	 * Adds money to the total monthly budget for every car leaving and paying
+	 * @param car
+	 */
 	public void collectMoney(Car car) {
         int totalFramesStayed = (int) Math.ceil(car.getMinutesStayed() / paymentTimeframe);
         
@@ -89,62 +99,109 @@ public class FinanceModel extends AbstractModel {
 		}
 	}
 	
+	/**
+	 * Adds money to the amount of money the garage misses out on
+	 * @param stayMinutes The amount of minutes the car was supposed to stay
+	 */
+	public void addMoneyMissedOutOn(int stayMinutes) {
+		int totalFramesStayed = (int) Math.ceil(stayMinutes / paymentTimeframe);
+		moneyMissedOutOn += totalFramesStayed * costPerTimeFrame_adHocCar;
+		carsLeftQueue++;
+	}
+	
+	/*
+	 * Checks if we have to pay or make reports yet
+	 */
 	private void manageMoney() {
+		//End of day
 		if(timeModel.getHour() == 0 && timeModel.getMinute() == 0) {
 			moneyMonth += moneyDay;
 			moneyDay = 0;
 		}
-		
+		//End of month
 		if(timeModel.getIsFirstDayOfMonth() && timeModel.getHour() == 8 && timeModel.getMinute() == 30) {
 			addPassHolderMoney();
 			payMoney();
 			
+			moneyLastMonth = moneyMonth;
 			moneyTotal += moneyMonth;
+			
+			//Reset our values
 			moneyMonth = 0;
+			moneyMissedOutOn = 0;
+			carsLeftQueue = 0;
 		}
 	}
 	
+	/**
+	 * Adds money to the total monthly budget by letting pass holders pay
+	 */
 	private void addPassHolderMoney() {
 		//Let pass holders pay
 		moneyMonth += passHolderPlaceAmount * cost_passHolderCar;
 		monthlyIncomeParkingPassCar += passHolderPlaceAmount * cost_passHolderCar;
 	}
 	
+	/**
+	 * Initiated the taxes and maintenance
+	 */
 	private void payMoney() {
 		//Pay taxes
 		moneyMonth = payMoney_taxes(moneyMonth);
 		//Pay maintenance
 		moneyMonth = payMoney_maintenance(moneyMonth);
 	}
+	/**
+	 * Pays for taxes
+	 * @param amount The amount we have before taxes has been reducted
+	 * @return Returns the amount we have after taxes has been reducted
+	 */
 	private float payMoney_taxes(float amount) {
+		float costs = amount;
+		
 		//We pay taxes at 8.30 in the morning
 		if(amount > 0 && amount <= 20384)
-			amount *= (1f - 0.3665f);
+			costs *= (1f - 0.3665f);
 		if(amount > 20384 && amount <= 68507)
-			amount *= (1f - 0.3810f);
+			costs *= (1f - 0.3810f);
 		if(amount > 68507)
-			amount *= (1f - 0.5175f);
+			costs *= (1f - 0.5175f);
 		
-		monthlyTaxes -= amount;
+		monthlyTaxes = costs - amount;
+		
+		amount = costs;
+		System.out.println("taxes: " + amount);
 		return amount;
 	}
+	/**
+	 * Pays money for maintenance
+	 * @param amount The amount we have before maintenance is being paid for
+	 * @return Returns the amount we have after maintenance is being paid for
+	 */
 	private float payMoney_maintenance(float amount) {
+		float costs = 0;
+		
 		//Pay maintenance costs
-		amount -= numberOfEntrances * entranceCosts;
-		amount -= numberOfTicketMachines * ticketMachineCosts;
-		amount -= numberOfExits * exitCosts;
+		costs -= numberOfEntrances * entranceCosts;
+		costs -= numberOfTicketMachines * ticketMachineCosts;
+		costs -= numberOfExits * exitCosts;
 		
-		amount -= numberOfPlaces * placeCosts;
-		amount -= numberOfRows * rowCosts;
-		amount -= numberOfFloors * floorCosts;
+		costs -= numberOfPlaces * placeCosts;
+		costs -= numberOfRows * rowCosts;
+		costs -= numberOfFloors * floorCosts;
 		
-		amount -= maintenanceCosts;
+		costs -= maintenanceCosts;
 		
-		monthlyMaintenance -= amount;
+		monthlyMaintenance = costs;
 		
+		amount += costs;
+		System.out.println("maintenance: " + amount);
 		return amount;
 	}
 	
+	/**
+	 * @return Returns an array of monthly revenue and costs
+	 */
 	public float[] getMonthlyReport() {
 		float[] report = new float[] { monthlyIncomeAdHocCars, monthlyIncomeParkingPassCar, monthlyIncomeReservationCar, monthlyMaintenance, monthlyTaxes };
 		
@@ -349,4 +406,27 @@ public class FinanceModel extends AbstractModel {
 	 * Sets the amount of passHolder spots the parking garage has
 	 */
 	public void setPassHolderPlaceAmount(int amount) { passHolderPlaceAmount = amount; }
+	
+	/**
+	 * @return Gets the amount of cars the parking garage misses out on on a monthly basis
+	 */
+	public int getCarsLeftQueue() { return carsLeftQueue; }
+	/**
+	 * Sets the amount of cars the parking garage misses out on on a monthly basis
+	 */
+	public void setCarsLeftQueue(int amount) { carsLeftQueue = amount; }
+	/**
+	 * Adds to the amount of cars the parking garage misses out on on a monthly basis
+	 */
+	public void addCarsLeftQueue(int amount) { carsLeftQueue += amount; }
+	
+	/**
+	 * @return Gets the total amount of money the garage has missed out on in the current month
+	 */
+	public float getMoneyMissedOutOn() { return moneyMissedOutOn; }
+
+	/**
+	 * @return Gets the money the parkingGarage has earned last month for later use
+	 */
+	public float getMoneyLastMonth() { return moneyLastMonth; }
 }

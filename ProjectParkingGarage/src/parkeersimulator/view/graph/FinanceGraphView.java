@@ -25,26 +25,40 @@ public class FinanceGraphView extends GraphView {
 				new TimeSeries[] {
 						new TimeSeries("Total Money"),
 						new TimeSeries("Money this month"),
-						new TimeSeries("Money Day")
+						new TimeSeries("Money Day"),
+						new TimeSeries("Money Missed out on")
 				},
 				new Color[] {
 						Color.GREEN,
 						Color.BLUE,
+						Color.CYAN,
 						Color.RED
 				},
 				"time (minutes)",
 				"amount (€)",
-				15
+				1
 		);
 	}
 
 	@Override
 	protected void updateDataset() {
 		FinanceModel financeModel = (FinanceModel) model;
+
+		if(timeModel.getIsFirstDayOfMonth() && timeModel.getHour() == 8 && timeModel.getMinute() == 31) {
+			graph_data[0].addOrUpdate(minute, financeModel.getMoneyTotal());
+        }
 		
-		graph_data[0].addOrUpdate(minute, financeModel.getMoneyTotal());
-		graph_data[1].addOrUpdate(minute, financeModel.getMoneyMonth());
-		graph_data[2].addOrUpdate(minute, financeModel.getMoneyDay());
+		if(timeModel.getIsFirstDayOfMonth() && timeModel.getHour() == 8 && timeModel.getMinute() == 31) {
+			graph_data[1].addOrUpdate(minute, financeModel.getMoneyLastMonth());
+        }
+		
+		if(timeModel.getHour() == 23 && timeModel.getMinute() == 59) {
+			graph_data[2].addOrUpdate(minute, financeModel.getMoneyDay());
+        }
+		
+		if(timeModel.getHour() == 23 && timeModel.getMinute() == 59) {
+			graph_data[3].addOrUpdate(minute, financeModel.getMoneyMissedOutOn());
+        }
 	}
 	
 }
