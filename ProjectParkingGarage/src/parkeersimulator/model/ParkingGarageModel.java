@@ -912,9 +912,9 @@ public class ParkingGarageModel extends AbstractModel {
 		    	if(averageCarsLeavingEntrenceCarQueueu <= 25) {
 		    		advice = "<html>Average amount of cars leaving entrance queue every day: " + averageCarsLeavingEntrenceCarQueueu +  "<br>Advice: The number of cars leaving the entrance queue is low, you do not have to change anything for this.<br><br></html>";
 		    	} else if(averageCarsLeavingEntrenceCarQueueu <= 75) {
-		    		advice = "<html>Average amount of cars leaving entrance queue every day: " + averageCarsLeavingEntrenceCarQueueu +  "<br>Advice: The number of cars leaving the entrance queue is al litel above average, maybe you can bould one entrance more.<br><br></html>";
+		    		advice = "<html>Average amount of cars leaving entrance queue every day: " + averageCarsLeavingEntrenceCarQueueu +  "<br>Advice: The number of cars leaving the entrance queue is a little above average, maybe you can build one more entrance.<br><br></html>";
 		    	} else if(averageCarsLeavingEntrenceCarQueueu > 75) {
-		    		advice = "<html>Average amount of cars leaving entrance queue every day: " + averageCarsLeavingEntrenceCarQueueu+  "<br>Advice: The number of cars leaving the entrance queue is very high so build more entrances for them.<br><br></html>";
+		    		advice = "<html>Average amount of cars leaving entrance queue every day: " + averageCarsLeavingEntrenceCarQueueu+  "<br>Advice: The number of cars leaving the entrance queue is very high, It is recommended to build more entrances for them.<br><br></html>";
 		    	}
     		}
     	}
@@ -931,23 +931,23 @@ public class ParkingGarageModel extends AbstractModel {
     	if(ticks >= 44640) {
     		if(maxPaymentCarQueue <= 25) {
 		    	if (maxEnteranceCarQueue <= 10 && averageLeavingCars <= 25) {
-		    		advice = "<html>maximum entrance queue: " + maxEnteranceCarQueue +  "<br>Advice: There are enough entrances for.<br><br></html>";
+		    		advice = "<html>maximum entrance queue: " + maxEnteranceCarQueue +  "<br>Advice: There are enough entrances.<br><br></html>";
 		    	} else if(maxEnteranceCarQueue <= 10 && averageLeavingCars > 25 && averageLeavingCars <= 75) { 
-		    		advice = "<html>maximum entrance queue: " + maxEnteranceCarQueue +  "<br>Advice: There are enough entrances for the amount of cars, but the number of cars leaving the entrance queue is a litel above averagee, maybe you can bould one entrance more.<br><br></html>";
+		    		advice = "<html>maximum entrance queue: " + maxEnteranceCarQueue +  "<br>Advice: There are enough entrances for the amount of cars, but the number of cars leaving the entrance queue is a little above average, maybe you can build one more entrance.<br><br></html>";
 		    	} else if(maxEnteranceCarQueue <= 10 && averageLeavingCars > 75) { 
 		    		advice = "<html>maximum entrance queue: " + maxEnteranceCarQueue +  "<br>Advice: There are enough entrances for the amount of cars, but the number of cars leaving the entrance queue is very high so build more entrances for them.<br><br></html>";
 		    	} else if (maxEnteranceCarQueue <= 25 && averageLeavingCars <= 25) {
-		    		advice = "<html>maximum entrance queue: " + maxEnteranceCarQueue +  "<br>Advice: The number of cars in the entrance queue is somtimes a liter high, maybe you can build one extra entrance to reduce this number.<br><br></html>";
+		    		advice = "<html>maximum entrance queue: " + maxEnteranceCarQueue +  "<br>Advice: The number of cars in the entrance queue is somtimes a little higher, maybe you can build one extra entrance to reduce this.<br><br></html>";
 		    	} else if (maxEnteranceCarQueue <= 25 && averageLeavingCars > 25 && averageLeavingCars <= 75) {
-		    		advice = "<html>maximum entrance queue: " + maxEnteranceCarQueue +  "<br>Advice: The number of cars in the entrance queue and the numer of cars leaving the enterene queue is a litel high, maybe you can build one extra entrance to reduce this number.<br><br></html>";
+		    		advice = "<html>maximum entrance queue: " + maxEnteranceCarQueue +  "<br>Advice: The number of cars in the entrance queue and the numer of cars leaving the enterene queue is a little high, maybe you can build one extra entrance to reduce this.<br><br></html>";
 		    	} else if (maxEnteranceCarQueue <= 25 && averageLeavingCars > 75) {
-		    		advice = "<html>maximum entrance queue: " + maxEnteranceCarQueue +  "<br>Advice: The number of cars in the entrance queue is a liter high and the numer of cars leaving the enterene queue is very high, so build more entrances.<br><br></html>";
+		    		advice = "<html>maximum entrance queue: " + maxEnteranceCarQueue +  "<br>Advice: The number of cars in the entrance queue is a little high and the numer of cars leaving the enterene queue is very high, so build more entrances.<br><br></html>";
 		    	} else if (maxEnteranceCarQueue > 25 && averageLeavingCars <= 25) {
 		    		advice = "<html>maximum entrance queue: " + maxEnteranceCarQueue +  "<br>Advice: The number of cars in the entrance queue is very high on busy moments, so build more entrance.<br><br></html>";
 		    	} else if (maxEnteranceCarQueue > 25 && averageLeavingCars > 25 && averageLeavingCars <= 75) {
-		    		advice = "<html>maximum entrance queue: " + maxEnteranceCarQueue +  "<br>Advice: The number of cars in the entrance queue is very high on busy moments and the number of cars leaving the entrances que is a litel high, so build more entrances.<br><br></html>";
+		    		advice = "<html>maximum entrance queue: " + maxEnteranceCarQueue +  "<br>Advice: The number of cars in the entrance queue is very high on busy moments and the number of cars leaving the entrances que is a little high, so build more entrances.<br><br></html>";
 		    	} else if (maxEnteranceCarQueue > 25 && averageLeavingCars > 75) {
-		    		advice = "<html>maximum entrance queue: " + maxEnteranceCarQueue +  "<br>Advice: The number of cars in the entrance queue on busy moments and the number of cars leaving the entrances queue is verry high, so build more entrances.<br><br></html>";
+		    		advice = "<html>maximum entrance queue: " + maxEnteranceCarQueue +  "<br>Advice: The number of cars in the entrance queue on busy moments and the number of cars leaving the entrances queue is very high, so build more entrances.<br><br></html>";
 		    	}
     		}
     	}
@@ -964,9 +964,9 @@ public class ParkingGarageModel extends AbstractModel {
 	    	if (maxPaymentCarQueue <= 15) {
 	    		advice = "<html>maximum payment queue: " + maxPaymentCarQueue +  "<br>Advice: There are enough payment terminals for the number of cars in the payment queue.<br><br></html>";
 	    	} else if(maxPaymentCarQueue <= 25) {
-	    		advice = "<html>maximum payment queue: " + maxPaymentCarQueue +  "<br>Advice: There are not so many payment terminals for the number of cars, it can keeps the queue in front of th entrance a litel bit, so mybe you can build one payment terminal more.<br><br></html>";
+	    		advice = "<html>maximum payment queue: " + maxPaymentCarQueue +  "<br>Advice: There are not enough payment terminals for the number of cars, it can keep up the queue in front of th entrance a little bit, so maybe you can build one more ticketmachine.<br><br></html>";
 	    	}else {
-	    		advice = "<html>maximum payment queue: " + maxPaymentCarQueue +  "<br>Advice: There are not enough payment terminals for the number of cars, it keeps the queue in front of the entrance.<br><br></html>";
+	    		advice = "<html>maximum payment queue: " + maxPaymentCarQueue +  "<br>Advice: There are not enough payment terminals for the number of cars, it keeps the queue in front of the entrance to long.<br><br></html>";
 	    	}	
     	}
     	return advice;
@@ -980,11 +980,11 @@ public class ParkingGarageModel extends AbstractModel {
     	String advice = "";
     	if(ticks >= 44640) {
 	    	if (maxExitCarQueue <= 10) {
-	    		advice = "<html>Maximum exit queue: " + maxExitCarQueue +  "<br>Advice: There are enough exits for the number of payment terminals .<br><br></html>";
+	    		advice = "<html>Maximum exit queue: " + maxExitCarQueue +  "<br>Advice: There are enough exits for the number of payment terminals.<br><br></html>";
 	    	} else if (maxExitCarQueue <= 25) {
 	    		advice = "<html>maximum exit queue: " + maxExitCarQueue +  "<br>Advice: One extra exit could reduce te mumber of cars waiting in the exit queue.<br><br></html>";
 	    	} else if (maxExitCarQueue > 25) {
-	    		advice = "<html>maximum exit queue: " + maxExitCarQueue +  "<br>Advice: There are not enough exits got the mumber of payment terminals.<br><br></html>";
+	    		advice = "<html>maximum exit queue: " + maxExitCarQueue +  "<br>Advice: There are not enough exits for the mumber of ticketmachines.<br><br></html>";
 	    	}	
     	}
     	return advice;
@@ -996,7 +996,7 @@ public class ParkingGarageModel extends AbstractModel {
     public String adviceLocationProps() {
     	String advice = "";
 	    if (ticks >= 44640) {
-			advice = "<html>Always make sure that the entrances, exits and payment terminals are distributed as well as possible across the parking garage<br><br></html>";
+			advice = "<html>Always make sure that the entrances, exits and ticketmachines are distributed as well as possible across the parking garage<br><br></html>";
 		}
 		return advice;
     }
