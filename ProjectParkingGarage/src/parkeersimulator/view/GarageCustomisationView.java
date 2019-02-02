@@ -12,12 +12,14 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 import java.util.HashMap;
 
 import javax.imageio.ImageIO;
 
 import parkeersimulator.controller.AbstractController.ActionType;
 import parkeersimulator.controller.ParkingGarageController;
+import parkeersimulator.main.Main;
 import parkeersimulator.model.ParkingGarageModel;
 import parkeersimulator.model.prop.Prop;
 
@@ -158,7 +160,7 @@ public class GarageCustomisationView extends AbstractControllableView implements
         	graphics.setColor(Color.WHITE);
         	graphics.clearRect(0, 0, this.getWidth(), this.getHeight());
         	
-        	Image img_background = createImage("resources/img_background.png");
+        	Image img_background = createImage("/img_background.png");
         	graphics.drawImage(img_background, 0, 0, this.getWidth(), this.getHeight(), this);
         	
     		int[] shadow_x = {	carpark_topleft_x - 35,
@@ -215,12 +217,12 @@ public class GarageCustomisationView extends AbstractControllableView implements
 					graphics.setColor(new Color(200, 200, 200));
 					
 					if(count % 2 == 0) {
-						Image entrance = createImage("resources/entrance.png");
+						Image entrance = createImage("/entrance.png");
 						graphics.fillRect(xPos - 4, 0, entrance.getWidth(this) + 8, yPos-20);
 						graphics.drawImage(entrance, xPos, yPos - 30, entrance.getWidth(this), entrance.getHeight(this), this);
 					}
 					else {
-						Image entrance = createImage("resources/entrance_bottom.png");
+						Image entrance = createImage("/entrance_bottom.png");
 			    		graphics.fillRect(xPos - 4, yPos+49, entrance.getWidth(this) + 8, this.getHeight());
 			    		graphics.drawImage(entrance, xPos, yPos + 30, entrance.getWidth(this), entrance.getHeight(this), this);
 					}
@@ -230,12 +232,12 @@ public class GarageCustomisationView extends AbstractControllableView implements
 					graphics.setColor(new Color(200, 200, 200));
 					
 					if(count % 2 == 0) {
-						Image exit = createImage("resources/exit.png");
+						Image exit = createImage("/exit.png");
 						graphics.fillRect(xPos - 4, 0, exit.getWidth(this) + 8, yPos-20);
 						graphics.drawImage(exit, xPos, yPos - 30, exit.getWidth(this), exit.getHeight(this), this);
 					}
 					else {
-						Image exit = createImage("resources/exit_bottom.png");
+						Image exit = createImage("/exit_bottom.png");
 			    		graphics.fillRect(xPos - 4, yPos+49, exit.getWidth(this) + 8, this.getHeight());
 			    		graphics.drawImage(exit, xPos, yPos + 30, exit.getWidth(this), exit.getHeight(this), this);
 					}
@@ -245,11 +247,11 @@ public class GarageCustomisationView extends AbstractControllableView implements
 					Image ticketMachine;
 					
 					if(count % 2 == 0) {
-						ticketMachine = createImage("resources/ticketmachine_top.png");
+						ticketMachine = createImage("/ticketmachine_top.png");
 						yPos -= 15;
 					}
 					else {
-						ticketMachine = createImage("resources/ticketmachine_bottom.png");
+						ticketMachine = createImage("/ticketmachine_bottom.png");
 						yPos += 18;
 					}
 					
@@ -293,9 +295,9 @@ public class GarageCustomisationView extends AbstractControllableView implements
      */
     private Image createImage(String path) {
     	Image img = null;
-    	
+    	URL url = Main.class.getResource(path);
         try {
-        	img = ImageIO.read(new File(path));
+        	img = ImageIO.read(url);
          } catch (IOException e) {
             e.printStackTrace();
          }
